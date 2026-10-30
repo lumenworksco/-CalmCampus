@@ -8,7 +8,7 @@
 ![Swift](https://img.shields.io/badge/Swift-SwiftUI%20%2B%20SwiftData-orange.svg)
 ![Data: on-device only](https://img.shields.io/badge/data-on--device%20only-brightgreen.svg)
 
-[**cc.braunf.com**](https://cc.braunf.com/) · [Impact report](https://cc.braunf.com/report.html) · [Evidence dossier](research/CalmCampus-Evidence-Dossier.pdf)
+[**cc.braunf.com**](https://cc.braunf.com/) · [Impact report](https://cc.braunf.com/report.html) · [Evidence dossier](https://github.com/lumenworksco/CalmCampus-Site/blob/main/research/CalmCampus-Evidence-Dossier.pdf)
 
 <p align="center">
   <img src="design/mockups/screenshots/home.png" width="230" alt="Home screen mockup">
@@ -49,8 +49,6 @@ The project is being rebuilt as native apps: **SwiftUI on iOS first, then Kotlin
 ios/            The iOS app (SwiftUI + SwiftData, XcodeGen project)
 spike/          iOS feasibility spike (XcodeGen project)
 ml/             On-device reframing model: data, training, evaluation, model card
-research/       Evidence dossier and source index backing the site's claims
-docs/           Pitch site and impact report (GitHub Pages, cc.braunf.com)
 design/         HTML mockups of the app screens, app icon and palette
 ```
 
