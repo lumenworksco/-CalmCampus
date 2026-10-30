@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Something in the app, site or model isn't working
+about: Something in the app or model isn't working
 labels: bug
 ---
 

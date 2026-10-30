@@ -6,12 +6,6 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "3399", "--directory", "design/mockups"],
       "port": 3399
-    },
-    {
-      "name": "website",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "3400", "--directory", "docs"],
-      "port": 3400
     }
   ]
 }

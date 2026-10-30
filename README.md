@@ -8,7 +8,7 @@
 ![Swift](https://img.shields.io/badge/Swift-SwiftUI%20%2B%20SwiftData-orange.svg)
 ![Data: on-device only](https://img.shields.io/badge/data-on--device%20only-brightgreen.svg)
 
-[**cc.braunf.com**](https://cc.braunf.com/) · [Impact report](https://cc.braunf.com/report.html) · [Evidence dossier](https://github.com/lumenworksco/_CalmWeb/blob/main/research/CalmCampus-Evidence-Dossier.pdf)
+[**cc.braunf.com**](https://cc.braunf.com/)
 
 <p align="center">
   <img src="design/mockups/screenshots/home.png" width="230" alt="Home screen mockup">
@@ -63,9 +63,6 @@ cd ios && xcodegen generate && open -a Xcode CalmCampus.xcodeproj
 # Run the unit tests (adjust the simulator name to one you have installed)
 xcodebuild test -project ios/CalmCampus.xcodeproj -scheme CalmCampus \
   -destination 'platform=iOS Simulator,name=iPhone 16'
-
-# Preview the website
-python3 -m http.server 3400 --directory docs
 ```
 
 The reframing model has its own setup, see [`ml/README.md`](ml/README.md).
