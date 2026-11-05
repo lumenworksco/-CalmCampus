@@ -6,7 +6,7 @@
 
 - `ios/` — the real iOS app (SwiftUI + SwiftData, XcodeGen). First feature: the adaptive daily check-in (`CalmCampus/Checkin/`): wording in `QuestionBank`, rules in `CheckinPlanner` (pure, unit-tested), answers stored as flat versioned rows (`Data/CheckinResponse`).
 - `spike/` — throwaway iOS feasibility spike (what sensor data iOS actually gives us). See `spike/README.md`.
-- `ml/` — fine-tuned on-device reframing model (data, MLX training, eval, `MODEL_CARD.md`). See `ml/README.md`; weights live on Hugging Face, not in git.
+- `ml/` — fine-tuned on-device reframing model (data, MLX training, eval, `MODEL_CARD.md`). See `ml/README.md`; weights live on Hugging Face ([CalmCampus](https://huggingface.co/CalmCampus)), not in git; `ml/publish_hf.py` publishes them. Downloading the public weights to run on the device is fine; sending user text to any inference API (including Hugging Face's) is not.
 - `design/mockups/` — HTML mockups of the app screens; `design/brand/` — app icon, palette.
 
 ## Commands
