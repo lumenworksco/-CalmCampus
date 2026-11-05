@@ -31,7 +31,7 @@ The project is being rebuilt as native apps: **SwiftUI on iOS first, then Kotlin
 |---|---|
 | Adaptive daily check-in (iOS) | Implemented, with unit-tested planner |
 | HealthKit sleep and step signals (iOS) | Implemented, behind a provider protocol so it can be tested without Apple Health data |
-| On-device reframing model | v0.1 research preview, see [`ml/`](ml/) |
+| On-device reframing model | v0.1 research preview, see [`ml/`](ml/); weights and data on [Hugging Face](https://huggingface.co/CalmCampus) |
 | Feasibility spike | Done, see [`spike/`](spike/) |
 | Pilot with KU Leuven students (TestFlight) | Planned |
 | Android app | Planned |

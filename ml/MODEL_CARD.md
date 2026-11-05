@@ -10,6 +10,8 @@ tags:
 - cbt
 - wellbeing
 - on-device
+datasets:
+- CalmCampus/calmcampus-reframe-data
 ---
 
 # CalmCampus Reframe 1.7B — v0.1 research preview
@@ -28,6 +30,16 @@ A small on-device model for the CalmCampus student wellbeing app. Given a studen
 | Runtime | `mlx-lm` (Python, Apple silicon) and `mlx-swift-lm` (iOS, `qwen3` architecture) |
 | Languages | English. Dutch was trained on but is **not usable** in this version (see Limitations) |
 
+## Related repositories
+
+| | |
+|---|---|
+| This model | 4-bit MLX, the file the app is designed to run and the one that was evaluated |
+| [CalmCampus/calmcampus-reframe-1.7b-bf16](https://huggingface.co/CalmCampus/calmcampus-reframe-1.7b-bf16) | The same model before quantisation (bfloat16), for converting or inspecting |
+| [CalmCampus/calmcampus-reframe-1.7b-lora](https://huggingface.co/CalmCampus/calmcampus-reframe-1.7b-lora) | The LoRA adapter on its own (67 MB) |
+| [CalmCampus/calmcampus-reframe-data](https://huggingface.co/datasets/CalmCampus/calmcampus-reframe-data) | The training, validation and held-out test data |
+| [Source code](https://github.com/lumenworksco/CalmCampus/tree/main/ml) | Training, evaluation and packaging scripts |
+
 ## Prompt contract
 
 Use exactly this system prompt, the Qwen chat template with **thinking disabled**, and greedy decoding. Anything else behaves like the untrained base model.
@@ -41,7 +53,7 @@ You are CalmCampus, a supportive companion for university students. The user sha
 
 ```python
 from mlx_lm import load, generate
-model, tok = load("iPwnds/calmcampus-reframe-1.7b-4bit")
+model, tok = load("CalmCampus/calmcampus-reframe-1.7b-4bit")
 messages = [{"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": "I failed my stats exam, so I'm going to fail the whole year."}]
 prompt = tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True, enable_thinking=False)
@@ -92,7 +104,7 @@ An independent crisis test set, written by someone outside the project and ideal
 
 ## Intended use
 
-Inside the CalmCampus app, on the student's own device, as an optional helper in a thought-reframing exercise. No user text leaves the device. It must not be used for diagnosis, crisis assessment, or as a replacement for professional support.
+Inside the CalmCampus app, on the student's own device, as an optional helper in a thought-reframing exercise. No user text leaves the device. The weights are public so that anyone can inspect exactly what is meant to run on a student's phone. It must not be used for diagnosis, crisis assessment, or as a replacement for professional support.
 
 ## License
 
