@@ -83,6 +83,7 @@ def main():
     ap.add_argument("--org", default="CalmCampus")
     ap.add_argument("--execute", action="store_true", help="create the repos and upload (default: dry run)")
     ap.add_argument("--verify", action="store_true", help="download from the Hub with an empty cache and run the model")
+    ap.add_argument("--only", nargs="+", metavar="NAME", help="upload only repos whose id ends with one of these (e.g. bf16 lora data); hashes of all repos are still compared")
     a = ap.parse_args()
     plan = repos(a.org)
 
@@ -110,6 +111,8 @@ def main():
         print(f"This login cannot write to {a.org}. Run `hf auth login` with a token that has write access to it."); return 1
 
     for r in plan:
+        if a.only and not any(r["id"].endswith(n) for n in a.only):
+            continue
         api.create_repo(r["id"], repo_type=r["type"], private=False, exist_ok=True)
         ops = [CommitOperationAdd(path_in_repo=d, path_or_fileobj=str(s)) for d, s in r["files"].items()]
         info = api.create_commit(r["id"], ops, repo_type=r["type"], commit_message=r["msg"])
