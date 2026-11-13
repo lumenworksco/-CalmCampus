@@ -58,8 +58,12 @@ function buildOne(id, out) {
   const hash = createHash("sha256");
   for (const f of files.sort()) hash.update(f).update(readFileSync(path.join(out, f)));
   const shell = ["./", ...files.map((f) => f)];
+  const build = hash.digest("hex").slice(0, 10);
   let sw = readFileSync(path.join(out, "sw.js"), "utf8");
-  sw = sw.replace("__ID__", id).replace("__BUILD__", hash.digest("hex").slice(0, 10)).replace("__SHELL__", JSON.stringify(shell));
+  sw = sw.replace("__ID__", id).replace("__BUILD__", build).replace("__SHELL__", JSON.stringify(shell));
+  // The version shown at the bottom of More, so a tester can tell which build a phone runs.
+  const indexPath = path.join(out, "index.html");
+  writeFileSync(indexPath, readFileSync(indexPath, "utf8").replace('<meta name="cc-university"', `<meta name="cc-build" content="${build.slice(0, 7)}">\n  <meta name="cc-university"`));
   writeFileSync(path.join(out, "sw.js"), sw);
   console.log(`built ${path.relative(root, out) || "."}  (${id}, ${files.length} files)`);
 }

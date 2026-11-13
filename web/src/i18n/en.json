@@ -103,7 +103,8 @@
     "deleteConfirm": "Delete everything on this phone?",
     "deleteYes": "Yes, delete",
     "deleteCancel": "Keep my data",
-    "deleted": "Done. Everything stored on this phone has been deleted."
+    "deleted": "Done. Everything stored on this phone has been deleted.",
+    "version": "Version {v}"
   },
   "signals": {
     "heading": "This week on your phone",

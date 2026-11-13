@@ -103,6 +103,7 @@
     "deleteConfirm": "Tout supprimer sur ce téléphone ?",
     "deleteYes": "Oui, supprimer",
     "deleteCancel": "Garder mes données",
+    "version": "Version {v}",
     "deleted": "C'est fait. Tout ce qui était stocké sur ce téléphone a été supprimé."
   },
   "signals": {

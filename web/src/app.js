@@ -10,7 +10,8 @@ import { SCENARIO_IDS, DEFAULT_SCENARIO, weekSignals, signalsFor, orderQuestions
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-const app = { config: null, store: null, lang: "en", ui: {}, answers: {}, confirmDelete: false, deleted: false, fellBack: false };
+const app = { config: null, store: null, lang: "en", ui: {}, answers: {}, confirmDelete: false, deleted: false, fellBack: false, screen: null, tabScroll: {} };
+const TABS = new Set(["home", "history", "more"]);
 
 const t = (key, vars) => translate(app.ui, key, { name: app.config?.name, ...vars });
 const L = (value) => loc(value, app.lang, app.config.defaultLanguage);
@@ -310,7 +311,8 @@ function viewMore() {
     ${demo}
     <div class="card stack"><h3>${esc(t("more.feedbackHeading"))}</h3><p class="small">${esc(t("more.feedbackBody"))}</p>
       <a class="btn sage" href="${esc(mail)}">${icon("mail", 20)}${esc(t("more.feedbackButton"))}</a></div>
-    ${del}</div>`;
+    ${del}
+    <p class="small version">${esc(t("more.version", { v: document.querySelector('meta[name="cc-build"]')?.content || "dev" }))}</p></div>`;
 }
 
 function viewPrivacy() {
@@ -354,6 +356,11 @@ function route(opts) {
   const inPlace = opts?.inPlace === true;
   const hash = location.hash.replace(/^#\/?/, "");
   const [name, arg] = hash.split("/");
+  // Remember where each tab was scrolled, so coming back to it (from Privacy, a
+  // result or a preview) lands where you left it instead of at the top.
+  if (!inPlace && TABS.has(app.screen)) app.tabScroll[app.screen] = window.scrollY;
+  const from = app.screen;
+  if (!inPlace) app.screen = name || "home";
   const view = $("view");
   let html = "", nav = "home";
   if (name === "check") {
@@ -377,7 +384,8 @@ function route(opts) {
   syncDock();
   if (!inPlace) {
     view.style.minHeight = "";
-    window.scrollTo(0, 0);
+    const back = TABS.has(app.screen) && from !== "check" && from !== app.screen ? app.tabScroll[app.screen] : 0;
+    window.scrollTo(0, back || 0);
     view.focus({ preventScroll: true });
   }
 }
