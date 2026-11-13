@@ -33,6 +33,7 @@ The project is being rebuilt as native apps: **SwiftUI on iOS first, then Kotlin
 | HealthKit sleep and step signals (iOS) | Implemented, behind a provider protocol so it can be tested without Apple Health data |
 | On-device reframing model | v0.1 research preview, see [`ml/`](ml/); weights and data on [Hugging Face](https://huggingface.co/CalmCampus) |
 | Feasibility spike | Done, see [`spike/`](spike/) |
+| Web preview for university reviewers (installable web app, one config per university, example phone data), see [`web/`](web/) | Implemented: the general version is on `main`, each university's version on its own branch |
 | Pilot with KU Leuven students (TestFlight) | Planned |
 | Android app | Planned |
 
@@ -47,6 +48,7 @@ The project is being rebuilt as native apps: **SwiftUI on iOS first, then Kotlin
 
 ```
 ios/            The iOS app (SwiftUI + SwiftData, XcodeGen project)
+web/            Reviewer preview as an installable web app (PWA), one config file per university
 spike/          iOS feasibility spike (XcodeGen project)
 ml/             On-device reframing model: data, training, evaluation, model card
 design/         HTML mockups of the app screens, app icon and palette
@@ -65,13 +67,19 @@ xcodebuild test -project ios/CalmCampus.xcodeproj -scheme CalmCampus \
   -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
+The web preview needs only Node 20+, see [`web/README.md`](web/README.md):
+
+```bash
+cd web && npm run check && npm test && npm run dev   # http://localhost:8080/
+```
+
 The reframing model has its own setup, see [`ml/README.md`](ml/README.md).
 
 ## Design principles
 
 - **All data stays on-device.** No cloud storage, analytics or accounts. Users can delete all their data at any time.
 - **On-device AI only** (Apple Foundation Models, MLX, Gemini Nano). User text is never sent to a cloud API.
-- **No synthetic data in the product.** Every signal is real, missing or unavailable, never fabricated.
+- **No synthetic data in the product.** Every signal is real, missing or unavailable, never fabricated. The one exception is the web reviewer preview, whose example weeks and phone data are always labelled Example.
 - **Light-touch check-ins.** A small question budget, every question skippable, and no clinical screeners or self-harm items.
 - **Wellness wording, not medical claims.** The app "supports", it does not "detect burnout".
 
@@ -81,8 +89,8 @@ Issues and pull requests are welcome, see [CONTRIBUTING.md](CONTRIBUTING.md) and
 
 ## Team
 
-- **Florian Braun**: Engineering Technology, UCLL
-- **Helene David**: Economics and Business, UCLL
+- **Florian Braun**: Engineering Technology
+- **Helene David**: Economics and Business
 
 ## License
 
