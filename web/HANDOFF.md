@@ -40,14 +40,15 @@ Team: Florian Braun and Helene David. CalmCampus is not medical: it does not dia
 
 ## Still to do
 
-1. **Deploy.** Not deployed, no public link yet. `cc.braunf.com` is GitHub Pages from `docs/` in the separate repo `lumenworksco/_CalmWeb` (local path `- PORTFOLIOS/CalmWeb`). That site has no analytics, no service worker and no worker route on `/epfl/`. Plan: `cd web && npm run build`, copy only `web/dist/epfl/` to `docs/epfl/` in that repo, commit, push, then open `https://cc.braunf.com/epfl/` (trailing slash). Do not copy all of `dist/`, it would overwrite the site root. Ask Florian before pushing.
-2. **Fill the TODOs in `web/config/universities/epfl.json`:** phone number and opening hours for both services (the epfl.ch pages give neither), and an approved EPFL logo (text placeholder now; do not copy from epfl.ch without permission). `npm run check` lists them as warnings.
-3. **EPFL review of product choices** (all mine, none reviewed by EPFL):
-   - Routing: 1-2 yes to Consultation sociale, 3-4 yes to the CHUV psychotherapeutic consultation. This is the most sensitive choice. It is one line per level in `levels`.
-   - A steady result points to the support list, not to a service.
-   - The four question wordings.
-   - French uses "tu"; EPFL's own pages mostly use "vous".
-4. **Re-verify EPFL details just before sending.** EPFL is restructuring and the pages sit under the Trust & Support Network.
+1. ~~Deploy.~~ **Done 2026-11-13.** Live at `https://cc.braunf.com/epfl/` (copied from `web/dist/epfl/` to `docs/epfl/` in `_CalmWeb`). To update: `npm run build`, `rsync -a --delete dist/epfl/ ../../_CalmWeb/docs/epfl/`, run `python3 scripts/check-site.py` there, commit, push.
+2. ~~Fill the TODOs in `epfl.json`.~~ **Done 2026-11-13.** Neither service publishes a phone number or opening hours (both are reached by email; the CHUV says students book directly). Checked the EPFL service pages, "in detail", Trust and Support Network, Student Services and the CHUV page; recorded as `notPublished`. The Student Services desk number (021 693 43 45) is deliberately not used. Added La Main Tendue's English line (0800 143 000, from EPFL's French social consultation page). Still open: the logo (text placeholder until EPFL gives permission). Worth asking Rodrigue whether his team wants a phone number or hours shown.
+3. **EPFL review of product choices.** Not reviewed by EPFL yet. Checked against EPFL's and CHUV's own pages on 2026-11-13 and kept as they are:
+   - Routing: 1-2 yes to Consultation sociale, 3-4 yes to the CHUV psychotherapeutic consultation. Kept: the CHUV page is for students whose study difficulties or low mood "put them in crisis" and lets them book directly; Consultation sociale presents itself as the first stop for stress, motivation, planning and isolation, and refers on. Still the most sensitive choice; one line per level in `levels`.
+   - A steady result points to the support list, not to a service. Kept: nothing on EPFL's pages suggests sending a student with no signs to one particular service.
+   - The four question wordings (sleep, planning, getting started, avoiding). Kept: they match the topics Consultation sociale lists.
+   - French uses "tu"; EPFL's pages use "vous" throughout (22 times on the social consultation page, never "tu"). Kept "tu" for now because `src/i18n/fr.json` is shared by every university; switching per university needs a register option in the code. Ask EPFL and AGEPoly.
+   Ask these four in the email to EPFL.
+4. ~~Re-verify EPFL details.~~ **Done 2026-11-13**: service emails (decoded from the page source), links, emergency numbers (115, 021 693 3000, SOS in the EPFL Campus app, 144, 0848 133 133, 143) all match their source pages. Repeat if the email goes out after about a week, since EPFL is restructuring these pages.
 5. **Test on real devices** (iPhone Safari and Android Chrome). So far only emulated sizes.
 6. **Email to EPFL.** The "What to test" text is below. The email text says install first from Safari, then use the app only from its icon, because Safari and the installed app have separate storage on iPhone.
 7. Optional, not requested: put the Playwright check script in the repo; add a language beyond FR/EN.
