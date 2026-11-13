@@ -1,8 +1,8 @@
 name: CI
 
 on:
+  # Every branch: main and each university's branch (<id>-web-demo) are checked.
   push:
-    branches: [main]
   pull_request:
 
 jobs:
@@ -24,7 +24,9 @@ jobs:
             -destination "platform=iOS Simulator,id=$SIM_ID" CODE_SIGNING_ALLOWED=NO
 
   web:
-    runs-on: ubuntu-latest
+    # Pinned: the Playwright version below supports Ubuntu 24.04, not the Ubuntu 26
+    # that ubuntu-latest moves to from October 2026.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
