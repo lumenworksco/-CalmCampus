@@ -2,6 +2,7 @@
   "id": "default",
   "name": "Your university",
   "logo": { "text": null, "image": null, "todo": "Optional. Set text or image to show the university next to CalmCampus." },
+  "preview": true,
   "defaultLanguage": "en",
   "languages": ["en", "fr"],
   "feedback": {

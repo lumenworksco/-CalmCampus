@@ -1,9 +1,23 @@
 {
-  "lang": { "name": "Français", "short": "FR", "switchTo": "Passer à l'anglais" },
+  "lang": {
+    "name": "Français",
+    "short": "FR",
+    "switchTo": "Passer à l'anglais",
+    "names": {
+      "en": "English",
+      "fr": "Français"
+    }
+  },
   "disclaimer": "Nous ne sommes pas des professionnel·les de santé. CalmCampus ne pose pas de diagnostic et ne soigne pas : l'application aide les étudiant·es à repérer les premiers signes et à trouver le bon soutien.",
-  "nav": { "home": "Accueil", "history": "Historique", "more": "Plus", "label": "Navigation principale" },
+  "nav": {
+    "home": "Accueil",
+    "history": "Mes semaines",
+    "support": "Soutien",
+    "about": "À propos",
+    "label": "Navigation principale"
+  },
   "demo": {
-    "label": "Données de démo",
+    "label": "Exemple",
     "banner": "Semaines et signaux inventés.",
     "exit": "Désactiver",
     "preview": "Voir chaque résultat",
@@ -82,17 +96,13 @@
     "chartLabel": "Signes remarqués chaque semaine, du plus ancien au plus récent",
     "trendHeading": "Tendance",
     "listHeading": "Semaine après semaine",
-    "open": "Ouvrir le résultat"
+    "open": "Ouvrir le résultat",
+    "examplesNote": "Les semaines précédentes sont des exemples, pour montrer à quoi ressemble l'historique après quelques semaines. Tes propres bilans s'y ajoutent."
   },
   "more": {
-    "title": "Plus",
     "supportHeading": "Soutien à {name}",
     "supportLead": "Ce sont de vrais services que tu peux contacter à tout moment. Pas besoin d'un résultat pour demander de l'aide.",
-    "emergencyHeading": "Numéros d'urgence",
     "languageHeading": "Langue",
-    "installHeading": "Ajouter à l'écran d'accueil",
-    "installIos": "iPhone : ouvre cette page dans Safari, touche Partager, puis Sur l'écran d'accueil. Utilise ensuite l'application depuis son icône.",
-    "installAndroid": "Android : dans Chrome, ouvre le menu et touche Installer l'application ou Ajouter à l'écran d'accueil.",
     "privacyLink": "Comment tes données sont traitées",
     "feedbackHeading": "Envoyer un retour",
     "feedbackBody": "Ouvre un e-mail à l'équipe CalmCampus. Aucune donnée n'est jointe automatiquement.",
@@ -104,16 +114,16 @@
     "deleteYes": "Oui, supprimer",
     "deleteCancel": "Garder mes données",
     "version": "Version {v}",
-    "deleted": "C'est fait. Tout ce qui était stocké sur ce téléphone a été supprimé."
+    "deleteDone": "C'est fait. Tout ce qui était stocké sur ce téléphone a été supprimé."
   },
   "signals": {
     "heading": "Cette semaine sur ton téléphone",
-    "simulated": "Simulé pour cette démo. L'application complète lit ces données sur le téléphone, depuis Santé et Temps d'écran sur iPhone ou Health Connect sur Android, et les compare à tes habitudes. Elles ne quittent jamais le téléphone.",
-    "scenarioLabel": "Semaine d'exemple",
+    "simulated": "Dans l'application complète, ces données viennent de la santé et du temps d'écran du téléphone, comparées à ta semaine habituelle. Ici, c'est un exemple.",
+    "scenarioLabel": "Essayer une autre semaine d'exemple",
     "scenarios": {
       "steady": "Semaine calme",
       "exams": "Semaine d'examens",
-      "heavy": "Semaine chargée"
+      "heavy": "Semaine difficile"
     },
     "names": {
       "sleep": "Sommeil",
@@ -125,7 +135,7 @@
       "lateScreen": "par nuit",
       "steps": "par jour"
     },
-    "usual": "D'habitude {value}",
+    "usual": "d'habitude {value}",
     "status": {
       "lower": "Moins que d'habitude",
       "higher": "Plus que d'habitude",
@@ -133,7 +143,6 @@
     },
     "hours": "{h} h {m}",
     "minutes": "{m} min",
-    "wearable": "Le sommeil demande une montre, une bague ou un horaire de sommeil sur le téléphone. Sans cela, l'application pose simplement la question.",
     "noticedHeading": "Ton téléphone a remarqué",
     "hint": {
       "sleep": "Environ {value} de sommeil par nuit, d'habitude {usual}.",
@@ -145,22 +154,107 @@
     "resultHeading": "Ce que ton téléphone a remarqué",
     "resultNone": "Rien d'inhabituel cette semaine pour le sommeil, le téléphone après minuit ou les pas.",
     "resultNote": "Les signaux du téléphone décident seulement de l'ordre des questions. Ton résultat vient uniquement de tes réponses.",
-    "dayLabel": "Chaque jour de la semaine, du lundi au dimanche"
+    "scenarioHint": "Les questions du bilan s'y adaptent."
   },
   "privacy": {
     "title": "Ta vie privée, en mots simples",
     "intro": "CalmCampus est conçu pour que tes réponses t'appartiennent, à toi seul·e.",
     "points": [
-      { "h": "Tes réponses restent sur ce téléphone", "p": "Elles sont enregistrées dans le stockage local de ton navigateur. Elles ne sont jamais envoyées à un serveur, à {name} ou à l'équipe CalmCampus." },
-      { "h": "Pas de compte, pas de suivi", "p": "Il n'y a ni inscription, ni statistiques, ni traceurs. Les polices et les icônes sont intégrées à l'application, qui n'appelle donc aucune autre entreprise." },
-      { "h": "Seulement le nécessaire", "p": "Nous gardons des réponses oui ou non et la semaine concernée. Ni nom, ni e-mail, ni position, ni texte libre." },
-      { "h": "Ce que l'hébergeur peut voir", "p": "Comme tout site web, l'hébergeur qui fournit les fichiers de l'application peut conserver des journaux techniques standard, comme l'heure et l'adresse de connexion. Ils ne contiennent jamais tes réponses, car elles ne quittent jamais ton téléphone." },
-      { "h": "Tu gardes le contrôle", "p": "Supprime tout à tout moment depuis l'onglet Plus. Effacer les données de ton navigateur a le même effet." },
-      { "h": "Le retour est ton choix", "p": "Envoyer un retour ouvre un brouillon d'e-mail. Rien n'y est joint et rien n'est envoyé tant que tu n'appuies pas toi-même sur envoyer." },
-      { "h": "Ceci est une démo pour relecture", "p": "Elle n'utilise aucune donnée réelle d'étudiant·e. En mode démo, les semaines et les signaux du téléphone affichés sont inventés et marqués Données de démo. Cette version web ne peut pas lire Santé ni Temps d'écran ; l'application complète le fait, uniquement sur le téléphone." }
+      {
+        "h": "Tes réponses restent sur ce téléphone",
+        "p": "Elles sont enregistrées dans le stockage local de ton navigateur. Elles ne sont jamais envoyées à un serveur, à {name} ou à l'équipe CalmCampus."
+      },
+      {
+        "h": "Pas de compte, pas de suivi",
+        "p": "Il n'y a ni inscription, ni statistiques, ni traceurs. Les polices et les icônes sont intégrées à l'application, qui n'appelle donc aucune autre entreprise."
+      },
+      {
+        "h": "Seulement le nécessaire",
+        "p": "Nous gardons des réponses oui ou non et la semaine concernée. Ni nom, ni e-mail, ni position, ni texte libre."
+      },
+      {
+        "h": "Ce que l'hébergeur peut voir",
+        "p": "Comme tout site web, l'hébergeur qui fournit les fichiers de l'application peut conserver des journaux techniques standard, comme l'heure et l'adresse de connexion. Ils ne contiennent jamais tes réponses, car elles ne quittent jamais ton téléphone."
+      },
+      {
+        "h": "Tu gardes le contrôle",
+        "p": "Efface tout à tout moment avec Recommencer, dans l'onglet À propos. Effacer les données de ton navigateur a le même effet."
+      },
+      {
+        "h": "Le retour est ton choix",
+        "p": "Envoyer un retour ouvre un brouillon d'e-mail. Rien n'y est joint et rien n'est envoyé tant que tu n'appuies pas toi-même sur envoyer."
+      },
+      {
+        "h": "Ceci est une démo pour relecture",
+        "p": "Elle n'utilise aucune donnée réelle d'étudiant·e. Les semaines précédentes et les données du téléphone affichées sont inventées et marquées Exemple. Cette version web ne peut pas lire Santé ni Temps d'écran ; l'application complète le fait, uniquement sur le téléphone."
+      }
     ],
     "principles": "Nous suivons les principes de conception de la nLPD suisse et du RGPD : minimisation des données, limitation des finalités, transparence et maîtrise par l'utilisateur. C'est une déclaration sur la conception de l'application. Ce n'est ni une certification ni un audit."
   },
-  "footer": { "privacy": "Confidentialité" },
-  "errors": { "config": "Cette université n'a pas pu être chargée. La configuration par défaut est affichée." }
+  "footer": {
+    "privacy": "Confidentialité"
+  },
+  "errors": {
+    "config": "Cette université n'a pas pu être chargée. La configuration par défaut est affichée."
+  },
+  "welcome": {
+    "title": "Bienvenue",
+    "lead": "Voici un aperçu de CalmCampus pour {name}. Essaie-le comme le ferait un·e étudiant·e. Cela prend environ cinq minutes.",
+    "points": [
+      "Réponds à quatre questions par oui ou non sur ta semaine. Moins d'une minute.",
+      "L'application tient aussi compte du sommeil, des pas et du téléphone tard le soir. Ici, ce sont des exemples, pas tes vraies données.",
+      "Rien de ce que tu saisis ne quitte ce téléphone."
+    ],
+    "installTitle": "D'abord, ajoute-la à ton écran d'accueil",
+    "installIos": "Dans Safari, touche le bouton Partager en bas de l'écran, puis Sur l'écran d'accueil. Ouvre ensuite CalmCampus depuis sa nouvelle icône.",
+    "installAndroid": "Dans Chrome, touche le menu à trois points, puis Ajouter à l'écran d'accueil ou Installer l'application. Ouvre ensuite CalmCampus depuis sa nouvelle icône.",
+    "start": "Commencer",
+    "later": "Tu retrouveras tout cela sous À propos."
+  },
+  "preview": {
+    "strip": "Aperçu avec des données d'exemple",
+    "about": "À propos"
+  },
+  "about": {
+    "title": "À propos de cet aperçu",
+    "intro": "CalmCampus aide les étudiant·es à repérer tôt les signes de stress et à trouver le bon soutien à {name}. Cet aperçu montre comment l'application fonctionnerait. Les semaines passées et les données du téléphone sont des exemples. Tes propres réponses restent sur ce téléphone.",
+    "tryHeading": "À essayer",
+    "try": [
+      {
+        "h": "Faire le bilan de la semaine",
+        "p": "Quatre questions par oui ou non. Moins d'une minute."
+      },
+      {
+        "h": "Essayer une autre semaine d'exemple",
+        "p": "Choisis-en une sur l'accueil, puis refais le bilan. Les questions s'adaptent."
+      },
+      {
+        "h": "Voir tous les résultats possibles",
+        "p": "Et le service de {name} que chacun propose."
+      },
+      {
+        "h": "Regarder l'onglet Soutien",
+        "p": "Les vrais services et numéros d'urgence qu'un·e étudiant·e verrait."
+      },
+      {
+        "h": "Nous dire ce que tu en penses",
+        "p": "Ouvre un e-mail à l'équipe CalmCampus."
+      }
+    ],
+    "startOverHeading": "Recommencer",
+    "startOverBody": "Efface tes réponses sur ce téléphone et remet les semaines d'exemple.",
+    "startOverButton": "Recommencer",
+    "startOverConfirm": "Effacer tes réponses et recommencer ?",
+    "startOverYes": "Oui, recommencer",
+    "startOverCancel": "Annuler",
+    "startOverDone": "C'est fait. Tu recommences."
+  },
+  "results": {
+    "title": "Tous les résultats possibles",
+    "lead": "Le résultat dépend uniquement du nombre de questions auxquelles on répond oui. Chaque résultat propose une prochaine étape. Touche un résultat pour le voir comme un·e étudiant·e.",
+    "yes": "Réponses oui : {range} sur {total}",
+    "suggests": "Propose : {target}",
+    "supportList": "la liste des soutiens",
+    "back": "Tous les résultats"
+  }
 }

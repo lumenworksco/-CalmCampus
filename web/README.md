@@ -17,7 +17,7 @@ No dependencies are needed to build or run. Playwright is only used by `scripts/
 ## Choosing a university
 
 - Folder: `dist/epfl/` opens EPFL, `dist/` opens the default setup.
-- URL: `?u=epfl` on any folder overrides it. `?lang=en` or `?lang=fr` picks the language, `?demo=1` turns on demo mode, `?demo=0` turns it off.
+- URL: `?u=epfl` on any folder overrides it. `?lang=en` or `?lang=fr` picks the language, `?demo=1` turns on demo mode, `?demo=0` turns it off (only for universities without `"preview": true`; a preview build always shows the examples).
 - Build one only: `node scripts/build.mjs --only epfl`
 
 ## How to add a university in 15 minutes

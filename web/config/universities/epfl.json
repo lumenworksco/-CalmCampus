@@ -6,6 +6,7 @@
     "image": null,
     "todo": "Text placeholder on purpose. Add an approved logo file only with EPFL's permission."
   },
+  "preview": true,
   "defaultLanguage": "fr",
   "languages": ["fr", "en"],
   "feedback": {

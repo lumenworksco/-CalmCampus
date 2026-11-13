@@ -31,7 +31,7 @@ Team: Florian Braun and Helene David. CalmCampus is not medical: it does not dia
 - Selecting a university: folder (`dist/epfl/`) or `?u=epfl`. Language: browser language, FR/EN button, or `?lang=`.
 - Weekly check-in: four yes/no questions in config (localised), result screen with one next step from config, the required disclaimer always visible, and an emergency block on every result.
 - Privacy: answers only in `localStorage` (keys start with `cc:`), "Delete my data", privacy screen in plain words ("design principles", not "certified"), no third-party requests (fonts and Lucide icons bundled, CSP `connect-src 'self'`).
-- Demo mode (`?demo=1` or More > Demo mode): six made-up weeks covering every level, labelled "Demo data", stored under a separate key, "Preview every result". Per-university flag.
+- Reviewer preview (`"preview": true` in the config, on for EPFL and default): a welcome screen on first open (what this is, language, how to install), example weeks and example phone data always on and labelled Example, four tabs (Home, My weeks, Support, About). About has "Things to try", "See every possible result" (each level, its yes-count range and the service it suggests) and Start over. Without the flag the older Demo mode toggle is used.
 - Simulated phone signals (demo mode only, `src/lib/signals.js`): a "This week on your phone" card with sleep, phone use after midnight and steps against the student's usual, three example weeks (calm, exam, heavy). Questions with a notable signal come first and show what the phone noticed; the result lists it too. Signals never answer a question or change the level; the result comes from the answers alone. Which signal belongs to which question is `signals` on each question in the config. A browser cannot read Apple Health or Screen Time, so the web version only simulates; the native iOS app reads sleep and steps for real (`ios/CalmCampus/Sensing/`).
 - "Send feedback": mailto to contact@calm.braunf.com, subject from config, nothing attached.
 - Brand: cream/sand/terracotta/sage/ink, Caprasimo and Figtree, Lucide icons at stroke 2.75. Text accents use darker tints (`--terracotta-deep`, `--sage-deep`) for contrast.
@@ -56,11 +56,12 @@ Team: Florian Braun and Helene David. CalmCampus is not medical: it does not dia
 
 ## What to test (paste into the email)
 
-1. Install from Safari (iPhone) or Chrome (Android) via Add to Home Screen, then open the app only from its icon.
-2. Do the weekly check-in: four yes/no questions, under a minute.
-3. Go to More > Demo mode > Turn on. Use "Preview every result" to see all four levels and the next step each one suggests.
-4. Switch between FR and EN. Does the wording feel kind and clear, and is the next step the right one for the level?
-5. Send feedback from More (opens an email draft, nothing attached). Delete my data wipes everything on the phone.
+1. Open https://cc.braunf.com/epfl/ in Safari (iPhone) or Chrome (Android). The first screen explains how to add it to the home screen. After that, open it only from its icon.
+2. Tap Start, then follow "Things to try" in the About tab. It covers everything below and takes about five minutes.
+3. Do the weekly check-in: four yes or no questions. The example phone data (sleep, steps, late phone use) decides which question comes first and shows what the phone noticed.
+4. On Home, pick another example week (calm, exams, difficult) and do the check-in again to see the questions adapt.
+5. About > See every possible result: each result, how many yes answers lead to it, and which service it suggests. Does each next step feel right?
+6. Switch between Français and English. Send feedback from About (opens an email draft, nothing attached). Start over clears your answers.
 
 ## Known limitations
 

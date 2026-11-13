@@ -1,9 +1,23 @@
 {
-  "lang": { "name": "English", "short": "EN", "switchTo": "Switch to French" },
+  "lang": {
+    "name": "English",
+    "short": "EN",
+    "switchTo": "Switch to French",
+    "names": {
+      "en": "English",
+      "fr": "Français"
+    }
+  },
   "disclaimer": "We are not medical professionals. CalmCampus does not diagnose or treat; it helps students notice early signs and reach the right support.",
-  "nav": { "home": "Home", "history": "History", "more": "More", "label": "Main navigation" },
+  "nav": {
+    "home": "Home",
+    "history": "My weeks",
+    "support": "Support",
+    "about": "About",
+    "label": "Main navigation"
+  },
   "demo": {
-    "label": "Demo data",
+    "label": "Example",
     "banner": "Made-up weeks and phone signals.",
     "exit": "Turn off",
     "preview": "Preview every result",
@@ -82,17 +96,13 @@
     "chartLabel": "Signs noticed each week, from oldest to newest",
     "trendHeading": "Trend",
     "listHeading": "Week by week",
-    "open": "Open result"
+    "open": "Open result",
+    "examplesNote": "The earlier weeks are examples, so you can see how the history looks after a few weeks. Your own check-ins are added to them."
   },
   "more": {
-    "title": "More",
     "supportHeading": "Support at {name}",
     "supportLead": "These are real services you can contact any time. You do not need a result to reach out.",
-    "emergencyHeading": "Emergency numbers",
     "languageHeading": "Language",
-    "installHeading": "Add to your home screen",
-    "installIos": "iPhone: open this page in Safari, tap Share, then Add to Home Screen. Use the app from its icon afterwards.",
-    "installAndroid": "Android: in Chrome, open the menu and tap Install app or Add to Home screen.",
     "privacyLink": "How your data is handled",
     "feedbackHeading": "Send feedback",
     "feedbackBody": "Opens an email to the CalmCampus team. No data is attached automatically.",
@@ -103,17 +113,17 @@
     "deleteConfirm": "Delete everything on this phone?",
     "deleteYes": "Yes, delete",
     "deleteCancel": "Keep my data",
-    "deleted": "Done. Everything stored on this phone has been deleted.",
-    "version": "Version {v}"
+    "version": "Version {v}",
+    "deleteDone": "Done. Everything stored on this phone has been deleted."
   },
   "signals": {
     "heading": "This week on your phone",
-    "simulated": "Simulated for this demo. The full app reads these on the phone, from Apple Health and Screen Time on iPhone or Health Connect on Android, and compares them with your own usual. They never leave the phone.",
-    "scenarioLabel": "Example week",
+    "simulated": "In the full app this comes from the phone's own health and screen time data, compared with your usual week. Here it is an example.",
+    "scenarioLabel": "Try another example week",
     "scenarios": {
       "steady": "Calm week",
       "exams": "Exam week",
-      "heavy": "Heavy week"
+      "heavy": "Difficult week"
     },
     "names": {
       "sleep": "Sleep",
@@ -125,7 +135,7 @@
       "lateScreen": "a night",
       "steps": "a day"
     },
-    "usual": "Usually {value}",
+    "usual": "usually {value}",
     "status": {
       "lower": "Less than usual",
       "higher": "More than usual",
@@ -133,7 +143,6 @@
     },
     "hours": "{h} h {m} min",
     "minutes": "{m} min",
-    "wearable": "Sleep needs a watch, a ring or a sleep schedule on the phone. Without one, the app simply asks.",
     "noticedHeading": "Your phone noticed",
     "hint": {
       "sleep": "About {value} of sleep a night, usually {usual}.",
@@ -145,22 +154,107 @@
     "resultHeading": "What your phone noticed",
     "resultNone": "Nothing unusual in sleep, late phone use or steps this week.",
     "resultNote": "Phone signals only decide which questions come first. Your result comes from your answers alone.",
-    "dayLabel": "Each day this week, Monday to Sunday"
+    "scenarioHint": "The check-in questions adapt to it."
   },
   "privacy": {
     "title": "Your privacy, in plain words",
     "intro": "CalmCampus is built so that your answers belong to you and nobody else.",
     "points": [
-      { "h": "Your answers stay on this phone", "p": "They are saved in your browser's local storage. They are never sent to a server, to {name}, or to the CalmCampus team." },
-      { "h": "No account, no tracking", "p": "There is no sign-up, no analytics and no trackers. Fonts and icons are bundled in the app, so it makes no calls to other companies." },
-      { "h": "Only what is needed", "p": "We keep yes or no answers and the week they belong to. No name, email, location or free text." },
-      { "h": "What the website host can see", "p": "Like any website, the host that delivers the app files may keep standard technical logs, such as a connection time and address. They never contain your answers, because your answers never leave your phone." },
-      { "h": "You are in control", "p": "Delete everything at any time from the More tab. Clearing your browser data does the same." },
-      { "h": "Feedback is your choice", "p": "Send feedback opens an email draft. Nothing is attached, and nothing is sent until you press send yourself." },
-      { "h": "This is a reviewer demo", "p": "It uses no real student data. In demo mode, the weeks and the phone signals you see are made up and labelled Demo data. This web version cannot read Apple Health or Screen Time; the full app does, on the phone only." }
+      {
+        "h": "Your answers stay on this phone",
+        "p": "They are saved in your browser's local storage. They are never sent to a server, to {name}, or to the CalmCampus team."
+      },
+      {
+        "h": "No account, no tracking",
+        "p": "There is no sign-up, no analytics and no trackers. Fonts and icons are bundled in the app, so it makes no calls to other companies."
+      },
+      {
+        "h": "Only what is needed",
+        "p": "We keep yes or no answers and the week they belong to. No name, email, location or free text."
+      },
+      {
+        "h": "What the website host can see",
+        "p": "Like any website, the host that delivers the app files may keep standard technical logs, such as a connection time and address. They never contain your answers, because your answers never leave your phone."
+      },
+      {
+        "h": "You are in control",
+        "p": "Clear everything at any time with Start over in the About tab. Clearing your browser data does the same."
+      },
+      {
+        "h": "Feedback is your choice",
+        "p": "Send feedback opens an email draft. Nothing is attached, and nothing is sent until you press send yourself."
+      },
+      {
+        "h": "This is a reviewer demo",
+        "p": "It uses no real student data. The earlier weeks and the phone data you see are made up and labelled Example. This web version cannot read Apple Health or Screen Time; the full app does, on the phone only."
+      }
     ],
     "principles": "We follow the design principles of the Swiss nLPD and the GDPR: data minimisation, purpose limitation, transparency and user control. This is a statement of how the app is designed. It is not a certification or an audit."
   },
-  "footer": { "privacy": "Privacy" },
-  "errors": { "config": "This university could not be loaded. Showing the default setup instead." }
+  "footer": {
+    "privacy": "Privacy"
+  },
+  "errors": {
+    "config": "This university could not be loaded. Showing the default setup instead."
+  },
+  "welcome": {
+    "title": "Welcome",
+    "lead": "This is a preview of CalmCampus for {name}. Try it the way a student would. It takes about five minutes.",
+    "points": [
+      "Answer four yes or no questions about your week. It takes under a minute.",
+      "The app also looks at sleep, steps and late phone use. Here these are examples, not your real data.",
+      "Nothing you enter leaves this phone."
+    ],
+    "installTitle": "First, add it to your home screen",
+    "installIos": "In Safari, tap the Share button at the bottom of the screen, then Add to Home Screen. Then open CalmCampus from its new icon.",
+    "installAndroid": "In Chrome, tap the menu with three dots, then Add to Home screen or Install app. Then open CalmCampus from its new icon.",
+    "start": "Start",
+    "later": "You can find all of this again under About."
+  },
+  "preview": {
+    "strip": "Preview with example data",
+    "about": "About"
+  },
+  "about": {
+    "title": "About this preview",
+    "intro": "CalmCampus helps students notice early signs of stress and find the right support at {name}. This preview shows how it would work. The past weeks and the phone data are examples. Your own answers stay on this phone.",
+    "tryHeading": "Things to try",
+    "try": [
+      {
+        "h": "Do this week's check-in",
+        "p": "Four yes or no questions. Under a minute."
+      },
+      {
+        "h": "Try another example week",
+        "p": "Pick one on Home, then do the check-in again. The questions adapt."
+      },
+      {
+        "h": "See every possible result",
+        "p": "And which {name} service each one suggests."
+      },
+      {
+        "h": "Look at the Support tab",
+        "p": "The real services and emergency numbers a student would see."
+      },
+      {
+        "h": "Tell us what you think",
+        "p": "Opens an email to the CalmCampus team."
+      }
+    ],
+    "startOverHeading": "Start over",
+    "startOverBody": "Clears your answers on this phone and brings back the example weeks.",
+    "startOverButton": "Start over",
+    "startOverConfirm": "Clear your answers and start over?",
+    "startOverYes": "Yes, start over",
+    "startOverCancel": "Cancel",
+    "startOverDone": "Done. You are starting over."
+  },
+  "results": {
+    "title": "Every possible result",
+    "lead": "The result depends only on how many of the four questions are answered yes. Each result suggests one next step. Tap one to see it as a student would.",
+    "yes": "Yes answers: {range} of {total}",
+    "suggests": "Suggests: {target}",
+    "supportList": "the list of support options",
+    "back": "All results"
+  }
 }

@@ -19,6 +19,7 @@ export function createStore(storage, universityId) {
   const demoFlag = `${PREFIX}${universityId}:demoOn`;
   const scenarioKey = `${PREFIX}${universityId}:demoScenario`;
   const langKey = `${PREFIX}lang`;
+  const welcomeKey = `${PREFIX}${universityId}:welcomed`;
 
   const read = (k) => {
     try { const v = JSON.parse(safe.get(k) ?? "[]"); return Array.isArray(v) ? v : []; }
@@ -46,6 +47,8 @@ export function createStore(storage, universityId) {
       const next = read(key).filter((e) => e.week !== entry.week).concat(entry);
       safe.set(key, JSON.stringify(next));
     },
+    isWelcomed: () => safe.get(welcomeKey) === "1",
+    setWelcomed: () => safe.set(welcomeKey, "1"),
     getLang: () => safe.get(langKey),
     setLang: (l) => safe.set(langKey, l),
     /** Delete every key this app wrote, for every university on this origin. */
