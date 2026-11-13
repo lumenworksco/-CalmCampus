@@ -237,7 +237,10 @@ function viewPrivacy() {
 
 /* ---------- Routing and events ---------- */
 
-function route() {
+// `keep`: re-render in place (no jump to the top) and focus the element matching this
+// selector. Used for the delete steps, which sit at the bottom of a long page.
+function route(opts) {
+  const keep = typeof opts?.focus === "string" ? opts.focus : null;
   const hash = location.hash.replace(/^#\/?/, "");
   const [name, arg] = hash.split("/");
   const view = $("view");
@@ -260,8 +263,15 @@ function route() {
   view.innerHTML = html;
   renderNav(nav);
   syncDock();
-  window.scrollTo(0, 0);
-  view.focus({ preventScroll: true });
+  const target = keep && view.querySelector(keep);
+  if (target) {
+    target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: true });
+    target.scrollIntoView({ block: "center" });
+  } else {
+    window.scrollTo(0, 0);
+    view.focus({ preventScroll: true });
+  }
 }
 
 function onClick(ev) {
@@ -294,7 +304,7 @@ function onClick(ev) {
       app.answers = {};
       renderShell();
     }
-    route();
+    route({ focus: app.deleted ? '[role="status"]' : app.confirmDelete ? '[role="alertdialog"]' : '[data-delete="ask"]' });
   }
 }
 

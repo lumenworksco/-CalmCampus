@@ -32,7 +32,7 @@ Team: Florian Braun and Helene David. CalmCampus is not medical: it does not dia
 - Weekly check-in: four yes/no questions in config (localised), result screen with one next step from config, the required disclaimer always visible, and an emergency block on every result.
 - Privacy: answers only in `localStorage` (keys start with `cc:`), "Delete my data", privacy screen in plain words ("design principles", not "certified"), no third-party requests (fonts and Lucide icons bundled, CSP `connect-src 'self'`).
 - Demo mode (`?demo=1` or More > Demo mode): six made-up weeks covering every level, labelled "Demo data", stored under a separate key, "Preview every result". Per-university flag.
-- "Send feedback": mailto to florian@calm.braunf.com, subject from config, nothing attached.
+- "Send feedback": mailto to contact@calm.braunf.com, subject from config, nothing attached.
 - Brand: cream/sand/terracotta/sage/ink, Caprasimo and Figtree, Lucide icons at stroke 2.75. Text accents use darker tints (`--terracotta-deep`, `--sage-deep`) for contrast.
 - PWA: per-folder manifest and service worker, offline shell, icons. Caches are prefixed per university so folders do not delete each other's caches.
 - Checks: `npm run check` (FR/EN parity, placeholders, references, contact formats, voice lint), `npm test` (12 tests), `npm run build`. Also run end to end in emulated iPhone SE, iPhone 14 (WebKit) and Pixel 7 (Chromium) with Playwright. That script is not in the repo; it covered check-in, language switch, delete, demo, every preview level, offline, `?u=`, no external hosts, no horizontal overflow.
