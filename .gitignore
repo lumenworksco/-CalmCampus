@@ -35,3 +35,8 @@ ml/runs/
 # Python
 __pycache__/
 *.pyc
+
+# Web demo build output
+web/dist/
+web/node_modules/
+web/package-lock.json
