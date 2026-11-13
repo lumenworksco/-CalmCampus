@@ -4,7 +4,7 @@
   "nav": { "home": "Accueil", "history": "Historique", "more": "Plus", "label": "Navigation principale" },
   "demo": {
     "label": "Données de démo",
-    "banner": "Ces semaines et ces signaux du téléphone sont inventés pour te permettre d'explorer l'application.",
+    "banner": "Semaines et signaux inventés.",
     "exit": "Désactiver",
     "preview": "Voir chaque résultat",
     "previewHint": "Ouvre un exemple de résultat pour chaque niveau.",

@@ -91,11 +91,11 @@ main { flex: 1; padding: 8px 20px calc(var(--dock-h) + 24px); outline: none; }
 /* Demo banner */
 #demo-banner:empty { display: none; }
 .demo-banner {
-  display: flex; align-items: center; gap: 12px; margin: 4px 20px 0; padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px; margin: 0 20px; padding: 6px 8px 6px 14px;
   border-radius: var(--radius-sm); background: var(--ink); color: var(--cream); font-size: 14px;
 }
 .demo-banner button {
-  margin-left: auto; min-height: 36px; padding: 0 14px; border-radius: 999px; border: 2px solid var(--cream);
+  margin-left: auto; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 2px solid var(--cream);
   background: transparent; color: var(--cream); font: 700 13px var(--font-body); cursor: pointer; white-space: nowrap;
 }
 
@@ -105,7 +105,9 @@ main { flex: 1; padding: 8px 20px calc(var(--dock-h) + 24px); outline: none; }
 .progress i.on { background: var(--sage); }
 .question { font-family: var(--font-head); font-size: 28px; line-height: 1.2; }
 .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.answers .btn { min-height: 72px; font-size: 20px; }
+.answers .btn { min-height: 64px; font-size: 20px; }
+.actions-bar:empty { display: none; }
+.actions-bar { padding: 12px 20px 4px; }
 .answers .btn.picked { background: var(--sage); border-color: var(--ink); }
 
 /* Result */
@@ -148,7 +150,7 @@ main { flex: 1; padding: 8px 20px calc(var(--dock-h) + 24px); outline: none; }
 .hint .you { color: var(--ink-soft); font-size: 14px; }
 
 /* History */
-.chart { display: flex; align-items: flex-end; gap: 10px; height: 130px; padding-top: 8px; }
+.chart { display: flex; align-items: flex-end; gap: 6px; height: 130px; padding-top: 8px; }
 .chart .col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 6px; }
 .chart .bar { width: 100%; max-width: 44px; border-radius: 12px 12px 6px 6px; background: var(--sage); min-height: 6px; }
 .chart .bar.l-notice { background: #B9A45C; }
@@ -189,11 +191,14 @@ main { flex: 1; padding: 8px 20px calc(var(--dock-h) + 24px); outline: none; }
 .nav a[aria-current="page"] { color: var(--ink); background: var(--sand); }
 
 
-@media (max-width: 360px) {
+@media (max-width: 380px) {
   .top { padding-left: 14px; padding-right: 14px; }
   .wordmark { font-size: 19px; }
   .lang { padding: 0 10px; }
   main { padding-left: 14px; padding-right: 14px; }
   h1 { font-size: 26px; }
   .question { font-size: 24px; }
+  .actions-bar { padding-left: 14px; padding-right: 14px; }
+  .disclaimer { padding-left: 14px; padding-right: 14px; font-size: 11.5px; }
+  .demo-banner { margin: 0 14px; }
 }

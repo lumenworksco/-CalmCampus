@@ -40,7 +40,11 @@ function renderShell() {
   $("demo-banner").innerHTML = app.store.isDemo()
     ? `<div class="demo-banner" role="status">${icon("flask-conical", 18)}<span><strong>${esc(t("demo.label"))}.</strong> ${esc(t("demo.banner"))}</span><button id="demo-exit">${esc(t("demo.exit"))}</button></div>`
     : "";
-  $("demo-exit")?.addEventListener("click", () => { app.store.setDemo(false); location.hash = "#/"; route(); });
+  $("demo-exit")?.addEventListener("click", () => {
+    app.store.setDemo(false);
+    renderShell();
+    if (location.hash && location.hash !== "#/") location.hash = "#/"; else route();
+  });
 }
 
 function renderNav(active) {
@@ -57,12 +61,11 @@ function syncDock() {
   document.documentElement.style.setProperty("--dock-h", `${h}px`);
 }
 
-async function setLang(lang) {
+async function setLang(lang, fromEl = null, focusSel = null) {
   app.lang = lang;
   app.store.setLang(lang);
   app.ui = await loadUi(lang);
-  renderShell();
-  route();
+  refresh(fromEl, focusSel, renderShell);
 }
 
 /* ---------- Views ---------- */
@@ -78,7 +81,7 @@ function demoTag() {
 }
 
 function previewList() {
-  return `<div class="card stack"><div><h3>${esc(t("demo.preview"))}</h3><p class="small">${esc(t("demo.previewHint"))}</p></div>
+  return `<div class="card stack" data-keep="preview"><div><h3>${esc(t("demo.preview"))}</h3><p class="small">${esc(t("demo.previewHint"))}</p></div>
     <div class="row wrap">${app.config.levels.map((lv) => `<a class="pill ${esc(lv.id)}" href="#/preview/${esc(lv.id)}" style="min-height:44px;text-decoration:none">${esc(t(`result.levels.${lv.id}.pill`))}</a>`).join("")}</div></div>`;
 }
 
@@ -119,7 +122,7 @@ function signalsCard() {
       <p class="small"><strong class="val">${esc(fmtSignal(s.id, s.mean))}</strong> ${esc(t(`signals.per.${s.id}`))}. <span class="nowrap"><span class="usual-key" aria-hidden="true"></span>${esc(t("signals.usual", { value: fmtSignal(s.id, s.usual) }))}</span></p>
       <div class="sig-bars" role="img" aria-label="${esc(t("signals.dayLabel"))}: ${esc(s.days.map((d) => fmtSignal(s.id, d)).join(", "))}">${bars}<span class="usual" style="bottom:${((s.usual / max) * 100).toFixed(1)}%"></span></div></li>`;
   }).join("");
-  return `<section class="card stack signals" aria-labelledby="sig-h">
+  return `<section class="card stack signals" data-keep="signals" aria-labelledby="sig-h">
     <div class="row wrap"><h2 id="sig-h" class="grow">${esc(t("signals.heading"))}</h2>${demoTag()}</div>
     <p class="small">${esc(t("signals.simulated"))}</p>
     <div><p class="small"><strong>${esc(t("signals.scenarioLabel"))}</strong></p>${seg}</div>
@@ -160,8 +163,8 @@ function viewHome() {
   return `<div class="stack">
     ${app.fellBack ? `<p class="card small" role="status">${esc(t("errors.config"))}</p>` : ""}
     <div><p class="small">${esc(t("home.greeting"))}</p><h1>${esc(t("home.title"))}</h1></div>
-    <p class="lead">${esc(t("home.lead"))}</p>
     ${done}
+    <p class="lead">${esc(t("home.lead"))}</p>
     ${signalsCard()}
     <p class="small row">${icon("shield-check", 18)}<span>${esc(t("home.stays"))}</span></p>
     ${app.store.isDemo() ? previewList() : ""}
@@ -172,7 +175,6 @@ function viewCheck(n) {
   const qs = questionsInOrder();
   if (!(n >= 0 && n < qs.length)) { location.hash = "#/"; return ""; }
   const q = qs[n];
-  const picked = app.answers[q.id];
   const dots = qs.map((_, i) => `<i class="${i <= n ? "on" : ""}"></i>`).join("");
   return `<div class="stack">
     <div class="row"><a class="btn ghost sm" href="${n === 0 ? "#/" : `#/check/${n - 1}`}">${icon("arrow-left", 18)}${esc(t("checkin.back"))}</a>
@@ -180,11 +182,18 @@ function viewCheck(n) {
     <div class="progress" aria-hidden="true">${dots}</div>
     <p class="small">${esc(t("checkin.heading"))}</p>
     <h1 class="question" id="q">${esc(L(q.text))}</h1>
-    ${checkContext(q)}
-    <div class="answers" role="group" aria-labelledby="q">
+    ${checkContext(q)}</div>`;
+}
+
+/** Yes and No sit in the bottom dock during the check-in, so they are always in reach. */
+function checkAnswers(n) {
+  const q = questionsInOrder()[n];
+  if (!q) return "";
+  const picked = app.answers[q.id];
+  return `<div class="answers" role="group" aria-labelledby="q">
       <button class="btn ${picked === true ? "picked" : ""}" data-answer="yes">${esc(t("checkin.yes"))}</button>
       <button class="btn ${picked === false ? "picked" : ""}" data-answer="no">${esc(t("checkin.no"))}</button>
-    </div></div>`;
+    </div>`;
 }
 
 function serviceCard(id, { actions = true } = {}) {
@@ -250,6 +259,10 @@ function fmtDate(iso) {
 
 /** Weeks are labelled by their Monday, whichever day the check-in was done. */
 function fmtWeek(e) { return fmtDate(weekStart(new Date(`${e.date}T12:00:00`))); }
+/** Compact label for the chart, for example 28/9 or 9/28 depending on the language. */
+function fmtShort(e) {
+  return new Date(`${weekStart(new Date(`${e.date}T12:00:00`))}T12:00:00`).toLocaleDateString(app.lang, { day: "numeric", month: "numeric" });
+}
 
 function viewHistory() {
   const entries = app.store.entries();
@@ -258,7 +271,7 @@ function viewHistory() {
   }
   const total = app.config.questions.length;
   const rows = entries.map((e) => ({ e, r: resultFor(app.config, e.answers) }));
-  const chart = rows.map(({ e, r }) => `<div class="col"><div class="bar l-${esc(r.level.id)}" style="height:${Math.max(4, (r.yes / total) * 100)}%"></div><span class="lab">${esc(fmtWeek(e))}</span></div>`).join("");
+  const chart = rows.map(({ e, r }) => `<div class="col"><div class="bar l-${esc(r.level.id)}" style="height:${Math.max(4, (r.yes / total) * 100)}%"></div><span class="lab">${esc(fmtShort(e))}</span></div>`).join("");
   const list = [...rows].reverse().map(({ e, r }) => `<li><a href="#/result/${esc(e.week)}" aria-label="${esc(t("history.open"))}: ${esc(t("history.weekOf", { date: fmtWeek(e) }))}">
       <span class="grow"><strong>${esc(t("history.weekOf", { date: fmtWeek(e) }))}</strong><br><span class="small">${esc(t("history.signs", { n: r.yes, total }))}</span></span>${pillFor(r.level)}${icon("arrow-right", 18)}</a></li>`).join("");
   return `<div class="stack"><div class="row wrap"><h1>${esc(t("history.title"))}</h1>${demoTag()}</div>
@@ -269,19 +282,19 @@ function viewHistory() {
 function viewMore() {
   const c = app.config;
   const langs = c.languages.length > 1
-    ? `<div class="seg" role="group" aria-label="${esc(t("more.languageHeading"))}">${c.languages.map((l) => `<button class="btn ${l === app.lang ? "sage" : "ghost"} sm" data-lang="${l}" lang="${l}" ${l === app.lang ? 'aria-pressed="true"' : 'aria-pressed="false"'}>${esc(l.toUpperCase())}</button>`).join("")}</div>` : "";
+    ? `<div class="seg" data-keep="lang" role="group" aria-label="${esc(t("more.languageHeading"))}">${c.languages.map((l) => `<button class="btn ${l === app.lang ? "sage" : "ghost"} sm" data-lang="${l}" lang="${l}" ${l === app.lang ? 'aria-pressed="true"' : 'aria-pressed="false"'}>${esc(l.toUpperCase())}</button>`).join("")}</div>` : "";
   const demo = app.store.isDemo()
-    ? `<div class="card stack"><h3>${esc(t("demo.toggleTitle"))}</h3><p class="small">${esc(t("demo.toggleOn"))}</p>
+    ? `<div class="card stack" data-keep="demo"><h3>${esc(t("demo.toggleTitle"))}</h3><p class="small">${esc(t("demo.toggleOn"))}</p>
         <button class="btn ghost" data-demo="off">${esc(t("demo.turnOff"))}</button></div>${previewList()}`
-    : `<div class="card stack"><h3>${esc(t("demo.toggleTitle"))}</h3><p class="small">${esc(t("demo.toggleOff"))}</p>
+    : `<div class="card stack" data-keep="demo"><h3>${esc(t("demo.toggleTitle"))}</h3><p class="small">${esc(t("demo.toggleOff"))}</p>
         <button class="btn ghost" data-demo="on">${esc(t("demo.turnOn"))}</button></div>`;
   const del = app.deleted
-    ? `<p class="card" role="status">${esc(t("more.deleted"))}</p>`
+    ? `<p class="card" data-keep="delete" role="status">${esc(t("more.deleted"))}</p>`
     : app.confirmDelete
-      ? `<div class="card stack" role="alertdialog" aria-label="${esc(t("more.deleteConfirm"))}"><p><strong>${esc(t("more.deleteConfirm"))}</strong></p>
+      ? `<div class="card stack" data-keep="delete" role="alertdialog" aria-label="${esc(t("more.deleteConfirm"))}"><p><strong>${esc(t("more.deleteConfirm"))}</strong></p>
           <button class="btn danger" data-delete="yes">${icon("trash-2", 20)}${esc(t("more.deleteYes"))}</button>
           <button class="btn ghost" data-delete="no">${esc(t("more.deleteCancel"))}</button></div>`
-      : `<div class="card stack"><h3>${esc(t("more.deleteHeading"))}</h3><p class="small">${esc(t("more.deleteBody"))}</p>
+      : `<div class="card stack" data-keep="delete"><h3>${esc(t("more.deleteHeading"))}</h3><p class="small">${esc(t("more.deleteBody"))}</p>
           <button class="btn danger" data-delete="ask">${icon("trash-2", 20)}${esc(t("more.deleteButton"))}</button></div>`;
   const fb = c.feedback;
   const mail = `mailto:${fb.email}?subject=${encodeURIComponent(fb.subject)}`;
@@ -309,10 +322,36 @@ function viewPrivacy() {
 
 /* ---------- Routing and events ---------- */
 
-// `keep`: re-render in place (no jump to the top) and focus the element matching this
-// selector. Used for the delete steps, which sit at the bottom of a long page.
+/**
+ * Re-render the current screen in place, for taps that change something on it
+ * (language, demo mode, example week, delete). The section that was tapped
+ * (its `data-keep`) stays at the same spot on screen, and focus moves to `focusSel`
+ * inside it without scrolling. Moving to another screen goes through route() and
+ * starts at the top.
+ */
+function refresh(fromEl = null, focusSel = null, alsoRender = null) {
+  const key = fromEl?.closest("[data-keep]")?.dataset.keep;
+  const before = key ? document.querySelector(`[data-keep="${key}"]`).getBoundingClientRect().top : null;
+  const y = window.scrollY;
+  // Measure first, then change the header or banner (Safari has no scroll anchoring),
+  // and keep the page at least as tall as it was, so a section that shrinks at the
+  // bottom of the page does not pull everything up.
+  const view = $("view");
+  view.style.minHeight = `${view.offsetHeight}px`;
+  alsoRender?.();
+  route({ inPlace: true });
+  const anchor = key && document.querySelector(`[data-keep="${key}"]`);
+  if (anchor) window.scrollTo(0, window.scrollY + anchor.getBoundingClientRect().top - before);
+  else window.scrollTo(0, y);
+  const f = focusSel && document.querySelector(focusSel);
+  if (f) {
+    if (!f.matches("a, button")) f.setAttribute("tabindex", "-1");
+    f.focus({ preventScroll: true });
+  }
+}
+
 function route(opts) {
-  const keep = typeof opts?.focus === "string" ? opts.focus : null;
+  const inPlace = opts?.inPlace === true;
   const hash = location.hash.replace(/^#\/?/, "");
   const [name, arg] = hash.split("/");
   const view = $("view");
@@ -333,14 +372,11 @@ function route(opts) {
   else html = viewHome();
   if (name !== "more") { app.confirmDelete = false; app.deleted = false; }
   view.innerHTML = html;
+  $("actions").innerHTML = name === "check" ? checkAnswers(Number(arg)) : "";
   renderNav(nav);
   syncDock();
-  const target = keep && view.querySelector(keep);
-  if (target) {
-    target.setAttribute("tabindex", "-1");
-    target.focus({ preventScroll: true });
-    target.scrollIntoView({ block: "center" });
-  } else {
+  if (!inPlace) {
+    view.style.minHeight = "";
     window.scrollTo(0, 0);
     view.focus({ preventScroll: true });
   }
@@ -363,12 +399,12 @@ function onClick(ev) {
     location.hash = `#/result/${week}`;
   } else if (el.dataset.scenario) {
     if (SCENARIO_IDS.includes(el.dataset.scenario)) app.store.setScenario(el.dataset.scenario);
-    route({ focus: `[data-scenario="${el.dataset.scenario}"]` });
+    refresh(el, `[data-scenario="${el.dataset.scenario}"]`);
   } else if (el.dataset.lang) {
-    setLang(el.dataset.lang);
+    setLang(el.dataset.lang, el, `[data-lang="${el.dataset.lang}"]`);
   } else if (el.dataset.demo) {
     app.store.setDemo(el.dataset.demo === "on", el.dataset.demo === "on" ? demoEntries(app.config) : []);
-    renderShell(); route();
+    refresh(el, "[data-demo]", renderShell);
   } else if (el.dataset.delete) {
     const step = el.dataset.delete;
     if (step === "ask") app.confirmDelete = true;
@@ -377,9 +413,8 @@ function onClick(ev) {
       app.store.clearAll();
       app.confirmDelete = false; app.deleted = true;
       app.answers = {};
-      renderShell();
     }
-    route({ focus: app.deleted ? '[role="status"]' : app.confirmDelete ? '[role="alertdialog"]' : '[data-delete="ask"]' });
+    refresh(el, app.deleted ? '[data-keep="delete"]' : app.confirmDelete ? '[data-delete="no"]' : '[data-delete="ask"]', step === "yes" ? renderShell : null);
   }
 }
 

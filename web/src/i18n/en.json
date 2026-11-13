@@ -4,7 +4,7 @@
   "nav": { "home": "Home", "history": "History", "more": "More", "label": "Main navigation" },
   "demo": {
     "label": "Demo data",
-    "banner": "These weeks and phone signals are made up so you can explore the app.",
+    "banner": "Made-up weeks and phone signals.",
     "exit": "Turn off",
     "preview": "Preview every result",
     "previewHint": "Opens an example result for each level.",
