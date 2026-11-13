@@ -97,7 +97,10 @@
     "trendHeading": "Trend",
     "listHeading": "Week by week",
     "open": "Open result",
-    "examplesNote": "The earlier weeks are examples, so you can see how the history looks after a few weeks. Your own check-ins are added to them."
+    "examplesNote": "The earlier weeks are examples, so you can see how this page looks after a few weeks.",
+    "ownHeading": "Your check-ins",
+    "ownEmpty": "Your own check-ins will appear here.",
+    "examplesHeading": "Example weeks"
   },
   "more": {
     "supportHeading": "Support at {name}",
@@ -121,32 +124,32 @@
     "simulated": "In the full app this comes from the phone's own health and screen time data, compared with your usual week. Here it is an example.",
     "scenarioLabel": "Try another example week",
     "scenarios": {
-      "steady": "Calm week",
-      "exams": "Exam week",
-      "heavy": "Difficult week"
+      "steady": "Calm",
+      "exams": "Exams",
+      "heavy": "Difficult"
     },
     "names": {
       "sleep": "Sleep",
-      "lateScreen": "Phone use after midnight",
+      "lateScreen": "Late phone use",
       "steps": "Steps"
     },
     "per": {
       "sleep": "a night",
-      "lateScreen": "a night",
+      "lateScreen": "after midnight",
       "steps": "a day"
     },
     "usual": "usually {value}",
     "status": {
-      "lower": "Less than usual",
-      "higher": "More than usual",
-      "same": "About usual"
+      "lower": "Lower",
+      "higher": "Higher",
+      "same": "Usual"
     },
     "hours": "{h} h {m} min",
     "minutes": "{m} min",
     "noticedHeading": "Your phone noticed",
     "hint": {
       "sleep": "About {value} of sleep a night, usually {usual}.",
-      "lateScreen": "About {value} on the phone after midnight each night, usually {usual}.",
+      "lateScreen": "About {value} on the phone after midnight, usually {usual}.",
       "steps": "About {value} steps a day, usually {usual}."
     },
     "noSignal": "No phone signal for this one. Only you can tell.",
@@ -185,7 +188,7 @@
         "p": "Send feedback opens an email draft. Nothing is attached, and nothing is sent until you press send yourself."
       },
       {
-        "h": "This is a reviewer demo",
+        "h": "This is a reviewer preview",
         "p": "It uses no real student data. The earlier weeks and the phone data you see are made up and labelled Example. This web version cannot read Apple Health or Screen Time; the full app does, on the phone only."
       }
     ],
@@ -221,7 +224,7 @@
     "tryHeading": "Things to try",
     "try": [
       {
-        "h": "Do this week's check-in",
+        "h": "Do the check-in",
         "p": "Four yes or no questions. Under a minute."
       },
       {

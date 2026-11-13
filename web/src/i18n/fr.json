@@ -11,7 +11,7 @@
   "disclaimer": "Nous ne sommes pas des professionnel·les de santé. CalmCampus ne pose pas de diagnostic et ne soigne pas : l'application aide les étudiant·es à repérer les premiers signes et à trouver le bon soutien.",
   "nav": {
     "home": "Accueil",
-    "history": "Mes semaines",
+    "history": "Semaines",
     "support": "Soutien",
     "about": "À propos",
     "label": "Navigation principale"
@@ -32,7 +32,7 @@
     "greeting": "Bonjour",
     "title": "Une minute au calme pour toi",
     "lead": "Quatre questions auxquelles répondre par oui ou non, sur la semaine écoulée. Cela prend moins d'une minute et t'aide à repérer les premiers signes et à trouver le bon soutien.",
-    "start": "Commencer le bilan de la semaine",
+    "start": "Commencer le bilan",
     "doneTitle": "Tu as fait ton bilan cette semaine",
     "doneBody": "Merci d'avoir pris une minute. Tu peux le refaire si quelque chose a changé.",
     "redo": "Refaire le bilan",
@@ -91,13 +91,16 @@
   "history": {
     "title": "Tes semaines",
     "empty": "Pas encore de bilan. Tes semaines apparaîtront ici après le premier.",
-    "signs": "{n} signe(s) sur {total}",
+    "signs": "{n} sur {total} signes",
     "weekOf": "Semaine du {date}",
     "chartLabel": "Signes remarqués chaque semaine, du plus ancien au plus récent",
     "trendHeading": "Tendance",
     "listHeading": "Semaine après semaine",
     "open": "Ouvrir le résultat",
-    "examplesNote": "Les semaines précédentes sont des exemples, pour montrer à quoi ressemble l'historique après quelques semaines. Tes propres bilans s'y ajoutent."
+    "examplesNote": "Les semaines précédentes sont des exemples, pour montrer à quoi ressemble cette page après quelques semaines.",
+    "ownHeading": "Tes bilans",
+    "ownEmpty": "Tes propres bilans apparaîtront ici.",
+    "examplesHeading": "Semaines d'exemple"
   },
   "more": {
     "supportHeading": "Soutien à {name}",
@@ -121,32 +124,32 @@
     "simulated": "Dans l'application complète, ces données viennent de la santé et du temps d'écran du téléphone, comparées à ta semaine habituelle. Ici, c'est un exemple.",
     "scenarioLabel": "Essayer une autre semaine d'exemple",
     "scenarios": {
-      "steady": "Semaine calme",
-      "exams": "Semaine d'examens",
-      "heavy": "Semaine difficile"
+      "steady": "Calme",
+      "exams": "Examens",
+      "heavy": "Difficile"
     },
     "names": {
       "sleep": "Sommeil",
-      "lateScreen": "Téléphone après minuit",
+      "lateScreen": "Téléphone tard",
       "steps": "Pas"
     },
     "per": {
       "sleep": "par nuit",
-      "lateScreen": "par nuit",
+      "lateScreen": "après minuit",
       "steps": "par jour"
     },
     "usual": "d'habitude {value}",
     "status": {
-      "lower": "Moins que d'habitude",
-      "higher": "Plus que d'habitude",
-      "same": "Comme d'habitude"
+      "lower": "En baisse",
+      "higher": "En hausse",
+      "same": "Habituel"
     },
     "hours": "{h} h {m}",
     "minutes": "{m} min",
     "noticedHeading": "Ton téléphone a remarqué",
     "hint": {
       "sleep": "Environ {value} de sommeil par nuit, d'habitude {usual}.",
-      "lateScreen": "Environ {value} sur le téléphone après minuit chaque nuit, d'habitude {usual}.",
+      "lateScreen": "Environ {value} sur le téléphone après minuit, d'habitude {usual}.",
       "steps": "Environ {value} pas par jour, d'habitude {usual}."
     },
     "noSignal": "Pas de signal du téléphone pour celle-ci. C'est à toi de le dire.",
@@ -185,7 +188,7 @@
         "p": "Envoyer un retour ouvre un brouillon d'e-mail. Rien n'y est joint et rien n'est envoyé tant que tu n'appuies pas toi-même sur envoyer."
       },
       {
-        "h": "Ceci est une démo pour relecture",
+        "h": "Ceci est un aperçu pour relecture",
         "p": "Elle n'utilise aucune donnée réelle d'étudiant·e. Les semaines précédentes et les données du téléphone affichées sont inventées et marquées Exemple. Cette version web ne peut pas lire Santé ni Temps d'écran ; l'application complète le fait, uniquement sur le téléphone."
       }
     ],
@@ -212,7 +215,7 @@
     "later": "Tu retrouveras tout cela sous À propos."
   },
   "preview": {
-    "strip": "Aperçu avec des données d'exemple",
+    "strip": "Aperçu avec exemples",
     "about": "À propos"
   },
   "about": {
@@ -221,7 +224,7 @@
     "tryHeading": "À essayer",
     "try": [
       {
-        "h": "Faire le bilan de la semaine",
+        "h": "Faire le bilan",
         "p": "Quatre questions par oui ou non. Moins d'une minute."
       },
       {

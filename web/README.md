@@ -18,7 +18,7 @@ Node 20+. No `npm install` is needed to build or run. Playwright is only used by
 
 ## What a reviewer sees
 
-- **Welcome** on first open: what the preview is, a choice between the languages, and (when opened in the browser instead of the installed app) how to add it to the home screen.
+- **Welcome** on first open: what the preview is and (when opened in the browser instead of the installed app) how to add it to the home screen. The language switch sits in the header on every screen; About also has a full Français / English choice.
 - **Home**: the weekly check-in (four yes or no questions) and "This week on your phone": example sleep, phone use after midnight and steps, each compared with the student's usual week. Three example weeks (calm, exams, difficult) show how the check-in adapts.
 - **Check-in**: questions with a notable phone signal come first and say what the phone noticed. Questions no phone signal can measure say so. Yes and No stay pinned at the bottom.
 - **Result**: the level, what the student noticed, what the phone noticed, one next step (a service from the config) and the emergency numbers.

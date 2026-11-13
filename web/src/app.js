@@ -42,7 +42,7 @@ function renderShell() {
     ? `<span class="uni-chip"><img src="${esc(c.logo.image)}" alt="${esc(c.name)}"></span>`
     : c.logo?.text ? `<span class="uni-chip">${esc(c.logo.text)}</span>` : "";
   const other = c.languages.length > 1 ? c.languages.find((l) => l !== app.lang) : null;
-  const switcher = other && app.screen !== "welcome"
+  const switcher = other
     ? `<button class="lang" id="lang-toggle" lang="${other}" aria-label="${esc(app.ui.lang.switchTo)}">${icon("languages", 18)}${esc(other.toUpperCase())}</button>`
     : "";
   $("top").innerHTML = `<div class="brand"><a class="wordmark" href="#/">CalmCampus</a>${chip}</div>${switcher}`;
@@ -145,7 +145,7 @@ function signalsCard() {
     return `<li class="sig${s.notable ? " notable" : ""}">
       <div class="sig-top"><strong>${esc(t(`signals.names.${s.id}`))}</strong>
         <span class="pill ${s.notable ? "notice" : "steady"}">${esc(t(`signals.status.${status}`))}</span></div>
-      <p class="small">${esc(fmtSignal(s.id, s.mean))} ${esc(t(`signals.per.${s.id}`))}, ${esc(t("signals.usual", { value: fmtSignal(s.id, s.usual) }))}</p></li>`;
+      <p class="small">${esc(fmtSignal(s.id, s.mean))} ${esc(t(`signals.per.${s.id}`))}, <span class="nowrap">${esc(t("signals.usual", { value: fmtSignal(s.id, s.usual) }))}</span></p></li>`;
   }).join("");
   const seg = `<div class="scen" role="group" aria-label="${esc(t("signals.scenarioLabel"))}">${SCENARIO_IDS.map((id) =>
     `<button class="btn ${id === cur ? "sage" : "ghost"}" data-scenario="${id}" aria-pressed="${id === cur}">${esc(t(`signals.scenarios.${id}`))}</button>`).join("")}</div>`;
@@ -186,7 +186,6 @@ function viewWelcome() {
   const icons = ["check", "smartphone", "shield-check"];
   const points = app.ui.welcome.points.map((p, i) => `<li><span class="dot">${icon(icons[i] ?? "check", 20)}</span><span>${esc(p.replace(/\{name\}/g, app.config.name))}</span></li>`).join("");
   return `<div class="stack welcome">
-    ${langButtons("welcome-lang")}
     <h1>${esc(t("welcome.title"))}</h1>
     <p class="lead">${esc(t("welcome.lead"))}</p>
     <ul class="points">${points}</ul>
@@ -206,7 +205,7 @@ function viewHome() {
     ${app.fellBack ? `<p class="card small" role="status">${esc(t("errors.config"))}</p>` : ""}
     <div><p class="small">${esc(t("home.greeting"))}</p><h1>${esc(t("home.title"))}</h1></div>
     ${done}
-    <p class="lead">${esc(t("home.lead"))}</p>
+    ${entry ? "" : `<p class="lead">${esc(t("home.lead"))}</p>`}
     ${signalsCard()}
     <p class="small row">${icon("shield-check", 18)}<span>${esc(t("home.stays"))}</span></p>
   </div>`;
@@ -335,13 +334,21 @@ function viewHistory() {
   const total = app.config.questions.length;
   const rows = entries.map((e) => ({ e, r: resultFor(app.config, e.answers) }));
   const chart = rows.map(({ e, r }) => `<div class="col"><div class="bar l-${esc(r.level.id)}" style="height:${Math.max(4, (r.yes / total) * 100)}%"></div><span class="lab">${esc(fmtShort(e))}</span></div>`).join("");
-  const list = [...rows].reverse().map(({ e, r }) => `<li><a href="#/result/${esc(e.week)}" aria-label="${esc(t("history.open"))}: ${esc(t("history.weekOf", { date: fmtWeek(e) }))}">
-      <span class="grow"><strong>${esc(t("history.weekOf", { date: fmtWeek(e) }))}</strong><br><span class="small">${esc(t("history.signs", { n: r.yes, total }))}${e.demo ? ` · ${esc(t("demo.label"))}` : ""}</span></span>${pillFor(r.level)}${icon("arrow-right", 18)}</a></li>`).join("");
-  const hasExamples = entries.some((e) => e.demo);
+  const item = ({ e, r }) => `<li><a href="#/result/${esc(e.week)}" aria-label="${esc(t("history.open"))}: ${esc(t("history.weekOf", { date: fmtWeek(e) }))}">
+      <span class="grow"><strong>${esc(t("history.weekOf", { date: fmtWeek(e) }))}</strong>
+        <span class="week-meta">${pillFor(r.level)}<span class="small">${esc(t("history.signs", { n: r.yes, total }))}</span></span></span>${icon("arrow-right", 18)}</a></li>`;
+  const newestFirst = [...rows].reverse();
+  const own = newestFirst.filter(({ e }) => !e.demo), examples = newestFirst.filter(({ e }) => e.demo);
+  const lists = examples.length
+    ? `<h2>${esc(t("history.ownHeading"))}</h2>
+       ${own.length ? `<ul class="week-list">${own.map(item).join("")}</ul>` : `<p class="small">${esc(t("history.ownEmpty"))}</p>`}
+       <div class="row wrap"><h2 class="grow">${esc(t("history.examplesHeading"))}</h2>${exampleTag()}</div>
+       <ul class="week-list">${examples.map(item).join("")}</ul>`
+    : `<h2>${esc(t("history.listHeading"))}</h2><ul class="week-list">${own.map(item).join("")}</ul>`;
   return `<div class="stack"><h1>${esc(t("history.title"))}</h1>
-    ${hasExamples ? `<p class="small">${esc(t("history.examplesNote"))}</p>` : ""}
+    ${examples.length ? `<p class="small">${esc(t("history.examplesNote"))}</p>` : ""}
     <div class="card"><h3>${esc(t("history.trendHeading"))}</h3><div class="chart" role="img" aria-label="${esc(t("history.chartLabel"))}: ${rows.map(({ e, r }) => `${fmtWeek(e)} ${r.yes}/${total}`).join(", ")}">${chart}</div></div>
-    <h2>${esc(t("history.listHeading"))}</h2><ul class="week-list">${list}</ul></div>`;
+    ${lists}</div>`;
 }
 
 function viewSupport() {
