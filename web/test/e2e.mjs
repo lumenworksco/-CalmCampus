@@ -245,7 +245,8 @@ async function desktop() {
   await p.waitForSelector("[data-welcome]");
   if (cfg.publicUrl) {
     ok((await p.textContent("body")).includes(T("en", "install.desktopTitle")), "a computer gets the phone link");
-    if (cfg.qr) ok(await p.evaluate(() => document.querySelector(".qr")?.naturalWidth > 0), "the QR code loads");
+    // Over a real network the image arrives a moment after the page: wait for it.
+    if (cfg.qr) ok(await until(p, () => { const i = document.querySelector(".qr"); return Boolean(i && i.complete && i.naturalWidth > 0); }, null, 8000), "the QR code loads");
   } else {
     ok(!(await p.$(".install")), "no install help without a public address");
   }
