@@ -66,6 +66,10 @@ const origin = new URL(base).origin;
 
 let checks = 0;
 const fails = [];
+// On CI: more time per step (shared machines are slower), and each failure becomes a
+// GitHub annotation, readable on the run page without access to the full log.
+const slow = Boolean(process.env.CI);
+const annotate = (msg) => { if (process.env.GITHUB_ACTIONS) console.log(`::error title=End-to-end::${msg.replace(/\r?\n/g, " ")}`); };
 
 async function until(page, fn, arg, ms = 3000) {
   const end = Date.now() + ms;
@@ -85,7 +89,7 @@ async function phone(name, browserType, device, os) {
   const ok = (cond, msg) => { checks++; if (!cond) fails.push(`${name}: ${msg}`); };
   p.on("pageerror", (e) => fails.push(`${name}: page error ${e.message}`));
   p.on("request", (r) => { if (!r.url().startsWith(origin)) fails.push(`${name}: request to another host ${r.url()}`); });
-  const settle = () => p.waitForTimeout(260);
+  const settle = () => p.waitForTimeout(slow ? 600 : 260);
   const h1 = () => p.textContent("h1");
   const hash = () => p.evaluate(() => location.hash);
   const shows = async (text) => (await p.evaluate(() => document.body.textContent)).includes(text);
@@ -263,15 +267,20 @@ async function offline() {
 }
 
 console.log(`Testing "${uniId}" at ${base}`);
+const runs = [
+  ["iPhone SE", () => phone("iPhone SE", webkit, devices["iPhone SE"], "ios")],
+  ["iPhone 14", () => phone("iPhone 14", webkit, devices["iPhone 14"], "ios")],
+  ["Pixel 7", () => phone("Pixel 7", chromium, devices["Pixel 7"], "android")],
+  ["desktop", desktop],
+  ["offline", offline],
+];
 try {
-  await phone("iPhone SE", webkit, devices["iPhone SE"], "ios");
-  await phone("iPhone 14", webkit, devices["iPhone 14"], "ios");
-  await phone("Pixel 7", chromium, devices["Pixel 7"], "android");
-  await desktop();
-  await offline();
+  for (const [name, run] of runs) {
+    try { await run(); } catch (e) { fails.push(`${name}: stopped: ${String(e.message ?? e).split("\n")[0]}`); }
+  }
 } finally {
   if (!live) server.close();
 }
 console.log(`${checks} checks`);
-if (fails.length) { console.error(fails.join("\n")); process.exit(1); }
+if (fails.length) { fails.forEach(annotate); console.error(fails.join("\n")); process.exit(1); }
 console.log("all pass");
