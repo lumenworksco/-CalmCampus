@@ -20,6 +20,7 @@ export function createStore(storage, universityId) {
   const scenarioKey = `${PREFIX}${universityId}:demoScenario`;
   const langKey = `${PREFIX}lang`;
   const welcomeKey = `${PREFIX}${universityId}:welcomed`;
+  const triedKey = `${PREFIX}${universityId}:tried`;
 
   const read = (k) => {
     try { const v = JSON.parse(safe.get(k) ?? "[]"); return Array.isArray(v) ? v : []; }
@@ -49,6 +50,12 @@ export function createStore(storage, universityId) {
     },
     isWelcomed: () => safe.get(welcomeKey) === "1",
     setWelcomed: () => safe.set(welcomeKey, "1"),
+    /** Which of the preview's "Things to try" a reviewer has done (ids, in any order). */
+    tried: () => read(triedKey).filter((x) => typeof x === "string"),
+    markTried(id) {
+      const now = api.tried();
+      if (!now.includes(id)) safe.set(triedKey, JSON.stringify([...now, id]));
+    },
     getLang: () => safe.get(langKey),
     setLang: (l) => safe.set(langKey, l),
     /** Delete every key this app wrote, for every university on this origin. */

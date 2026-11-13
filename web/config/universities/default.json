@@ -1,13 +1,14 @@
 {
   "id": "default",
   "name": "Your university",
+  "nameInText": { "en": "your university", "fr": "ton université" },
   "logo": { "text": null, "image": null, "todo": "Optional. Set text or image to show the university next to CalmCampus." },
   "preview": true,
   "defaultLanguage": "en",
   "languages": ["en", "fr"],
   "feedback": {
     "email": "contact@calm.braunf.com",
-    "subject": "CalmCampus demo feedback"
+    "subject": { "en": "Feedback on the CalmCampus preview", "fr": "Retour sur l'aperçu CalmCampus" }
   },
   "questions": [
     {
@@ -84,8 +85,8 @@
       "tel": "112",
       "label": { "en": "Emergency services", "fr": "Services d'urgence" },
       "detail": {
-        "en": "Europe-wide emergency number. Replace with your campus and national numbers.",
-        "fr": "Numéro d'urgence européen. À remplacer par les numéros de ton campus et de ton pays."
+        "en": "Europe-wide emergency number. Each university's version adds its campus and local numbers.",
+        "fr": "Numéro d'urgence européen. La version de chaque université ajoute ses numéros de campus et locaux."
       },
       "source": null
     }

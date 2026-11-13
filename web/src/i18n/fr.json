@@ -77,13 +77,14 @@
       }
     },
     "exampleKicker": "Exemple de résultat",
-    "skipped": "Questions passées : {n} sur {total}."
+    "skipped": "Questions passées : {n} sur {total}.",
+    "nextTry": "À essayer ensuite"
   },
   "service": {
     "email": "Envoyer un e-mail",
     "call": "Appeler",
     "website": "Ouvrir le site web",
-    "noContact": "Les coordonnées ne sont pas encore renseignées. Demande à ton service aux étudiant·es par où commencer.",
+    "noContact": "La version de chaque université affiche ici les vraies coordonnées de ce service.",
     "emailNote": "Cela ouvre ton application de messagerie. Rien de CalmCampus n'y est joint."
   },
   "history": {
@@ -102,7 +103,7 @@
   },
   "more": {
     "supportHeading": "Soutien à {name}",
-    "supportLead": "Ce sont de vrais services que tu peux contacter à tout moment. Pas besoin d'un résultat pour demander de l'aide.",
+    "supportLead": "Ce sont les services de {name}. Tu peux les contacter à tout moment, sans avoir besoin d'un résultat.",
     "languageHeading": "Langue",
     "privacyLink": "Comment tes données sont traitées",
     "feedbackHeading": "Envoyer un retour",
@@ -157,7 +158,8 @@
     "resultNone": "Rien d'inhabituel cette semaine pour le sommeil, le téléphone après minuit ou les pas.",
     "resultNote": "Les signaux du téléphone décident seulement de l'ordre des questions. Ton résultat vient uniquement de tes réponses.",
     "scenarioHint": "Les questions du bilan s'y adaptent.",
-    "unremarkable": "Ton téléphone n'a rien remarqué d'inhabituel pour celle-ci."
+    "unremarkable": "Ton téléphone n'a rien remarqué d'inhabituel pour celle-ci.",
+    "redoPrompt": "Tu as choisi une autre semaine d'exemple. Refais le bilan pour voir comment les questions changent."
   },
   "privacy": {
     "title": "Ta vie privée, en mots simples",
@@ -199,18 +201,19 @@
   },
   "welcome": {
     "title": "Bienvenue",
-    "lead": "Voici un aperçu de CalmCampus pour {name}. Essaie-le comme le ferait un·e étudiant·e. Cela prend environ cinq minutes.",
+    "lead": "CalmCampus aide les étudiant·es à repérer tôt les signes de stress et à trouver le bon soutien. Voici un aperçu pour {name} : essaie-le comme le ferait un·e étudiant·e. Cela prend environ cinq minutes.",
     "points": [
       "Réponds à quatre questions par oui ou non sur ta semaine. Moins d'une minute.",
       "L'application complète tient aussi compte du sommeil, des pas et de l'usage du téléphone tard le soir. Ici, ce sont des exemples, pas tes vraies données.",
       "Rien de ce que tu saisis ne quitte ce téléphone."
     ],
-    "start": "Commencer",
+    "start": "Commencer l'aperçu",
     "later": "Tu retrouveras tout cela sous À propos."
   },
   "preview": {
     "strip": "Aperçu avec exemples",
-    "about": "À propos"
+    "about": "À propos",
+    "tryLink": "À essayer"
   },
   "about": {
     "title": "À propos de cet aperçu",
@@ -231,7 +234,7 @@
       },
       {
         "h": "Regarder l'onglet Soutien",
-        "p": "Les vrais services et numéros d'urgence qu'un·e étudiant·e verrait."
+        "p": "Les services et numéros d'urgence qu'un·e étudiant·e verrait."
       },
       {
         "h": "Nous dire ce que tu en penses",
@@ -244,7 +247,10 @@
     "startOverConfirm": "Effacer tes réponses et recommencer ?",
     "startOverYes": "Oui, recommencer",
     "startOverCancel": "Annuler",
-    "startOverDone": "C'est fait. Tu recommences."
+    "startOverDone": "C'est fait. Tu recommences.",
+    "progress": "{n} sur {total} essayés",
+    "allDone": "Tu as tout essayé. Merci.",
+    "doneLabel": "(fait)"
   },
   "results": {
     "title": "Tous les résultats possibles",

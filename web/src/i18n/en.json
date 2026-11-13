@@ -77,13 +77,14 @@
       }
     },
     "exampleKicker": "Example result",
-    "skipped": "Questions skipped: {n} of {total}."
+    "skipped": "Questions skipped: {n} of {total}.",
+    "nextTry": "Next to try"
   },
   "service": {
     "email": "Send an email",
     "call": "Call",
     "website": "Open the website",
-    "noContact": "Contact details are not set up yet. Ask your student services where to start.",
+    "noContact": "Each university's version shows this service's real contact details here.",
     "emailNote": "This opens your email app. Nothing from CalmCampus is attached."
   },
   "history": {
@@ -102,7 +103,7 @@
   },
   "more": {
     "supportHeading": "Support at {name}",
-    "supportLead": "These are real services you can contact any time. You do not need a result to reach out.",
+    "supportLead": "These are {name}'s own services. You can contact them any time, without needing a result.",
     "languageHeading": "Language",
     "privacyLink": "How your data is handled",
     "feedbackHeading": "Send feedback",
@@ -157,7 +158,8 @@
     "resultNone": "Nothing unusual in sleep, late phone use or steps this week.",
     "resultNote": "Phone signals only decide which questions come first. Your result comes from your answers alone.",
     "scenarioHint": "The check-in questions adapt to it.",
-    "unremarkable": "Your phone noticed nothing unusual for this one."
+    "unremarkable": "Your phone noticed nothing unusual for this one.",
+    "redoPrompt": "You picked another example week. Redo the check-in to see how the questions change."
   },
   "privacy": {
     "title": "Your privacy, in plain words",
@@ -199,18 +201,19 @@
   },
   "welcome": {
     "title": "Welcome",
-    "lead": "This is a preview of CalmCampus for {name}. Try it the way a student would. It takes about five minutes.",
+    "lead": "CalmCampus helps students notice early signs of stress and find the right support. This is a preview for {name}: try it the way a student would. It takes about five minutes.",
     "points": [
       "Answer four yes or no questions about your week. It takes under a minute.",
       "The full app also looks at sleep, steps and late phone use. Here these are examples, not your real data.",
       "Nothing you enter leaves this phone."
     ],
-    "start": "Start",
+    "start": "Start the preview",
     "later": "You can find all of this again under About."
   },
   "preview": {
-    "strip": "Preview with example data",
-    "about": "About"
+    "strip": "Preview with examples",
+    "about": "About",
+    "tryLink": "What to try"
   },
   "about": {
     "title": "About this preview",
@@ -227,11 +230,11 @@
       },
       {
         "h": "See every possible result",
-        "p": "And which {name} service each one suggests."
+        "p": "And the service at {name} each one suggests."
       },
       {
         "h": "Look at the Support tab",
-        "p": "The real services and emergency numbers a student would see."
+        "p": "The services and emergency numbers a student would see."
       },
       {
         "h": "Tell us what you think",
@@ -244,7 +247,10 @@
     "startOverConfirm": "Clear your answers and start over?",
     "startOverYes": "Yes, start over",
     "startOverCancel": "Cancel",
-    "startOverDone": "Done. You are starting over."
+    "startOverDone": "Done. You are starting over.",
+    "progress": "{n} of {total} tried",
+    "allDone": "You have tried everything. Thank you.",
+    "doneLabel": "(done)"
   },
   "results": {
     "title": "Every possible result",

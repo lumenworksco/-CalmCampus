@@ -205,9 +205,10 @@ main { flex: 1; padding: 8px 20px calc(var(--dock-h) + 24px); outline: none; }
 /* Preview strip: one calm line that says this is a preview and leads to About */
 #demo-banner:empty { display: none; }
 .preview-strip {
-  display: flex; align-items: center; gap: 8px; margin: 0 20px; min-height: 44px; padding: 6px 16px;
+  display: flex; align-items: center; gap: 6px; margin: 0 20px; min-height: 44px; padding: 6px 12px;
   border-radius: 999px; background: var(--sand); color: var(--ink); font-size: 14px; text-decoration: none;
 }
+@media (max-width: 380px) { .preview-strip { margin: 0 14px; font-size: 13.5px; } }
 .preview-strip .go { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
 
 /* Welcome */
@@ -245,3 +246,12 @@ main { flex: 1; padding: 8px 20px calc(var(--dock-h) + 24px); outline: none; }
   .btn:hover, .try a:hover, .level-list a:hover, .week-list a:hover, .link-row:hover, .preview-strip:hover, .lang:hover { filter: brightness(0.96); }
   .nav a:hover { color: var(--ink); }
 }
+
+/* Reviewer guide: done items, the next thing to try, and the redo prompt */
+.try .num.done { background: var(--sage); color: var(--ink); }
+.next-try {
+  display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-radius: var(--radius);
+  background: var(--sand); border: 2px solid var(--sage); text-decoration: none; line-height: 1.35;
+}
+.redo { display: grid; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 2px solid var(--line); }
+.redo .btn { justify-self: start; }

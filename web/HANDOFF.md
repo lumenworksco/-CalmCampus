@@ -19,6 +19,8 @@ Branch `epfl-web-demo` is not merged into `main` yet. If SSH to GitHub fails, pu
 
 Written 2026-11-13, last updated 2026-11-13. Read this, then `web/README.md` and the repo `CLAUDE.md`. This repo is public: keep names of people at partner universities and anything they told us in confidence out of it.
 
+**Branches.** This branch is `main` plus what is EPFL-specific: `config/universities/epfl.json`, `config/qr/epfl.svg`, `test/epfl.test.mjs` and this file. Make app changes on `main`, then merge `main` into this branch; never merge this branch into `main`. Do not add the "Co-Authored-By" trailer to commits.
+
 ## Goal
 
 Let EPFL's student services (Consultation sociale) try a preview on their own phones for a few days and review it with colleagues and the student association AGEPoly. This is a reviewer preview, not a pilot: no real student data, no analytics. Every future university should be a config file, not a code change.
@@ -37,7 +39,8 @@ Team: Florian Braun and Helene David. CalmCampus is not medical: it does not dia
 - Privacy: answers only in `localStorage` (keys start with `cc:`), privacy screen in plain words ("design principles", not "certified"), nothing loaded from other hosts (fonts and Lucide icons bundled, CSP `connect-src 'self'`).
 - PWA: per-folder manifest and service worker, offline shell, icons. Installed apps update themselves (fetch past the HTTP cache, reload once the new version is ready, never during a check-in).
 - Interaction: taps that change the current screen keep the tapped section in place; tabs remember their scroll position; colours pass WCAG AA contrast.
-- Checks: `npm run check`, `npm test` (21 unit tests), `npm run build`, and `npm run e2e` (164 end-to-end checks in WebKit on iPhone SE and iPhone 14, Chromium on Pixel 7 and a desktop window, plus offline). CI runs all of them (`.github/workflows/ci.yml`, job `web`).
+- Guide for reviewers: "Things to try" in About ticks off what was done (stored on the device), the result suggests the next thing to try, and Home offers to redo the check-in after another example week is picked. The top line says "What to try".
+- Checks: `npm run check`, `npm test` (25 unit tests, 3 of them EPFL-specific in `test/epfl.test.mjs`), `npm run build`, and `npm run e2e` (179 end-to-end checks in WebKit on iPhone SE and iPhone 14, Chromium on Pixel 7 and a desktop window, plus offline; expected texts come from the config). CI runs all of them (`.github/workflows/ci.yml`, job `web`).
 - EPFL facts verified on epfl.ch and chuv.ch on 2026-11-13 (source URL stored per entry in the config); all links return 200. Emails live in the page source behind email protection, so decode them from the raw HTML.
 
 ## Still to do
@@ -53,13 +56,13 @@ Team: Florian Braun and Helene David. CalmCampus is not medical: it does not dia
 4. ~~Re-verify EPFL details.~~ **Done 2026-11-13.** Repeat if the email goes out after about a week, since EPFL is restructuring these pages.
 5. **Test on real devices** (iPhone Safari and Android Chrome): delete the old icon, open the link, follow the welcome screen, check the version at the bottom of About.
 6. **Email to EPFL.** The "What to test" text is below; the welcome screen and About > Things to try guide the rest. Add the four review questions from step 3.
-7. Optional: in Cloudflare, turn off Network Error Logging for cc.braunf.com (it sends browser error reports to Cloudflare); merge `epfl-web-demo` into `main`; add a language beyond FR/EN.
+7. Optional: in Cloudflare, turn off Network Error Logging for cc.braunf.com (it sends browser error reports to Cloudflare); add a language beyond FR/EN. Keep this branch current by merging `main` into it.
 
 ## What to test (paste into the email)
 
 1. Open https://cc.braunf.com/epfl/ on your phone, in Safari (iPhone) or Chrome (Android). On a computer, the page shows a QR code to scan with the phone.
 2. Follow the first screen to add it to your home screen, then open it only from its icon.
-3. Tap Start, then follow "Things to try" in the About tab. It takes about five minutes.
+3. Tap "Start the preview", then follow "What to try" at the top of the screen. It ticks off each step and takes about five minutes.
 4. Do the weekly check-in: four yes or no questions, each one can be skipped. The example phone data (sleep, steps, late phone use) decides which question comes first.
 5. On Home, pick another example week (calm, exams, difficult) and do the check-in again to see the questions adapt.
 6. About > See every possible result: each result, how many yes answers lead to it, and which service it suggests. Does each next step feel right?

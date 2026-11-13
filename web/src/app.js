@@ -63,7 +63,7 @@ function renderShell() {
   if (isPreview()) {
     // Hidden on the welcome screen and during the check-in, where the screen needs the room.
     $("demo-banner").innerHTML = app.screen === "welcome" || app.screen === "check" ? ""
-      : `<a class="preview-strip" href="#/about">${icon("info", 18)}<span class="grow">${esc(t("preview.strip"))}</span><span class="go">${esc(t("preview.about"))}</span></a>`;
+      : `<a class="preview-strip" href="#/about">${icon("info", 18)}<span class="grow">${esc(t("preview.strip"))}</span><span class="go">${esc(t("preview.tryLink"))}</span></a>`;
   } else {
     $("demo-banner").innerHTML = showsExamples()
       ? `<div class="demo-banner" role="status">${icon("flask-conical", 18)}<span><strong>${esc(t("demo.label"))}.</strong> ${esc(t("demo.banner"))}</span><button id="demo-exit">${esc(t("demo.exit"))}</button></div>`
@@ -147,6 +147,34 @@ function installTip() {
   return `<div class="card stack install"><h3 class="row">${icon("share", 20)}${esc(t("install.title"))}</h3><ol class="steps">${steps}</ol></div>`;
 }
 
+/* ---------- The reviewer's guide ("Things to try") ---------- */
+
+// One entry per item of `about.try` in the strings, in the same order.
+const TRIES = ["checkin", "week", "results", "support", "feedback"];
+const tryHref = (id) => ({ checkin: "#/check/0", week: "#/", results: "#/results", support: "#/support", feedback: feedbackHref() }[id]);
+
+/** Which items are done. "week" needs check-ins with two different example weeks. */
+function triedDone() {
+  const tried = app.store.tried();
+  const weeks = tried.filter((x) => x.startsWith("scenario:")).length;
+  return new Set(TRIES.filter((id) => (id === "week" ? weeks >= 2 : tried.includes(id))));
+}
+
+function tryLink(id, inner, cls = "") {
+  const attrs = id === "checkin" ? " data-reset" : id === "feedback" ? ' data-track="feedback"' : "";
+  return `<a${cls ? ` class="${cls}"` : ""} href="${esc(tryHref(id))}"${attrs}>${inner}</a>`;
+}
+
+/** On a result: point to the next thing to try, so a reviewer never wonders what to do next. */
+function nextTryCard() {
+  if (!isPreview()) return "";
+  const done = triedDone();
+  const i = TRIES.findIndex((id) => id !== "checkin" && !done.has(id));
+  if (i === -1) return "";
+  const it = app.ui.about.try[i];
+  return tryLink(TRIES[i], `<span class="grow"><span class="small">${esc(t("result.nextTry"))}</span><br><strong>${esc(typo(it.h))}</strong></span>${icon("arrow-right", 20)}`, "next-try");
+}
+
 /* ---------- Example phone data (see lib/signals.js) ---------- */
 
 function scenario() {
@@ -168,10 +196,13 @@ function fmtSignal(id, v) {
 
 const signalHint = (s) => t(`signals.hint.${s.id}`, { value: fmtSignal(s.id, s.mean), usual: fmtSignal(s.id, s.usual) });
 
-function signalsCard() {
+function signalsCard(entry) {
   const sigs = phoneSignals();
   if (!sigs) return "";
   const cur = scenario();
+  const redo = entry && entry.scenario && entry.scenario !== cur
+    ? `<div class="redo"><p class="small">${esc(t("signals.redoPrompt"))}</p><a class="btn sage sm" href="#/check/0" data-reset>${esc(t("home.redo"))}${icon("arrow-right", 18)}</a></div>`
+    : "";
   const rows = sigs.map((s) => {
     const status = s.notable ? s.direction : "same";
     return `<li class="sig${s.notable ? " notable" : ""}">
@@ -185,7 +216,7 @@ function signalsCard() {
     <div class="row wrap"><h2 id="sig-h" class="grow">${esc(t("signals.heading"))}</h2>${exampleTag()}</div>
     <p class="small">${esc(t("signals.simulated"))}</p>
     <ul class="sig-list">${rows}</ul>
-    <div class="scen-box"><p><strong>${esc(t("signals.scenarioLabel"))}</strong></p><p class="small">${esc(t("signals.scenarioHint"))}</p>${seg}</div>
+    <div class="scen-box"><p><strong>${esc(t("signals.scenarioLabel"))}</strong></p><p class="small">${esc(t("signals.scenarioHint"))}</p>${seg}${redo}</div>
   </section>`;
 }
 
@@ -241,7 +272,7 @@ function viewHome() {
     <div><p class="small">${esc(t("home.greeting"))}</p><h1>${esc(t("home.title"))}</h1></div>
     ${done}
     ${entry ? "" : `<p class="lead">${esc(t("home.lead"))}</p>`}
-    ${signalsCard()}
+    ${signalsCard(entry)}
     <p class="small row">${icon("shield-check", 18)}<span>${esc(t("home.stays"))}</span></p>
   </div>`;
 }
@@ -336,6 +367,7 @@ function viewResult(answers, { saved, example, phone, scenarioId, back } = {}) {
     ${next}
     ${emergencyCard()}
     ${saved ? `<p class="small row">${icon("shield-check", 18)}<span>${esc(t("result.saved"))}</span></p>` : ""}
+    ${saved ? nextTryCard() : ""}
     <a class="btn ghost" href="${back ? back.href : "#/"}">${esc(back ? back.label : t("result.again"))}</a></div>`;
 }
 
@@ -422,10 +454,15 @@ function resetCard() {
 function viewAbout() {
   const c = app.config;
   const mail = feedbackHref();
-  const hrefs = ["#/check/0", "#/", "#/results", "#/support", mail];
+  const done = triedDone();
   const tries = isPreview()
-    ? `<section class="stack"><h2>${esc(t("about.tryHeading"))}</h2><ol class="try">${app.ui.about.try.map((it, i) =>
-        `<li><a href="${esc(hrefs[i])}"${i === 0 ? " data-reset" : ""}><span class="num">${i + 1}</span><span class="grow"><strong>${esc(typo(it.h))}</strong><br><span class="small">${esc(typo(it.p.replace(/\{name\}/g, uniName())))}</span></span>${icon("arrow-right", 18)}</a></li>`).join("")}</ol></section>`
+    ? `<section class="stack"><div><h2>${esc(t("about.tryHeading"))}</h2>
+        <p class="small">${esc(t(done.size === TRIES.length ? "about.allDone" : "about.progress", { n: done.size, total: TRIES.length }))}</p></div>
+        <ol class="try">${app.ui.about.try.map((it, i) => {
+          const ok = done.has(TRIES[i]);
+          const num = ok ? `<span class="num done">${icon("check", 18)}<span class="sr">${esc(t("about.doneLabel"))}</span></span>` : `<span class="num">${i + 1}</span>`;
+          return `<li>${tryLink(TRIES[i], `${num}<span class="grow"><strong>${esc(typo(it.h))}</strong><br><span class="small">${esc(typo(it.p.replace(/\{name\}/g, uniName())))}</span></span>${icon("arrow-right", 18)}`, ok ? "done" : "")}</li>`;
+        }).join("")}</ol></section>`
     : "";
   const demo = isPreview() ? "" : showsExamples()
     ? `<div class="card stack" data-keep="demo"><h3>${esc(t("demo.toggleTitle"))}</h3><p class="small">${esc(t("demo.toggleOn"))}</p>
@@ -439,7 +476,7 @@ function viewAbout() {
     ${tries}
     <h2>${esc(t("more.languageHeading"))}</h2>${langButtons("lang")}
     <div class="card stack"><h3>${esc(t("more.feedbackHeading"))}</h3><p class="small">${esc(t("more.feedbackBody"))}</p>
-      <a class="btn sage" href="${esc(mail)}">${icon("mail", 20)}${esc(t("more.feedbackButton"))}</a></div>
+      <a class="btn sage" href="${esc(mail)}" data-track="feedback">${icon("mail", 20)}${esc(t("more.feedbackButton"))}</a></div>
     <a class="link-row" href="#/privacy"><span class="row">${icon("shield-check", 20)}${esc(t("more.privacyLink"))}</span>${icon("arrow-right", 18)}</a>
     ${installTip()}
     ${demo}
@@ -517,9 +554,9 @@ function route(opts) {
     if (!lv) { location.replace("#/results"); return; }
     html = viewResult(answersForLevel(app.config, lv), { example: true, back: { href: "#/results", label: t("results.back") } });
     nav = "about";
-  } else if (name === "results") { nav = "about"; html = viewResults(); }
+  } else if (name === "results") { nav = "about"; html = viewResults(); if (isPreview()) app.store.markTried("results"); }
   else if (name === "history") { nav = "history"; html = viewHistory(); }
-  else if (name === "support") { nav = "support"; html = viewSupport(); }
+  else if (name === "support") { nav = "support"; html = viewSupport(); if (isPreview()) app.store.markTried("support"); }
   else if (name === "about") { nav = "about"; html = viewAbout(); }
   else if (name === "privacy") { nav = "about"; html = viewPrivacy(); }
   else html = viewHome();
@@ -538,6 +575,7 @@ function route(opts) {
 }
 
 function onClick(ev) {
+  if (ev.target.closest("[data-track]")?.dataset.track === "feedback") app.store.markTried("feedback");
   const el = ev.target.closest("[data-answer],[data-lang],[data-demo],[data-delete],[data-reset],[data-scenario],[data-welcome],[data-replace]");
   if (!el) return;
   if (el.dataset.reset !== undefined) { app.answers = {}; return; }
@@ -574,6 +612,7 @@ function onClick(ev) {
       const entry = { week, date: isoDate(now), answers: { ...app.answers }, qv: Object.fromEntries(qs.map((x) => [x.id, x.version])) };
       if (showsExamples()) entry.scenario = scenario();
       app.store.save(entry);
+      if (isPreview()) { app.store.markTried("checkin"); if (entry.scenario) app.store.markTried(`scenario:${entry.scenario}`); }
       app.answers = {};
       location.replace(`#/result/${week}`);
     }, v === "skip" ? 60 : 180);

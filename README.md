@@ -33,7 +33,7 @@ The project is being rebuilt as native apps: **SwiftUI on iOS first, then Kotlin
 | HealthKit sleep and step signals (iOS) | Implemented, behind a provider protocol so it can be tested without Apple Health data |
 | On-device reframing model | v0.1 research preview, see [`ml/`](ml/); weights and data on [Hugging Face](https://huggingface.co/CalmCampus) |
 | Feasibility spike | Done, see [`spike/`](spike/) |
-| Web preview for university reviewers (installable web app, one config per university, example phone data), see [`web/`](web/) | Live for EPFL at [cc.braunf.com/epfl](https://cc.braunf.com/epfl/) |
+| Web preview for university reviewers (installable web app, one config per university, example phone data), see [`web/`](web/) | Implemented: the general version is on `main`, each university's version on its own branch |
 | Pilot with KU Leuven students (TestFlight) | Planned |
 | Android app | Planned |
 
@@ -70,7 +70,7 @@ xcodebuild test -project ios/CalmCampus.xcodeproj -scheme CalmCampus \
 The web preview needs only Node 20+, see [`web/README.md`](web/README.md):
 
 ```bash
-cd web && npm run check && npm test && npm run dev   # http://localhost:8080/epfl/
+cd web && npm run check && npm test && npm run dev   # http://localhost:8080/
 ```
 
 The reframing model has its own setup, see [`ml/README.md`](ml/README.md).
@@ -89,8 +89,8 @@ Issues and pull requests are welcome, see [CONTRIBUTING.md](CONTRIBUTING.md) and
 
 ## Team
 
-- **Florian Braun**: Engineering Technology, UCLL
-- **Helene David**: Economics and Business, UCLL
+- **Florian Braun**: Engineering Technology
+- **Helene David**: Economics and Business
 
 ## License
 

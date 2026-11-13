@@ -4,7 +4,9 @@ import { readFileSync } from "node:fs";
 import { typography } from "../src/lib/i18n.js";
 import { levelRanges, resultFor, countYes } from "../src/lib/scoring.js";
 
-const epfl = JSON.parse(readFileSync(new URL("../config/universities/epfl.json", import.meta.url), "utf8"));
+// Generic behaviour is tested on the default config; a tailored university branch adds
+// its own checks in test/<id>.test.mjs.
+const uni = JSON.parse(readFileSync(new URL("../config/universities/default.json", import.meta.url), "utf8"));
 
 test("French spacing keeps ? and : with their word", () => {
   assert.equal(typography("Tout supprimer sur ce téléphone ?", "fr"), "Tout supprimer sur ce téléphone ?");
@@ -24,12 +26,12 @@ test("typographic apostrophes", () => {
 });
 
 test("each level shows the range of yes answers that leads to it", () => {
-  const r = levelRanges(epfl).map(({ level, lo, hi }) => `${level.id}:${lo}-${hi}`);
+  const r = levelRanges(uni).map(({ level, lo, hi }) => `${level.id}:${lo}-${hi}`);
   assert.deepEqual(r, ["steady:0-0", "notice:1-1", "support:2-2", "care:3-4"]);
 });
 
 test("a skipped question is not a yes", () => {
   const a = { sleep: true, planning: null, energy: null, connection: false };
-  assert.equal(countYes(epfl, a), 1);
-  assert.equal(resultFor(epfl, a).level.id, "notice");
+  assert.equal(countYes(uni, a), 1);
+  assert.equal(resultFor(uni, a).level.id, "notice");
 });
