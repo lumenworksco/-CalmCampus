@@ -1,5 +1,22 @@
 # Handoff: EPFL reviewer demo (web/)
 
+> **For the next Claude session.** This file is self-contained. Do the setup below, read it fully, then continue with "Still to do". Do not push to `main` or deploy anything without asking Florian first.
+
+## Setup on a new computer
+
+```bash
+git clone https://github.com/lumenworksco/CalmCampus.git   # GitHub redirects from the new name -CalmCampus
+cd CalmCampus && git checkout epfl-web-demo
+cd web && npm run check && npm test && npm run build        # needs Node 20+; no npm install needed
+npm run dev                                                 # http://localhost:8080  (EPFL at /epfl/)
+```
+
+Branch `epfl-web-demo` is not merged into `main` yet. If SSH to GitHub fails, push over HTTPS (`gh auth login`, then `git push https://github.com/lumenworksco/CalmCampus.git <branch>`).
+
+## First message to paste into the new session
+
+"Read web/HANDOFF.md and web/README.md on branch epfl-web-demo. Continue with the 'Still to do' list, starting with the deployment step. Ask me before pushing or publishing anything."
+
 Written 2026-11-13 so work can continue from another machine or Claude account. Read this, then `web/README.md` and the repo `CLAUDE.md`.
 
 ## Goal
