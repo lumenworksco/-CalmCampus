@@ -384,7 +384,7 @@ function viewResults() {
         <span class="small">${esc(t("results.suggests", { target }))}</span></span>${icon("arrow-right", 20)}</a></li>`;
   }).join("");
   return `<div class="stack">
-    <div>${backLink("#/about", t("preview.about"))}</div>
+    <div>${backLink("#/about", t("checkin.back"))}</div>
     <h1>${esc(t("results.title"))}</h1>
     <p class="lead">${esc(t("results.lead"))}</p>
     <ul class="level-list">${items}</ul>
@@ -486,7 +486,7 @@ function viewAbout() {
 
 function viewPrivacy() {
   const pts = app.ui.privacy.points.map((p) => `<div><dt>${esc(typo(p.h))}</dt><dd>${esc(typo(p.p.replace(/\{name\}/g, uniName())))}</dd></div>`).join("");
-  return `<div class="stack privacy"><div>${backLink("#/about", t("preview.about"))}</div>
+  return `<div class="stack privacy"><div>${backLink("#/about", t("checkin.back"))}</div>
     <h1>${esc(t("privacy.title"))}</h1><p class="lead">${esc(t("privacy.intro"))}</p>
     <div class="card"><dl>${pts}</dl></div><p class="small">${esc(t("privacy.principles"))}</p></div>`;
 }

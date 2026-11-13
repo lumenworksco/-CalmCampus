@@ -212,7 +212,6 @@
   },
   "preview": {
     "strip": "Aperçu avec exemples",
-    "about": "À propos",
     "tryLink": "À essayer"
   },
   "about": {
@@ -230,7 +229,7 @@
       },
       {
         "h": "Voir tous les résultats possibles",
-        "p": "Et le service de {name} que chacun propose."
+        "p": "Ouvre la liste : chaque résultat et le service de {name} qu'il propose."
       },
       {
         "h": "Regarder l'onglet Soutien",
