@@ -6,7 +6,11 @@ const CACHE = `${PREFIX}__BUILD__`;
 const SHELL = __SHELL__;
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // cache: "reload" skips the browser's HTTP cache. The host may let browsers keep files
+  // for hours, and without this a new version could be filled with the old files.
+  e.waitUntil(caches.open(CACHE)
+    .then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: "reload" }))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {

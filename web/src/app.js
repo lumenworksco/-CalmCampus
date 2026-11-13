@@ -418,6 +418,35 @@ function onClick(ev) {
   }
 }
 
+/**
+ * The app runs from its offline copy, so a new version arrives in the background.
+ * When it has taken over, reload once to show it, but never in the middle of a
+ * check-in (answers in progress live in memory): wait until the student leaves it.
+ * Also look for a new version whenever the app comes back to the foreground,
+ * because installed apps on phones are resumed far more often than relaunched.
+ */
+function watchForUpdates() {
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloading = false;
+  const reloadWhenSafe = () => {
+    if (reloading) return;
+    if (location.hash.startsWith("#/check")) {
+      window.addEventListener("hashchange", function wait() {
+        if (location.hash.startsWith("#/check")) return;
+        window.removeEventListener("hashchange", wait);
+        reloadWhenSafe();
+      });
+      return;
+    }
+    reloading = true;
+    location.reload();
+  };
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController) reloadWhenSafe(); });
+  navigator.serviceWorker.register("sw.js").then((reg) => {
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") reg.update().catch(() => {}); });
+  }).catch(() => {});
+}
+
 async function init() {
   const params = new URLSearchParams(location.search);
   const id = resolveUniversityId(location.search, document.querySelector('meta[name="cc-university"]')?.content);
@@ -434,7 +463,7 @@ async function init() {
   new ResizeObserver(syncDock).observe($("dock"));
   route();
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    watchForUpdates();
   }
 }
 
