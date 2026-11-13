@@ -26,3 +26,10 @@ export function answersForLevel(config, level) {
   config.questions.forEach((q, i) => { answers[q.id] = i < level.minYes; });
   return answers;
 }
+
+/** Each level with the range of yes answers that leads to it, lowest first. */
+export function levelRanges(config) {
+  const total = config.questions.length;
+  const sorted = [...config.levels].sort((a, b) => a.minYes - b.minYes);
+  return sorted.map((level, i) => ({ level, lo: level.minYes, hi: i + 1 < sorted.length ? sorted[i + 1].minYes - 1 : total }));
+}

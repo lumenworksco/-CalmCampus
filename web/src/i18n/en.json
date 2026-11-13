@@ -1,7 +1,5 @@
 {
   "lang": {
-    "name": "English",
-    "short": "EN",
     "switchTo": "Switch to French",
     "names": {
       "en": "English",
@@ -20,8 +18,6 @@
     "label": "Example",
     "banner": "Made-up weeks and phone signals.",
     "exit": "Turn off",
-    "preview": "Preview every result",
-    "previewHint": "Opens an example result for each level.",
     "toggleTitle": "Demo mode",
     "toggleOn": "On. Showing made-up weeks. Your real answers are kept apart and are not touched.",
     "toggleOff": "Off. Turn on to fill the app with a few made-up weeks.",
@@ -44,7 +40,8 @@
     "yes": "Yes",
     "no": "No",
     "back": "Back",
-    "heading": "This past week"
+    "heading": "This past week",
+    "skip": "Skip this question"
   },
   "result": {
     "kicker": "Your result",
@@ -78,13 +75,14 @@
         "title": "This week sounds heavy",
         "body": "Three or four signs showed up. You do not have to carry that alone. Someone who can look at the whole picture with you can help, and reaching out is a normal thing to do."
       }
-    }
+    },
+    "exampleKicker": "Example result",
+    "skipped": "Questions skipped: {n} of {total}."
   },
   "service": {
     "email": "Send an email",
     "call": "Call",
     "website": "Open the website",
-    "hoursHeading": "How to reach them",
     "noContact": "Contact details are not set up yet. Ask your student services where to start.",
     "emailNote": "This opens your email app. Nothing from CalmCampus is attached."
   },
@@ -94,7 +92,7 @@
     "signs": "{n} of {total} signs",
     "weekOf": "Week of {date}",
     "chartLabel": "Signs noticed each week, from oldest to newest",
-    "trendHeading": "Trend",
+    "trendHeading": "Signs each week",
     "listHeading": "Week by week",
     "open": "Open result",
     "examplesNote": "The earlier weeks are examples, so you can see how this page looks after a few weeks.",
@@ -108,7 +106,7 @@
     "languageHeading": "Language",
     "privacyLink": "How your data is handled",
     "feedbackHeading": "Send feedback",
-    "feedbackBody": "Opens an email to the CalmCampus team. No data is attached automatically.",
+    "feedbackBody": "Opens an email to the CalmCampus team, with a few questions to guide you. Nothing from the app is attached.",
     "feedbackButton": "Send feedback",
     "deleteHeading": "Delete my data",
     "deleteBody": "Removes every answer and setting stored on this phone. It cannot be undone.",
@@ -117,11 +115,12 @@
     "deleteYes": "Yes, delete",
     "deleteCancel": "Keep my data",
     "version": "Version {v}",
-    "deleteDone": "Done. Everything stored on this phone has been deleted."
+    "deleteDone": "Done. Everything stored on this phone has been deleted.",
+    "feedbackTemplate": "What worked well:\n\n\nWhat was unclear:\n\n\nThe results and the services they suggest:\n\n\nAnything else:\n"
   },
   "signals": {
     "heading": "This week on your phone",
-    "simulated": "In the full app this comes from the phone's own health and screen time data, compared with your usual week. Here it is an example.",
+    "simulated": "In the full app, this would come from the phone's own health and screen time data, compared with your usual week. Here it is an example.",
     "scenarioLabel": "Try another example week",
     "scenarios": {
       "steady": "Calm",
@@ -157,7 +156,8 @@
     "resultHeading": "What your phone noticed",
     "resultNone": "Nothing unusual in sleep, late phone use or steps this week.",
     "resultNote": "Phone signals only decide which questions come first. Your result comes from your answers alone.",
-    "scenarioHint": "The check-in questions adapt to it."
+    "scenarioHint": "The check-in questions adapt to it.",
+    "unremarkable": "Your phone noticed nothing unusual for this one."
   },
   "privacy": {
     "title": "Your privacy, in plain words",
@@ -169,7 +169,7 @@
       },
       {
         "h": "No account, no tracking",
-        "p": "There is no sign-up, no analytics and no trackers. Fonts and icons are bundled in the app, so it makes no calls to other companies."
+        "p": "There is no sign-up, no analytics and no trackers. Fonts and icons are bundled in the app, so it does not load anything from other companies."
       },
       {
         "h": "Only what is needed",
@@ -189,13 +189,10 @@
       },
       {
         "h": "This is a reviewer preview",
-        "p": "It uses no real student data. The earlier weeks and the phone data you see are made up and labelled Example. This web version cannot read Apple Health or Screen Time; the full app does, on the phone only."
+        "p": "It uses no real student data. The earlier weeks and the phone data you see are made up and labelled Example. This web version cannot read Apple Health or Screen Time; the full app is designed to, on the phone only."
       }
     ],
     "principles": "We follow the design principles of the Swiss nLPD and the GDPR: data minimisation, purpose limitation, transparency and user control. This is a statement of how the app is designed. It is not a certification or an audit."
-  },
-  "footer": {
-    "privacy": "Privacy"
   },
   "errors": {
     "config": "This university could not be loaded. Showing the default setup instead."
@@ -205,12 +202,9 @@
     "lead": "This is a preview of CalmCampus for {name}. Try it the way a student would. It takes about five minutes.",
     "points": [
       "Answer four yes or no questions about your week. It takes under a minute.",
-      "The app also looks at sleep, steps and late phone use. Here these are examples, not your real data.",
+      "The full app also looks at sleep, steps and late phone use. Here these are examples, not your real data.",
       "Nothing you enter leaves this phone."
     ],
-    "installTitle": "First, add it to your home screen",
-    "installIos": "In Safari, tap the Share button at the bottom of the screen, then Add to Home Screen. Then open CalmCampus from its new icon.",
-    "installAndroid": "In Chrome, tap the menu with three dots, then Add to Home screen or Install app. Then open CalmCampus from its new icon.",
     "start": "Start",
     "later": "You can find all of this again under About."
   },
@@ -258,6 +252,25 @@
     "yes": "Yes answers: {range} of {total}",
     "suggests": "Suggests: {target}",
     "supportList": "the list of support options",
-    "back": "All results"
+    "back": "All results",
+    "emergencyNote": "Every result also shows the emergency numbers."
+  },
+  "install": {
+    "title": "Add it to your home screen",
+    "ios": [
+      "Open this page in Safari.",
+      "Tap Share: the square with an arrow. On newer iPhones it can be under the ••• button.",
+      "Choose Add to Home Screen.",
+      "Open CalmCampus from its new icon."
+    ],
+    "android": [
+      "Open this page in Chrome.",
+      "Tap the menu: the three dots at the top right.",
+      "Choose Add to Home screen or Install app.",
+      "Open CalmCampus from its new icon."
+    ],
+    "desktopTitle": "Made for phones",
+    "desktopBody": "Scan this code with your phone's camera, or open {url} on your phone.",
+    "qrAlt": "QR code that opens {url}"
   }
 }

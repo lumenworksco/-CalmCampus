@@ -2,7 +2,7 @@
 // Fails (exit 1) on: missing translations, broken service/level references,
 // bad contact formats, exclamation marks, emoji, banned clinical words, or a
 // misspelled product name. TODO placeholders are reported as warnings.
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { SIGNAL_IDS } from "../src/lib/signals.js";
@@ -70,6 +70,7 @@ for (const f of files) {
   const c = read(`config/universities/${f}`);
   if (c.id !== id) err(where, `"id" must equal the file name (${id})`);
   if (!c.name) err(where, "name is required");
+  if (c.nameInText !== undefined && (typeof c.nameInText !== "object" || !Object.values(c.nameInText).every((v) => typeof v === "string" && v.trim()))) err(where, "nameInText must have one text per language");
   if (!Array.isArray(c.languages) || !c.languages.length) { err(where, "languages is required"); continue; }
   if (!c.languages.includes(c.defaultLanguage)) err(where, "defaultLanguage must be one of languages");
   for (const l of c.languages) if (!uiLangs.includes(l)) err(where, `language "${l}" has no src/i18n/${l}.json`);
@@ -81,6 +82,10 @@ for (const f of files) {
 
   if (!c.feedback?.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c.feedback.email)) err(where, "feedback.email invalid");
   if (!c.feedback?.subject) err(where, "feedback.subject required");
+  else if (typeof c.feedback.subject !== "string") needLoc(c.feedback.subject, `${where} feedback.subject`);
+  if (c.publicUrl !== undefined && !/^https:\/\/.+\/$/.test(c.publicUrl)) err(where, "publicUrl must be an https URL ending in /");
+  if (c.qr !== undefined && !existsSync(path.join(root, c.qr))) err(where, `qr file not found: ${c.qr}`);
+  if (c.qr !== undefined && !c.publicUrl) err(where, "qr needs publicUrl (the address the code opens)");
 
   if (c.questions?.length !== 4) err(where, "exactly 4 questions are required");
   const qids = new Set();

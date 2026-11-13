@@ -24,3 +24,19 @@ export function pickLanguage(config, { search = "", stored = null, browser = [] 
   }
   return config.defaultLanguage;
 }
+
+/**
+ * Typography for text shown on screen (never for links): typographic apostrophes,
+ * no line break inside a number, a phone number or "24 h/24", and French spacing
+ * before ? ! ; and :, so a question mark never ends up alone on a new line.
+ */
+export function typography(text, lang) {
+  if (typeof text !== "string") return text;
+  let out = text
+    .replace(/'/g, "’")
+    .replace(/(\d) (?=\d)/g, "$1 ")
+    .replace(/(\d) (?=(?:h|min)\b)/g, "$1 ")
+    .replace(/\bh (?=\d)/g, "h ");
+  if (lang === "fr") out = out.replace(/ ([?!;])/g, " $1").replace(/ :/g, " :");
+  return out;
+}

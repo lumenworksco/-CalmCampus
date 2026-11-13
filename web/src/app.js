@@ -1,7 +1,7 @@
 import { icon } from "./lib/icons.js";
 import { loadConfig, resolveUniversityId } from "./lib/config.js";
-import { loc, pickLanguage, translate } from "./lib/i18n.js";
-import { resultFor, answersForLevel } from "./lib/scoring.js";
+import { loc, pickLanguage, translate, typography } from "./lib/i18n.js";
+import { resultFor, answersForLevel, levelRanges } from "./lib/scoring.js";
 import { createStore } from "./lib/store.js";
 import { demoEntries } from "./lib/demo.js";
 import { isoDate, weekKey, weekStart } from "./lib/week.js";
@@ -10,11 +10,16 @@ import { SCENARIO_IDS, DEFAULT_SCENARIO, weekSignals, signalsFor, orderQuestions
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-const app = { config: null, store: null, lang: "en", ui: {}, answers: {}, confirmDelete: false, deleted: false, fellBack: false, screen: null, tabScroll: {} };
+const app = { config: null, store: null, lang: "en", ui: {}, answers: {}, confirmDelete: false, deleted: false, fellBack: false, screen: null, tabScroll: {}, advancing: false };
 const TABS = new Set(["home", "history", "support", "about"]);
 
-const t = (key, vars) => translate(app.ui, key, { name: app.config?.name, ...vars });
+/** Display text goes through typography(); links never do (L keeps them raw). */
+const typo = (s) => typography(s, app.lang);
 const L = (value) => loc(value, app.lang, app.config.defaultLanguage);
+const Lt = (value) => typo(L(value));
+/** The university's name inside a sentence: "l'EPFL" in French (config `nameInText`). */
+const uniName = () => (app.config?.nameInText ? L(app.config.nameInText) : app.config?.name);
+const t = (key, vars) => typo(translate(app.ui, key, { name: uniName(), ...vars }));
 
 /**
  * Preview builds (a reviewer demo, `preview: true` in the university config) always
@@ -32,7 +37,12 @@ async function loadUi(lang) {
 }
 
 const isInstalled = () => window.matchMedia?.("(display-mode: standalone)").matches || navigator.standalone === true;
-const platform = () => (/iPhone|iPad|iPod/.test(navigator.userAgent) ? "ios" : /Android/.test(navigator.userAgent) ? "android" : null);
+function platform() {
+  const ua = navigator.userAgent;
+  // iPadOS Safari presents itself as a Mac; touch support gives it away.
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return "ios";
+  return /Android/.test(ua) ? "android" : "desktop";
+}
 
 /* ---------- Shell ---------- */
 
@@ -43,7 +53,7 @@ function renderShell() {
     : c.logo?.text ? `<span class="uni-chip">${esc(c.logo.text)}</span>` : "";
   const other = c.languages.length > 1 ? c.languages.find((l) => l !== app.lang) : null;
   const switcher = other
-    ? `<button class="lang" id="lang-toggle" lang="${other}" aria-label="${esc(app.ui.lang.switchTo)}">${icon("languages", 18)}${esc(other.toUpperCase())}</button>`
+    ? `<button class="lang" id="lang-toggle" lang="${other}" aria-label="${esc(t("lang.switchTo"))}">${icon("languages", 18)}${esc(other.toUpperCase())}</button>`
     : "";
   $("top").innerHTML = `<div class="brand"><a class="wordmark" href="#/">CalmCampus</a>${chip}</div>${switcher}`;
   $("lang-toggle")?.addEventListener("click", () => setLang(other));
@@ -51,7 +61,8 @@ function renderShell() {
   document.documentElement.lang = app.lang;
 
   if (isPreview()) {
-    $("demo-banner").innerHTML = app.screen === "welcome" ? ""
+    // Hidden on the welcome screen and during the check-in, where the screen needs the room.
+    $("demo-banner").innerHTML = app.screen === "welcome" || app.screen === "check" ? ""
       : `<a class="preview-strip" href="#/about">${icon("info", 18)}<span class="grow">${esc(t("preview.strip"))}</span><span class="go">${esc(t("preview.about"))}</span></a>`;
   } else {
     $("demo-banner").innerHTML = showsExamples()
@@ -98,8 +109,17 @@ function exampleTag() {
   return showsExamples() ? `<span class="pill demo">${esc(t("demo.label"))}</span>` : "";
 }
 
-function backLink(href, label) {
-  return `<a class="btn ghost sm" href="${href}">${icon("arrow-left", 18)}${esc(label)}</a>`;
+/** `replace`: go back without adding a browser history entry (used inside the check-in). */
+function backLink(href, label, replace = false) {
+  return `<a class="btn ghost sm" href="${href}"${replace ? " data-replace" : ""}>${icon("arrow-left", 18)}${esc(label)}</a>`;
+}
+
+function feedbackHref() {
+  const fb = app.config.feedback;
+  const subject = typeof fb.subject === "string" ? fb.subject : L(fb.subject);
+  // A few neutral prompts help a reviewer start; nothing from the app is added.
+  const body = t("more.feedbackTemplate").replace(/\n/g, "\r\n");
+  return `mailto:${fb.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function langButtons(keep) {
@@ -109,10 +129,22 @@ function langButtons(keep) {
     `<button class="btn ${l === app.lang ? "sage" : "ghost"} sm" data-lang="${l}" lang="${l}" aria-pressed="${l === app.lang}">${esc(app.ui.lang.names?.[l] ?? l.toUpperCase())}</button>`).join("")}</div>`;
 }
 
+/**
+ * How to get the app onto the home screen: numbered steps on a phone, and on a
+ * computer (where the email is often opened first) a QR code to the phone link.
+ */
 function installTip() {
+  if (isInstalled()) return "";
   const p = platform();
-  if (isInstalled() || !p) return "";
-  return `<div class="card stack install"><h3 class="row">${icon("share", 20)}${esc(t("welcome.installTitle"))}</h3><p>${esc(t(p === "ios" ? "welcome.installIos" : "welcome.installAndroid"))}</p></div>`;
+  if (p === "desktop") {
+    const url = app.config.publicUrl;
+    if (!url) return "";
+    const shown = url.replace(/^https:\/\//, "").replace(/\/$/, "");
+    const qr = app.config.qr ? `<img class="qr" src="${esc(app.config.qr)}" width="132" height="132" alt="${esc(t("install.qrAlt", { url: shown }))}">` : "";
+    return `<div class="card install desktop">${qr}<div class="grow"><h3>${esc(t("install.desktopTitle"))}</h3><p>${esc(t("install.desktopBody", { url: shown }))}</p></div></div>`;
+  }
+  const steps = app.ui.install[p].map((s) => `<li>${esc(typo(s))}</li>`).join("");
+  return `<div class="card stack install"><h3 class="row">${icon("share", 20)}${esc(t("install.title"))}</h3><ol class="steps">${steps}</ol></div>`;
 }
 
 /* ---------- Example phone data (see lib/signals.js) ---------- */
@@ -166,12 +198,15 @@ function checkContext(q) {
       ${hits.map((s) => `<p>${esc(signalHint(s))}</p>`).join("")}
       <p class="you">${esc(t("signals.youDecide"))}</p></div>`;
   }
-  return q.signals?.length ? "" : `<p class="small row">${icon("smartphone", 18)}<span>${esc(t("signals.noSignal"))}</span></p>`;
+  // Questions with a phone signal that looks as usual say so, so the adaptation stays visible.
+  const note = q.signals?.length ? "signals.unremarkable" : "signals.noSignal";
+  return `<p class="small row">${icon("smartphone", 18)}<span>${esc(t(note))}</span></p>`;
 }
 
-function phoneSection() {
-  const sigs = phoneSignals();
-  if (!sigs) return "";
+/** What the phone noticed for a result: the example week the check-in was done with. */
+function phoneSection(scenarioId) {
+  if (!showsExamples()) return "";
+  const sigs = weekSignals(SCENARIO_IDS.includes(scenarioId) ? scenarioId : scenario());
   const hits = sigs.filter((s) => s.notable);
   return `<div class="card stack"><div class="row wrap"><h3 class="grow">${esc(t("signals.resultHeading"))}</h3>${exampleTag()}</div>
     ${hits.length
@@ -184,7 +219,7 @@ function phoneSection() {
 
 function viewWelcome() {
   const icons = ["check", "smartphone", "shield-check"];
-  const points = app.ui.welcome.points.map((p, i) => `<li><span class="dot">${icon(icons[i] ?? "check", 20)}</span><span>${esc(p.replace(/\{name\}/g, app.config.name))}</span></li>`).join("");
+  const points = app.ui.welcome.points.map((p, i) => `<li><span class="dot">${icon(icons[i] ?? "check", 20)}</span><span>${esc(typo(p.replace(/\{name\}/g, uniName())))}</span></li>`).join("");
   return `<div class="stack welcome">
     <h1>${esc(t("welcome.title"))}</h1>
     <p class="lead">${esc(t("welcome.lead"))}</p>
@@ -211,28 +246,36 @@ function viewHome() {
   </div>`;
 }
 
+const checkIndex = () => { const m = location.hash.match(/^#\/check\/(\d+)$/); return m ? Number(m[1]) : -1; };
+
+/** Returns null when it redirects, so route() stops there. */
 function viewCheck(n) {
   const qs = questionsInOrder();
-  if (!(n >= 0 && n < qs.length)) { location.hash = "#/"; return ""; }
+  if (!(n >= 0 && n < qs.length)) { location.replace("#/"); return null; }
+  // Never show a question before the earlier ones are answered, for example after the
+  // browser's back button returns into a check-in that is already finished.
+  const missing = qs.findIndex((q, i) => i < n && app.answers[q.id] === undefined);
+  if (missing !== -1) { location.replace(`#/check/${missing}`); return null; }
   const q = qs[n];
   const dots = qs.map((_, i) => `<i class="${i <= n ? "on" : ""}"></i>`).join("");
   return `<div class="stack">
-    <div class="row">${backLink(n === 0 ? "#/" : `#/check/${n - 1}`, t("checkin.back"))}
+    <div class="row">${backLink(n === 0 ? "#/" : `#/check/${n - 1}`, t("checkin.back"), true)}
       <span class="small grow" style="text-align:right">${esc(t("checkin.progress", { n: n + 1, total: qs.length }))}</span></div>
     <div class="progress" aria-hidden="true">${dots}</div>
     <p class="small">${esc(t("checkin.heading"))}</p>
-    <h1 class="question" id="q">${esc(L(q.text))}</h1>
+    <h1 class="question" id="q">${esc(Lt(q.text))}</h1>
     ${checkContext(q)}</div>`;
 }
 
-/** Yes and No sit in the bottom dock during the check-in, so they are always in reach. */
+/** Yes, No and Skip sit in the bottom dock during the check-in, so they are always in reach. */
 function checkAnswers(n) {
   const q = questionsInOrder()[n];
   if (!q) return "";
   const picked = app.answers[q.id];
   return `<div class="answers" role="group" aria-labelledby="q">
-      <button class="btn ${picked === true ? "picked" : ""}" data-answer="yes">${esc(t("checkin.yes"))}</button>
-      <button class="btn ${picked === false ? "picked" : ""}" data-answer="no">${esc(t("checkin.no"))}</button>
+      <button class="btn ${picked === true ? "picked" : ""}" data-answer="yes" data-n="${n}">${esc(t("checkin.yes"))}</button>
+      <button class="btn ${picked === false ? "picked" : ""}" data-answer="no" data-n="${n}">${esc(t("checkin.no"))}</button>
+      <button class="btn link" data-answer="skip" data-n="${n}">${esc(t("checkin.skip"))}</button>
     </div>`;
 }
 
@@ -240,7 +283,7 @@ function serviceCard(id, { actions = true } = {}) {
   const s = app.config.services[id];
   if (!s) return "";
   const c = s.contact || {};
-  const link = L(c.link), hours = L(c.hours), note = L(s.note);
+  const link = L(c.link), hours = Lt(c.hours), note = Lt(s.note);
   const btns = [];
   if (c.email) btns.push({ href: `mailto:${c.email}`, label: t("service.email"), ic: "mail", ext: false });
   if (link) btns.push({ href: link, label: t("service.website"), ic: "external-link", ext: true });
@@ -249,8 +292,8 @@ function serviceCard(id, { actions = true } = {}) {
     ? `<div class="actions">${btns.map((b, i) => `<a class="btn ${i ? "ghost" : ""}" href="${esc(b.href)}" ${b.ext ? 'target="_blank" rel="noopener noreferrer"' : ""}>${icon(b.ic, 20)}${esc(b.label)}</a>`).join("")}</div>`
     : "";
   return `<section class="card service" aria-labelledby="s-${esc(id)}">
-    <h3 id="s-${esc(id)}">${esc(L(s.name))}</h3>
-    <p>${esc(L(s.purpose))}</p>
+    <h3 id="s-${esc(id)}">${esc(Lt(s.name))}</h3>
+    <p>${esc(Lt(s.purpose))}</p>
     ${note ? `<p class="small">${esc(note)}</p>` : ""}
     ${btns.length ? "" : `<p class="small">${esc(t("service.noContact"))}</p>`}
     ${buttons}
@@ -261,32 +304,34 @@ function serviceCard(id, { actions = true } = {}) {
 
 function emergencyCard() {
   const items = app.config.emergency.map((e) => `<div class="em-item">
-      <div class="label">${esc(L(e.label))}</div>
-      <a class="call" href="tel:${esc(e.tel)}">${icon("phone", 22)}${esc(e.number)}</a>
-      <div class="detail">${esc(L(e.detail))}</div></div>`).join("");
+      <div class="label">${esc(Lt(e.label))}</div>
+      <a class="call" href="tel:${esc(e.tel)}">${icon("phone", 22)}${esc(typo(e.number))}</a>
+      <div class="detail">${esc(Lt(e.detail))}</div></div>`).join("");
   return `<section class="emergency" aria-labelledby="em-h">
     <h2 id="em-h">${icon("siren", 24)}${esc(t("result.emergencyHeading"))}</h2>
     <p class="intro">${esc(t("result.emergencyIntro"))}</p>${items}</section>`;
 }
 
-function viewResult(answers, { saved, example, phone, back } = {}) {
+function viewResult(answers, { saved, example, phone, scenarioId, back } = {}) {
   const c = app.config;
   const r = resultFor(c, answers);
   const yesQs = c.questions.filter((q) => answers[q.id] === true);
+  const skipped = c.questions.filter((q) => answers[q.id] === null).length;
   const lv = r.level;
   const noticed = yesQs.length
-    ? `<ul class="noticed">${yesQs.map((q) => `<li>${icon("check", 18)}<span>${esc(L(q.text))}</span></li>`).join("")}</ul>`
+    ? `<ul class="noticed">${yesQs.map((q) => `<li>${icon("check", 18)}<span>${esc(Lt(q.text))}</span></li>`).join("")}</ul>`
     : `<p class="lead">${esc(t("result.noneNoticed"))}</p>`;
   const next = lv.service
     ? serviceCard(lv.service)
     : `<div class="card stack"><p>${esc(t("result.steadyNext"))}</p><a class="btn sage" href="#/support">${esc(t("result.seeSupport"))}</a></div>`;
   return `<div class="stack">
     ${back ? `<div>${backLink(back.href, back.label)}</div>` : ""}
-    <div class="level-head"><div class="row wrap"><span class="small">${esc(t("result.kicker"))}</span>${pillFor(lv)}${example ? exampleTag() : ""}</div>
+    <div class="level-head"><div class="row wrap"><span class="small">${esc(t(example ? "result.exampleKicker" : "result.kicker"))}</span>${pillFor(lv)}</div>
       <h1>${esc(t(`result.levels.${lv.id}.title`))}</h1></div>
     <p class="lead">${esc(t(`result.levels.${lv.id}.body`))}</p>
-    <div class="card stack"><h3>${esc(t("result.noticedHeading"))}</h3>${noticed}</div>
-    ${phone ? phoneSection() : ""}
+    <div class="card stack"><h3>${esc(t("result.noticedHeading"))}</h3>${noticed}
+      ${skipped ? `<p class="small">${esc(t("result.skipped", { n: skipped, total: c.questions.length }))}</p>` : ""}</div>
+    ${phone ? phoneSection(scenarioId) : ""}
     <h2>${esc(t("result.nextHeading"))}</h2>
     ${next}
     ${emergencyCard()}
@@ -298,11 +343,9 @@ function viewResult(answers, { saved, example, phone, back } = {}) {
 function viewResults() {
   const c = app.config;
   const total = c.questions.length;
-  const sorted = [...c.levels].sort((a, b) => a.minYes - b.minYes);
-  const items = sorted.map((lv, i) => {
-    const lo = lv.minYes, hi = i + 1 < sorted.length ? sorted[i + 1].minYes - 1 : total;
+  const items = levelRanges(c).map(({ level: lv, lo, hi }) => {
     const range = lo === hi ? `${lo}` : `${lo}–${hi}`;
-    const target = lv.service ? L(c.services[lv.service]?.name) : t("results.supportList");
+    const target = lv.service ? Lt(c.services[lv.service]?.name) : t("results.supportList");
     return `<li><a href="#/preview/${esc(lv.id)}">
       <span class="grow stack-tight">${pillFor(lv)}<strong>${esc(t(`result.levels.${lv.id}.title`))}</strong>
         <span class="small">${esc(t("results.yes", { range, total }))}</span>
@@ -312,7 +355,8 @@ function viewResults() {
     <div>${backLink("#/about", t("preview.about"))}</div>
     <h1>${esc(t("results.title"))}</h1>
     <p class="lead">${esc(t("results.lead"))}</p>
-    <ul class="level-list">${items}</ul></div>`;
+    <ul class="level-list">${items}</ul>
+    <p class="small row">${icon("siren", 18)}<span>${esc(t("results.emergencyNote"))}</span></p></div>`;
 }
 
 function fmtDate(iso) {
@@ -333,7 +377,9 @@ function viewHistory() {
   }
   const total = app.config.questions.length;
   const rows = entries.map((e) => ({ e, r: resultFor(app.config, e.answers) }));
-  const chart = rows.map(({ e, r }) => `<div class="col"><div class="bar l-${esc(r.level.id)}" style="height:${Math.max(4, (r.yes / total) * 100)}%"></div><span class="lab">${esc(fmtShort(e))}</span></div>`).join("");
+  // The chart shows the last seven weeks so it always fits a small phone; the list has them all.
+  const recent = rows.slice(-7);
+  const chart = recent.map(({ e, r }) => `<div class="col"><div class="bar l-${esc(r.level.id)}" style="height:${Math.max(4, (r.yes / total) * 100)}%"></div><span class="lab${e.demo ? "" : " own"}">${esc(fmtShort(e))}</span></div>`).join("");
   const item = ({ e, r }) => `<li><a href="#/result/${esc(e.week)}" aria-label="${esc(t("history.open"))}: ${esc(t("history.weekOf", { date: fmtWeek(e) }))}">
       <span class="grow"><strong>${esc(t("history.weekOf", { date: fmtWeek(e) }))}</strong>
         <span class="week-meta">${pillFor(r.level)}<span class="small">${esc(t("history.signs", { n: r.yes, total }))}</span></span></span>${icon("arrow-right", 18)}</a></li>`;
@@ -347,7 +393,7 @@ function viewHistory() {
     : `<h2>${esc(t("history.listHeading"))}</h2><ul class="week-list">${own.map(item).join("")}</ul>`;
   return `<div class="stack"><h1>${esc(t("history.title"))}</h1>
     ${examples.length ? `<p class="small">${esc(t("history.examplesNote"))}</p>` : ""}
-    <div class="card"><h3>${esc(t("history.trendHeading"))}</h3><div class="chart" role="img" aria-label="${esc(t("history.chartLabel"))}: ${rows.map(({ e, r }) => `${fmtWeek(e)} ${r.yes}/${total}`).join(", ")}">${chart}</div></div>
+    <div class="card"><h3>${esc(t("history.trendHeading"))}</h3><div class="chart" role="img" aria-label="${esc(t("history.chartLabel"))}: ${recent.map(({ e, r }) => `${fmtWeek(e)} ${r.yes}/${total}`).join(", ")}">${chart}</div></div>
     ${lists}</div>`;
 }
 
@@ -375,12 +421,11 @@ function resetCard() {
 
 function viewAbout() {
   const c = app.config;
-  const fb = c.feedback;
-  const mail = `mailto:${fb.email}?subject=${encodeURIComponent(fb.subject)}`;
+  const mail = feedbackHref();
   const hrefs = ["#/check/0", "#/", "#/results", "#/support", mail];
   const tries = isPreview()
     ? `<section class="stack"><h2>${esc(t("about.tryHeading"))}</h2><ol class="try">${app.ui.about.try.map((it, i) =>
-        `<li><a href="${esc(hrefs[i])}"${i === 0 ? " data-reset" : ""}><span class="num">${i + 1}</span><span class="grow"><strong>${esc(it.h)}</strong><br><span class="small">${esc(it.p.replace(/\{name\}/g, c.name))}</span></span>${icon("arrow-right", 18)}</a></li>`).join("")}</ol></section>`
+        `<li><a href="${esc(hrefs[i])}"${i === 0 ? " data-reset" : ""}><span class="num">${i + 1}</span><span class="grow"><strong>${esc(typo(it.h))}</strong><br><span class="small">${esc(typo(it.p.replace(/\{name\}/g, uniName())))}</span></span>${icon("arrow-right", 18)}</a></li>`).join("")}</ol></section>`
     : "";
   const demo = isPreview() ? "" : showsExamples()
     ? `<div class="card stack" data-keep="demo"><h3>${esc(t("demo.toggleTitle"))}</h3><p class="small">${esc(t("demo.toggleOn"))}</p>
@@ -403,7 +448,7 @@ function viewAbout() {
 }
 
 function viewPrivacy() {
-  const pts = app.ui.privacy.points.map((p) => `<div><dt>${esc(p.h)}</dt><dd>${esc(p.p.replace(/\{name\}/g, app.config.name))}</dd></div>`).join("");
+  const pts = app.ui.privacy.points.map((p) => `<div><dt>${esc(typo(p.h))}</dt><dd>${esc(typo(p.p.replace(/\{name\}/g, uniName())))}</dd></div>`).join("");
   return `<div class="stack privacy"><div>${backLink("#/about", t("preview.about"))}</div>
     <h1>${esc(t("privacy.title"))}</h1><p class="lead">${esc(t("privacy.intro"))}</p>
     <div class="card"><dl>${pts}</dl></div><p class="small">${esc(t("privacy.principles"))}</p></div>`;
@@ -449,11 +494,13 @@ function route(opts) {
   if (!inPlace && TABS.has(app.screen)) app.tabScroll[app.screen] = window.scrollY;
   const from = app.screen;
   if (!inPlace) app.screen = name || "home";
-  if (from !== app.screen && (from === "welcome" || app.screen === "welcome")) renderShell();
+  // The preview line is hidden on the welcome screen and during the check-in.
+  const bare = (s) => s === "welcome" || s === "check";
+  if (from !== app.screen && (bare(from) || bare(app.screen))) renderShell();
   const view = $("view");
   let html = "", nav = "home";
   if (name === "welcome") { nav = null; html = viewWelcome(); }
-  else if (name === "check") { nav = null; html = viewCheck(Number(arg)); }
+  else if (name === "check") { nav = null; html = viewCheck(Number(arg)); if (html === null) return; }
   else if (name === "result") {
     const e = app.store.entryForWeek(arg || currentWeek());
     if (!e) { location.replace("#/"); return; }
@@ -461,7 +508,7 @@ function route(opts) {
     const fromHistory = inPlace ? app.resultBack === "history" : from === "history";
     if (!inPlace) app.resultBack = fromHistory ? "history" : null;
     html = viewResult(e.answers, {
-      saved: own, example: !own, phone: own && e.week === currentWeek(),
+      saved: own, example: !own, phone: own && e.week === currentWeek(), scenarioId: e.scenario,
       back: fromHistory ? { href: "#/history", label: t("history.title") } : null,
     });
     nav = fromHistory ? "history" : "home";
@@ -491,25 +538,45 @@ function route(opts) {
 }
 
 function onClick(ev) {
-  const el = ev.target.closest("[data-answer],[data-lang],[data-demo],[data-delete],[data-reset],[data-scenario],[data-welcome]");
+  const el = ev.target.closest("[data-answer],[data-lang],[data-demo],[data-delete],[data-reset],[data-scenario],[data-welcome],[data-replace]");
   if (!el) return;
   if (el.dataset.reset !== undefined) { app.answers = {}; return; }
+  if (el.dataset.replace !== undefined) {
+    // Inside the check-in, moving between questions replaces the history entry, so the
+    // whole check-in is one step back: the phone's back button returns to where it started.
+    ev.preventDefault();
+    location.replace(el.getAttribute("href"));
+    return;
+  }
   if (el.dataset.welcome !== undefined) {
     app.store.setWelcomed();
-    location.hash = "#/";
+    location.replace("#/");
     return;
   }
   if (el.dataset.answer) {
-    const n = Number(location.hash.split("/")[2]);
+    const n = Number(el.dataset.n);
+    // Ignore a second tap while moving on, and taps on a question that is no longer shown.
+    if (app.advancing || n !== checkIndex()) return;
     const qs = questionsInOrder();
-    app.answers[qs[n].id] = el.dataset.answer === "yes";
-    if (n + 1 < qs.length) { location.hash = `#/check/${n + 1}`; return; }
-    const now = new Date();
-    const qv = Object.fromEntries(qs.map((q) => [q.id, q.version]));
-    const week = weekKey(now);
-    app.store.save({ week, date: isoDate(now), answers: { ...app.answers }, qv });
-    app.answers = {};
-    location.hash = `#/result/${week}`;
+    const q = qs[n];
+    if (!q) return;
+    const v = el.dataset.answer;
+    app.answers[q.id] = v === "yes" ? true : v === "no" ? false : null;
+    el.closest(".answers")?.querySelectorAll("[data-answer]").forEach((b) => b.classList.toggle("picked", b === el && v !== "skip"));
+    app.advancing = true;
+    // A short pause shows which answer was taken before the next question appears.
+    setTimeout(() => {
+      app.advancing = false;
+      if (checkIndex() !== n) return;
+      if (n + 1 < qs.length) { location.replace(`#/check/${n + 1}`); return; }
+      const now = new Date();
+      const week = weekKey(now);
+      const entry = { week, date: isoDate(now), answers: { ...app.answers }, qv: Object.fromEntries(qs.map((x) => [x.id, x.version])) };
+      if (showsExamples()) entry.scenario = scenario();
+      app.store.save(entry);
+      app.answers = {};
+      location.replace(`#/result/${week}`);
+    }, v === "skip" ? 60 : 180);
   } else if (el.dataset.scenario) {
     if (SCENARIO_IDS.includes(el.dataset.scenario)) app.store.setScenario(el.dataset.scenario);
     refresh(el, `[data-scenario="${el.dataset.scenario}"]`);
@@ -531,7 +598,7 @@ function onClick(ev) {
         app.store.setLang(app.lang);
         app.store.setDemo(true, demoEntries(app.config));
         app.tabScroll = {};
-        location.hash = "#/welcome";
+        location.replace("#/welcome");
         return;
       }
       app.deleted = true;

@@ -1,6 +1,10 @@
 {
   "id": "epfl",
   "name": "EPFL",
+  "nameInText": {
+    "fr": "l'EPFL",
+    "en": "EPFL"
+  },
   "logo": {
     "text": "EPFL",
     "image": null,
@@ -9,9 +13,14 @@
   "preview": true,
   "defaultLanguage": "fr",
   "languages": ["fr", "en"],
+  "publicUrl": "https://cc.braunf.com/epfl/",
+  "qr": "config/qr/epfl.svg",
   "feedback": {
     "email": "contact@calm.braunf.com",
-    "subject": "CalmCampus EPFL demo feedback"
+    "subject": {
+      "fr": "Retour sur l'aperçu CalmCampus (EPFL)",
+      "en": "Feedback on the CalmCampus preview (EPFL)"
+    }
   },
   "questions": [
     {

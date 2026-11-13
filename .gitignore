@@ -38,3 +38,5 @@ __pycache__/
 
 # Web demo build output
 web/dist/
+web/node_modules/
+web/package-lock.json
