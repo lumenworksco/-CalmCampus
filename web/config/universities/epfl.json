@@ -75,8 +75,8 @@
         }
       },
       "source": "https://www.epfl.ch/education/studies/en/social-consultation/",
-      "verified": "2026-11-12",
-      "todo": ["phone", "opening hours (the page gives none)"]
+      "verified": "2026-11-13",
+      "notPublished": ["phone", "opening hours: contact is by email or appointment only (checked on the service pages, the Trust and Support Network page and the Student Services page)"]
     },
     "clinical": {
       "name": {
@@ -104,8 +104,9 @@
         "en": "The first consultation is covered by EPFL."
       },
       "source": "https://www.epfl.ch/education/studies/en/psy-consultation-epfl/",
-      "verified": "2026-11-12",
-      "todo": ["phone"]
+      "sourceChuv": "https://www.chuv.ch/fr/fiches-psy/consultation-psychotherapeutique-pour-etudiants-epfl-unite-ambulatoire-daccueil-et-interventions-breves",
+      "verified": "2026-11-13",
+      "notPublished": ["phone: contact is by email, appointments booked directly by the student (checked on the EPFL and CHUV pages)"]
     }
   },
   "emergency": [
@@ -160,10 +161,10 @@
         "en": "La Main Tendue, listening 24/7"
       },
       "detail": {
-        "fr": "Écoute gratuite et confidentielle, par téléphone ou par tchat sur 143.ch.",
-        "en": "Free, confidential listening by phone or chat at 143.ch."
+        "fr": "Écoute gratuite et confidentielle, par téléphone ou par tchat sur 143.ch. En anglais : 0800 143 000.",
+        "en": "Free, confidential listening by phone or chat at 143.ch. In English: 0800 143 000."
       },
-      "source": "https://www.epfl.ch/education/studies/en/social-consultation/"
+      "source": "https://www.epfl.ch/education/studies/consultation-sociale/"
     }
   ]
 }
