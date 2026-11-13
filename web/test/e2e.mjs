@@ -3,7 +3,7 @@
 // It serves dist/ itself, or checks a deployed copy when E2E_URL is set.
 //
 //   npm run build && npm run e2e
-//   E2E_URL=https://cc.braunf.com/epfl/ npm run e2e      # after deploying
+//   E2E_URL=https://cc.braunf.com/<id>/ npm run e2e      # after deploying
 //
 // It tests the university of this branch: the one config besides "default" if there
 // is one (a tailored branch), else "default" (main). E2E_UNI=<id> picks another.

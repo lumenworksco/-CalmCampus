@@ -1,4 +1,4 @@
-/** ?u=epfl wins, then the folder's <meta name="cc-university">, then "default". */
+/** ?u=<id> wins, then the folder's <meta name="cc-university">, then "default". */
 export function resolveUniversityId(search, metaValue) {
   const fromUrl = new URLSearchParams(search).get("u");
   const id = (fromUrl || metaValue || "default").toLowerCase();

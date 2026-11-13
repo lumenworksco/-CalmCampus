@@ -1,9 +1,9 @@
 // Builds dist/ : the default university at the root and every other university in
-// its own folder (dist/epfl/). Each folder is a complete, installable PWA with
+// its own folder (dist/<id>/). Each folder is a complete, installable PWA with
 // its own manifest and service worker, so any static host can serve it as is.
 //
 //   node scripts/build.mjs            all universities
-//   node scripts/build.mjs --only epfl
+//   node scripts/build.mjs --only <id>
 import { createHash } from "node:crypto";
 import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";

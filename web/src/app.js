@@ -17,7 +17,7 @@ const TABS = new Set(["home", "history", "support", "about"]);
 const typo = (s) => typography(s, app.lang);
 const L = (value) => loc(value, app.lang, app.config.defaultLanguage);
 const Lt = (value) => typo(L(value));
-/** The university's name inside a sentence: "l'EPFL" in French (config `nameInText`). */
+/** The university's name inside a sentence, with its article where needed (config `nameInText`). */
 const uniName = () => (app.config?.nameInText ? L(app.config.nameInText) : app.config?.name);
 const t = (key, vars) => typo(translate(app.ui, key, { name: uniName(), ...vars }));
 
