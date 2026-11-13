@@ -236,6 +236,82 @@ async function phone(name, browserType, device, os) {
   await browser.close();
 }
 
+/* ---------- Every result level, Skip, links, feedback and Start over, in each language ---------- */
+
+async function languageFlows(name, browserType, device) {
+  const browser = await browserType.launch();
+  const p = await (await browser.newContext({ ...device })).newPage();
+  const ok = (cond, msg) => { checks++; if (!cond) fails.push(`${name}: ${msg}`); };
+  p.on("pageerror", (e) => fails.push(`${name}: page error ${e.message}`));
+  p.on("request", (r) => { if (!r.url().startsWith(origin)) fails.push(`${name}: request to another host ${r.url()}`); });
+  const settle = () => p.waitForTimeout(slow ? 600 : 260);
+  const go = async (h) => { await p.evaluate((x) => { location.hash = x; }, h); await settle(); };
+  const h1 = () => p.textContent("h1");
+  const shows = async (text) => (await p.evaluate(() => document.body.textContent)).includes(text);
+  const backText = async () => ((await p.textContent('a.btn.sm[href="#/about"]')) ?? "").trim();
+  const ticked = (href) => p.evaluate((h) => Boolean(document.querySelector(`.try a[href="${h}"] .num.done`)), href);
+  for (const lang of hasFr ? ["fr", "en"] : ["en"]) {
+    const L = lang.toUpperCase();
+    await p.goto(`${base}?lang=${lang}`);
+    await p.waitForSelector("[data-welcome]");
+    await p.click("[data-welcome]"); await settle();
+
+    // 0 to 4 yes answers: the level, where it points, and the emergency numbers every time
+    for (let yes = 0; yes <= total; yes++) {
+      await go("#/");
+      await p.click('a[href="#/check/0"]'); await settle();
+      for (let i = 0; i < total; i++) { await p.click(i < yes ? '[data-answer="yes"]' : '[data-answer="no"]'); await settle(); }
+      const lv = levelFor(cfg, yes);
+      ok(await h1() === T(lang, `result.levels.${lv.id}.title`), `${L}: ${yes} yes gives "${lv.id}" (got ${await h1()})`);
+      ok(await shows(lv.service ? C(lang, cfg.services[lv.service].name) : T(lang, "result.seeSupport")), `${L}: ${yes} yes points to ${lv.service ?? "the support list"}`);
+      ok(await p.isVisible(".emergency"), `${L}: ${yes} yes shows the emergency numbers`);
+    }
+
+    // Skip: counted, and never a yes
+    await go("#/");
+    await p.click('a[href="#/check/0"]'); await settle();
+    for (let i = 0; i < total; i++) { await p.click(i === 0 ? '[data-answer="yes"]' : i === 1 ? '[data-answer="skip"]' : '[data-answer="no"]'); await settle(); }
+    ok(await shows(T(lang, "result.skipped", { n: 1, total })), `${L}: a skipped question is counted`);
+    ok(await h1() === T(lang, `result.levels.${levelFor(cfg, 1).id}.title`), `${L}: a skipped question is not a yes`);
+
+    // My weeks
+    await go("#/history");
+    ok(await h1() === T(lang, "history.title") && (await p.$$(".week-list li")).length === 7, `${L}: My weeks shows one own week and six examples`);
+
+    // Support: every service's email and website, and the emergency numbers
+    await go("#/support");
+    for (const [id, s] of Object.entries(cfg.services)) {
+      const hrefs = await p.locator(`section.service[aria-labelledby="s-${id}"] a`).evaluateAll((as) => as.map((a) => a.getAttribute("href")));
+      if (s.contact.email) ok(hrefs.includes(`mailto:${s.contact.email}`), `${L}: ${id} email link`);
+      const site = loc(s.contact.link, lang, cfg.defaultLanguage);
+      if (site) ok(hrefs.includes(site), `${L}: ${id} website link`);
+    }
+    const tels = await p.locator(".emergency a.call").evaluateAll((as) => as.map((a) => a.getAttribute("href")));
+    ok(JSON.stringify(tels) === JSON.stringify(cfg.emergency.map((e) => `tel:${e.tel}`)), `${L}: emergency numbers dial the configured numbers`);
+
+    // About: steps 3 and 4 tick once their page is opened; the pages under About go "Back"
+    await go("#/about");
+    ok(!(await ticked("#/results")), `${L}: step 3 is not ticked before the results page is opened`);
+    ok(await ticked("#/support"), `${L}: step 4 is ticked once the Support tab was opened`);
+    await p.click('.try a[href="#/results"]'); await settle();
+    ok(await backText() === T(lang, "checkin.back"), `${L}: the results page's back button says "${T(lang, "checkin.back")}" (got "${await backText()}")`);
+    await p.click('a.btn.sm[href="#/about"]'); await settle();
+    ok(await ticked("#/results"), `${L}: step 3 is ticked once the results page was opened`);
+    await go("#/privacy");
+    ok(await backText() === T(lang, "checkin.back"), `${L}: the privacy page's back button says "${T(lang, "checkin.back")}" (got "${await backText()}")`);
+
+    // Feedback and Start over
+    await go("#/about");
+    const subject = typeof cfg.feedback.subject === "string" ? cfg.feedback.subject : loc(cfg.feedback.subject, lang, cfg.defaultLanguage);
+    const mail = (await p.getAttribute('a.btn.sage[data-track="feedback"]', "href")) ?? "";
+    ok(mail.startsWith(`mailto:${cfg.feedback.email}?subject=${encodeURIComponent(subject)}&body=`), `${L}: Send feedback opens an email to ${cfg.feedback.email}`);
+    await p.click('[data-delete="ask"]'); await settle();
+    await p.click('[data-delete="yes"]'); await settle();
+    ok(await h1() === T(lang, "welcome.title"), `${L}: Start over shows the welcome screen`);
+  }
+  await browser.close();
+}
+
 async function desktop() {
   const browser = await chromium.launch();
   const p = await browser.newPage({ viewport: { width: 1280, height: 800 } });
@@ -272,6 +348,8 @@ const runs = [
   ["iPhone SE", () => phone("iPhone SE", webkit, devices["iPhone SE"], "ios")],
   ["iPhone 14", () => phone("iPhone 14", webkit, devices["iPhone 14"], "ios")],
   ["Pixel 7", () => phone("Pixel 7", chromium, devices["Pixel 7"], "android")],
+  ["iPhone 14, every result in each language", () => languageFlows("iPhone 14 (each language)", webkit, devices["iPhone 14"])],
+  ["Pixel 7, every result in each language", () => languageFlows("Pixel 7 (each language)", chromium, devices["Pixel 7"])],
   ["desktop", desktop],
   ["offline", offline],
 ];
