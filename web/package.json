@@ -1,0 +1,14 @@
+{
+  "name": "calmcampus-web",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CalmCampus reviewer demo (PWA). One config file per university.",
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "test": "node --test test/*.test.mjs",
+    "build": "node scripts/check.mjs && node scripts/build.mjs",
+    "dev": "node scripts/build.mjs && python3 -m http.server 8080 --directory dist",
+    "e2e": "node test/e2e.mjs"
+  }
+}
