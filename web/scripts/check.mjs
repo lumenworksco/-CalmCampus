@@ -5,6 +5,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { SIGNAL_IDS } from "../src/lib/signals.js";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p) => JSON.parse(readFileSync(path.join(root, p), "utf8"));
@@ -87,6 +88,8 @@ for (const f of files) {
     if (!q.id || qids.has(q.id)) err(where, `question ${i} needs a unique id`);
     qids.add(q.id);
     if (!Number.isInteger(q.version)) err(where, `question ${q.id} needs an integer version`);
+    if (q.signals !== undefined && (!Array.isArray(q.signals) || q.signals.some((s) => !SIGNAL_IDS.includes(s))))
+      err(where, `question ${q.id}: signals must be a list of ${SIGNAL_IDS.join(", ")}`);
     needLoc(q.text, `${where} questions[${i}].text`);
   });
 

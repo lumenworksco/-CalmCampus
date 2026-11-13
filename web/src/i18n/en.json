@@ -4,7 +4,7 @@
   "nav": { "home": "Home", "history": "History", "more": "More", "label": "Main navigation" },
   "demo": {
     "label": "Demo data",
-    "banner": "These weeks are made up so you can explore the app.",
+    "banner": "These weeks and phone signals are made up so you can explore the app.",
     "exit": "Turn off",
     "preview": "Preview every result",
     "previewHint": "Opens an example result for each level.",
@@ -105,6 +105,47 @@
     "deleteCancel": "Keep my data",
     "deleted": "Done. Everything stored on this phone has been deleted."
   },
+  "signals": {
+    "heading": "This week on your phone",
+    "simulated": "Simulated for this demo. The full app reads these on the phone, from Apple Health and Screen Time on iPhone or Health Connect on Android, and compares them with your own usual. They never leave the phone.",
+    "scenarioLabel": "Example week",
+    "scenarios": {
+      "steady": "Calm week",
+      "exams": "Exam week",
+      "heavy": "Heavy week"
+    },
+    "names": {
+      "sleep": "Sleep",
+      "lateScreen": "Phone use after midnight",
+      "steps": "Steps"
+    },
+    "per": {
+      "sleep": "a night",
+      "lateScreen": "a night",
+      "steps": "a day"
+    },
+    "usual": "Usually {value}",
+    "status": {
+      "lower": "Less than usual",
+      "higher": "More than usual",
+      "same": "About usual"
+    },
+    "hours": "{h} h {m} min",
+    "minutes": "{m} min",
+    "wearable": "Sleep needs a watch, a ring or a sleep schedule on the phone. Without one, the app simply asks.",
+    "noticedHeading": "Your phone noticed",
+    "hint": {
+      "sleep": "About {value} of sleep a night, usually {usual}.",
+      "lateScreen": "About {value} on the phone after midnight each night, usually {usual}.",
+      "steps": "About {value} steps a day, usually {usual}."
+    },
+    "noSignal": "No phone signal for this one. Only you can tell.",
+    "youDecide": "You know best. Answer for how the week felt.",
+    "resultHeading": "What your phone noticed",
+    "resultNone": "Nothing unusual in sleep, late phone use or steps this week.",
+    "resultNote": "Phone signals only decide which questions come first. Your result comes from your answers alone.",
+    "dayLabel": "Each day this week, Monday to Sunday"
+  },
   "privacy": {
     "title": "Your privacy, in plain words",
     "intro": "CalmCampus is built so that your answers belong to you and nobody else.",
@@ -115,7 +156,7 @@
       { "h": "What the website host can see", "p": "Like any website, the host that delivers the app files may keep standard technical logs, such as a connection time and address. They never contain your answers, because your answers never leave your phone." },
       { "h": "You are in control", "p": "Delete everything at any time from the More tab. Clearing your browser data does the same." },
       { "h": "Feedback is your choice", "p": "Send feedback opens an email draft. Nothing is attached, and nothing is sent until you press send yourself." },
-      { "h": "This is a reviewer demo", "p": "It uses no real student data. In demo mode, the weeks you see are made up and labelled Demo data." }
+      { "h": "This is a reviewer demo", "p": "It uses no real student data. In demo mode, the weeks and the phone signals you see are made up and labelled Demo data. This web version cannot read Apple Health or Screen Time; the full app does, on the phone only." }
     ],
     "principles": "We follow the design principles of the Swiss nLPD and the GDPR: data minimisation, purpose limitation, transparency and user control. This is a statement of how the app is designed. It is not a certification or an audit."
   },

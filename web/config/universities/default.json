@@ -12,6 +12,7 @@
     {
       "id": "sleep",
       "version": 1,
+      "signals": ["sleep", "lateScreen"],
       "text": {
         "en": "This week, has your sleep been worse than usual?",
         "fr": "Cette semaine, ton sommeil a-t-il été moins bon que d'habitude ?"
@@ -20,6 +21,7 @@
     {
       "id": "planning",
       "version": 1,
+      "signals": [],
       "text": {
         "en": "Have you struggled to plan or organise your studies?",
         "fr": "As-tu eu du mal à organiser ou à planifier tes études ?"
@@ -28,6 +30,7 @@
     {
       "id": "energy",
       "version": 1,
+      "signals": ["steps"],
       "text": {
         "en": "Have you found it hard to get started on things you usually manage?",
         "fr": "As-tu eu du mal à te mettre au travail sur ce que tu gères d'habitude ?"
@@ -36,6 +39,7 @@
     {
       "id": "connection",
       "version": 1,
+      "signals": [],
       "text": {
         "en": "Have you been avoiding friends, classes or plans more than usual?",
         "fr": "As-tu évité tes amis, tes cours ou tes projets plus que d'habitude ?"

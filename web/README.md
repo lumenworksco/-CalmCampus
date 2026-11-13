@@ -25,6 +25,8 @@ No dependencies are needed to build or run. Playwright is only used by `scripts/
 1. Copy `config/universities/default.json` to `config/universities/<id>.json`. The file name, without `.json`, is the id and the folder name (`/<id>/`).
 2. Set `name`, `languages` and `defaultLanguage`. Every language listed needs a file in `src/i18n/` (English and French exist). Optional: `logo.text`, or `logo.image` once you have permission to use the logo.
 3. Translate the four `questions` into every language. Never change a question `id` later. Bump its `version` when the wording changes.
+Each question can list `signals` (`sleep`, `lateScreen`, `steps`): the phone signals that belong to it. In demo mode they decide which questions come first and what context is shown; they never change the result.
+
 4. Fill in `services`: for each one a `name`, a `purpose` and `contact` (`link` per language, `email`, `phone`, `hours`). Use `null` for anything you do not know and list it in `todo`. If the university's pages do not publish it at all (for example a service reached only by email), list it in `notPublished` with where you looked instead: no warning, and the app simply leaves it out. Copy details only from the university's own pages, and put that page in `source` and today's date in `verified`.
 5. Fill in `emergency`: the campus emergency number first, then national lines. `number` is what people read, `tel` is what the phone dials.
 6. Point each entry in `levels` at a service with `service`. `minYes` is how many of the four answers must be yes for that level. The default is `0 steady`, `1 notice`, `2 support`, `3 care`.

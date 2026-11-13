@@ -5,6 +5,7 @@ import { resultFor, answersForLevel } from "./lib/scoring.js";
 import { createStore } from "./lib/store.js";
 import { demoEntries } from "./lib/demo.js";
 import { isoDate, weekKey, weekStart } from "./lib/week.js";
+import { SCENARIO_IDS, DEFAULT_SCENARIO, weekSignals, signalsFor, orderQuestions } from "./lib/signals.js";
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -81,6 +82,74 @@ function previewList() {
     <div class="row wrap">${app.config.levels.map((lv) => `<a class="pill ${esc(lv.id)}" href="#/preview/${esc(lv.id)}" style="min-height:44px;text-decoration:none">${esc(t(`result.levels.${lv.id}.pill`))}</a>`).join("")}</div></div>`;
 }
 
+/* ---------- Simulated phone signals (demo mode only, see lib/signals.js) ---------- */
+
+function scenario() {
+  const s = app.store.getScenario();
+  return SCENARIO_IDS.includes(s) ? s : DEFAULT_SCENARIO;
+}
+const phoneSignals = () => (app.store.isDemo() ? weekSignals(scenario()) : null);
+const questionsInOrder = () => orderQuestions(app.config.questions, phoneSignals());
+
+function fmtSignal(id, v) {
+  if (id === "sleep") {
+    let h = Math.floor(v), m = Math.round((v - h) * 6) * 10;
+    if (m === 60) { h += 1; m = 0; }
+    return t("signals.hours", { h, m: app.lang === "fr" ? String(m).padStart(2, "0") : m });
+  }
+  if (id === "lateScreen") return t("signals.minutes", { m: Math.round(v / 5) * 5 });
+  return (Math.round(v / 100) * 100).toLocaleString(app.lang);
+}
+
+const signalHint = (s) => t(`signals.hint.${s.id}`, { value: fmtSignal(s.id, s.mean), usual: fmtSignal(s.id, s.usual) });
+
+function signalsCard() {
+  const sigs = phoneSignals();
+  if (!sigs) return "";
+  const cur = scenario();
+  const seg = `<div class="scen" role="group" aria-label="${esc(t("signals.scenarioLabel"))}">${SCENARIO_IDS.map((id) =>
+    `<button class="btn ${id === cur ? "sage" : "ghost"}" data-scenario="${id}" aria-pressed="${id === cur}">${esc(t(`signals.scenarios.${id}`))}</button>`).join("")}</div>`;
+  const rows = sigs.map((s) => {
+    const max = Math.max(...s.days, s.usual) || 1;
+    const status = s.notable ? s.direction : "same";
+    const bars = s.days.map((d) => `<i style="height:${Math.max(8, (d / max) * 100).toFixed(1)}%"></i>`).join("");
+    return `<li class="sig${s.notable ? " notable" : ""}">
+      <div class="sig-head"><strong>${esc(t(`signals.names.${s.id}`))}</strong>
+        <span class="pill ${s.notable ? "notice" : "steady"}">${esc(t(`signals.status.${status}`))}</span></div>
+      <p class="small"><strong class="val">${esc(fmtSignal(s.id, s.mean))}</strong> ${esc(t(`signals.per.${s.id}`))}. <span class="nowrap"><span class="usual-key" aria-hidden="true"></span>${esc(t("signals.usual", { value: fmtSignal(s.id, s.usual) }))}</span></p>
+      <div class="sig-bars" role="img" aria-label="${esc(t("signals.dayLabel"))}: ${esc(s.days.map((d) => fmtSignal(s.id, d)).join(", "))}">${bars}<span class="usual" style="bottom:${((s.usual / max) * 100).toFixed(1)}%"></span></div></li>`;
+  }).join("");
+  return `<section class="card stack signals" aria-labelledby="sig-h">
+    <div class="row wrap"><h2 id="sig-h" class="grow">${esc(t("signals.heading"))}</h2>${demoTag()}</div>
+    <p class="small">${esc(t("signals.simulated"))}</p>
+    <div><p class="small"><strong>${esc(t("signals.scenarioLabel"))}</strong></p>${seg}</div>
+    <ul class="sig-list">${rows}</ul>
+    <p class="small">${esc(t("signals.wearable"))}</p></section>`;
+}
+
+function checkContext(q) {
+  const sigs = phoneSignals();
+  if (!sigs) return "";
+  const hits = signalsFor(q, sigs);
+  if (hits.length) {
+    return `<div class="hint"><div class="row wrap"><strong class="row grow">${icon("smartphone", 18)}${esc(t("signals.noticedHeading"))}</strong>${demoTag()}</div>
+      ${hits.map((s) => `<p>${esc(signalHint(s))}</p>`).join("")}
+      <p class="you">${esc(t("signals.youDecide"))}</p></div>`;
+  }
+  return q.signals?.length ? "" : `<p class="small row">${icon("smartphone", 18)}<span>${esc(t("signals.noSignal"))}</span></p>`;
+}
+
+function phoneSection() {
+  const sigs = phoneSignals();
+  if (!sigs) return "";
+  const hits = sigs.filter((s) => s.notable);
+  return `<div class="card stack"><div class="row wrap"><h3 class="grow">${esc(t("signals.resultHeading"))}</h3>${demoTag()}</div>
+    ${hits.length
+      ? `<ul class="noticed">${hits.map((s) => `<li>${icon("smartphone", 18)}<span>${esc(signalHint(s))}</span></li>`).join("")}</ul>`
+      : `<p>${esc(t("signals.resultNone"))}</p>`}
+    <p class="small">${esc(t("signals.resultNote"))}</p></div>`;
+}
+
 function viewHome() {
   const entry = app.store.entryForWeek(currentWeek());
   const done = entry
@@ -93,13 +162,14 @@ function viewHome() {
     <div><p class="small">${esc(t("home.greeting"))}</p><h1>${esc(t("home.title"))}</h1></div>
     <p class="lead">${esc(t("home.lead"))}</p>
     ${done}
+    ${signalsCard()}
     <p class="small row">${icon("shield-check", 18)}<span>${esc(t("home.stays"))}</span></p>
     ${app.store.isDemo() ? previewList() : ""}
   </div>`;
 }
 
 function viewCheck(n) {
-  const qs = app.config.questions;
+  const qs = questionsInOrder();
   if (!(n >= 0 && n < qs.length)) { location.hash = "#/"; return ""; }
   const q = qs[n];
   const picked = app.answers[q.id];
@@ -110,6 +180,7 @@ function viewCheck(n) {
     <div class="progress" aria-hidden="true">${dots}</div>
     <p class="small">${esc(t("checkin.heading"))}</p>
     <h1 class="question" id="q">${esc(L(q.text))}</h1>
+    ${checkContext(q)}
     <div class="answers" role="group" aria-labelledby="q">
       <button class="btn ${picked === true ? "picked" : ""}" data-answer="yes">${esc(t("checkin.yes"))}</button>
       <button class="btn ${picked === false ? "picked" : ""}" data-answer="no">${esc(t("checkin.no"))}</button>
@@ -149,7 +220,7 @@ function emergencyCard() {
     <p class="intro">${esc(t("result.emergencyIntro"))}</p>${items}</section>`;
 }
 
-function viewResult(answers, { saved, preview } = {}) {
+function viewResult(answers, { saved, preview, phone } = {}) {
   const c = app.config;
   const r = resultFor(c, answers);
   const yesQs = c.questions.filter((q) => answers[q.id] === true);
@@ -165,6 +236,7 @@ function viewResult(answers, { saved, preview } = {}) {
       <h1>${esc(t(`result.levels.${lv.id}.title`))}</h1></div>
     <p class="lead">${esc(t(`result.levels.${lv.id}.body`))}</p>
     <div class="card stack"><h3>${esc(t("result.noticedHeading"))}</h3>${noticed}</div>
+    ${phone ? phoneSection() : ""}
     <h2>${esc(t("result.nextHeading"))}</h2>
     ${next}
     ${emergencyCard()}
@@ -249,7 +321,7 @@ function route(opts) {
     nav = null; html = viewCheck(Number(arg));
   } else if (name === "result") {
     const e = app.store.entryForWeek(arg || currentWeek());
-    if (e) html = viewResult(e.answers, { saved: !app.store.isDemo() });
+    if (e) html = viewResult(e.answers, { saved: !app.store.isDemo(), phone: e.week === currentWeek() });
     else { location.hash = "#/"; return; }
   } else if (name === "preview" && app.store.isDemo()) {
     const lv = app.config.levels.find((l) => l.id === arg);
@@ -275,12 +347,12 @@ function route(opts) {
 }
 
 function onClick(ev) {
-  const el = ev.target.closest("[data-answer],[data-lang],[data-demo],[data-delete],[data-reset]");
+  const el = ev.target.closest("[data-answer],[data-lang],[data-demo],[data-delete],[data-reset],[data-scenario]");
   if (!el) return;
   if (el.dataset.reset !== undefined) { app.answers = {}; return; }
   if (el.dataset.answer) {
     const n = Number(location.hash.split("/")[2]);
-    const qs = app.config.questions;
+    const qs = questionsInOrder();
     app.answers[qs[n].id] = el.dataset.answer === "yes";
     if (n + 1 < qs.length) { location.hash = `#/check/${n + 1}`; return; }
     const now = new Date();
@@ -289,6 +361,9 @@ function onClick(ev) {
     app.store.save({ week, date: isoDate(now), answers: { ...app.answers }, qv });
     app.answers = {};
     location.hash = `#/result/${week}`;
+  } else if (el.dataset.scenario) {
+    if (SCENARIO_IDS.includes(el.dataset.scenario)) app.store.setScenario(el.dataset.scenario);
+    route({ focus: `[data-scenario="${el.dataset.scenario}"]` });
   } else if (el.dataset.lang) {
     setLang(el.dataset.lang);
   } else if (el.dataset.demo) {

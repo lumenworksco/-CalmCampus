@@ -4,7 +4,7 @@
   "nav": { "home": "Accueil", "history": "Historique", "more": "Plus", "label": "Navigation principale" },
   "demo": {
     "label": "Données de démo",
-    "banner": "Ces semaines sont inventées pour te permettre d'explorer l'application.",
+    "banner": "Ces semaines et ces signaux du téléphone sont inventés pour te permettre d'explorer l'application.",
     "exit": "Désactiver",
     "preview": "Voir chaque résultat",
     "previewHint": "Ouvre un exemple de résultat pour chaque niveau.",
@@ -105,6 +105,47 @@
     "deleteCancel": "Garder mes données",
     "deleted": "C'est fait. Tout ce qui était stocké sur ce téléphone a été supprimé."
   },
+  "signals": {
+    "heading": "Cette semaine sur ton téléphone",
+    "simulated": "Simulé pour cette démo. L'application complète lit ces données sur le téléphone, depuis Santé et Temps d'écran sur iPhone ou Health Connect sur Android, et les compare à tes habitudes. Elles ne quittent jamais le téléphone.",
+    "scenarioLabel": "Semaine d'exemple",
+    "scenarios": {
+      "steady": "Semaine calme",
+      "exams": "Semaine d'examens",
+      "heavy": "Semaine chargée"
+    },
+    "names": {
+      "sleep": "Sommeil",
+      "lateScreen": "Téléphone après minuit",
+      "steps": "Pas"
+    },
+    "per": {
+      "sleep": "par nuit",
+      "lateScreen": "par nuit",
+      "steps": "par jour"
+    },
+    "usual": "D'habitude {value}",
+    "status": {
+      "lower": "Moins que d'habitude",
+      "higher": "Plus que d'habitude",
+      "same": "Comme d'habitude"
+    },
+    "hours": "{h} h {m}",
+    "minutes": "{m} min",
+    "wearable": "Le sommeil demande une montre, une bague ou un horaire de sommeil sur le téléphone. Sans cela, l'application pose simplement la question.",
+    "noticedHeading": "Ton téléphone a remarqué",
+    "hint": {
+      "sleep": "Environ {value} de sommeil par nuit, d'habitude {usual}.",
+      "lateScreen": "Environ {value} sur le téléphone après minuit chaque nuit, d'habitude {usual}.",
+      "steps": "Environ {value} pas par jour, d'habitude {usual}."
+    },
+    "noSignal": "Pas de signal du téléphone pour celle-ci. C'est à toi de le dire.",
+    "youDecide": "C'est toi qui sais. Réponds selon ce que tu as ressenti cette semaine.",
+    "resultHeading": "Ce que ton téléphone a remarqué",
+    "resultNone": "Rien d'inhabituel cette semaine pour le sommeil, le téléphone après minuit ou les pas.",
+    "resultNote": "Les signaux du téléphone décident seulement de l'ordre des questions. Ton résultat vient uniquement de tes réponses.",
+    "dayLabel": "Chaque jour de la semaine, du lundi au dimanche"
+  },
   "privacy": {
     "title": "Ta vie privée, en mots simples",
     "intro": "CalmCampus est conçu pour que tes réponses t'appartiennent, à toi seul·e.",
@@ -115,7 +156,7 @@
       { "h": "Ce que l'hébergeur peut voir", "p": "Comme tout site web, l'hébergeur qui fournit les fichiers de l'application peut conserver des journaux techniques standard, comme l'heure et l'adresse de connexion. Ils ne contiennent jamais tes réponses, car elles ne quittent jamais ton téléphone." },
       { "h": "Tu gardes le contrôle", "p": "Supprime tout à tout moment depuis l'onglet Plus. Effacer les données de ton navigateur a le même effet." },
       { "h": "Le retour est ton choix", "p": "Envoyer un retour ouvre un brouillon d'e-mail. Rien n'y est joint et rien n'est envoyé tant que tu n'appuies pas toi-même sur envoyer." },
-      { "h": "Ceci est une démo pour relecture", "p": "Elle n'utilise aucune donnée réelle d'étudiant·e. En mode démo, les semaines affichées sont inventées et marquées Données de démo." }
+      { "h": "Ceci est une démo pour relecture", "p": "Elle n'utilise aucune donnée réelle d'étudiant·e. En mode démo, les semaines et les signaux du téléphone affichés sont inventés et marqués Données de démo. Cette version web ne peut pas lire Santé ni Temps d'écran ; l'application complète le fait, uniquement sur le téléphone." }
     ],
     "principles": "Nous suivons les principes de conception de la nLPD suisse et du RGPD : minimisation des données, limitation des finalités, transparence et maîtrise par l'utilisateur. C'est une déclaration sur la conception de l'application. Ce n'est ni une certification ni un audit."
   },

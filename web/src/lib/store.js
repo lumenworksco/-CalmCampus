@@ -17,6 +17,7 @@ export function createStore(storage, universityId) {
   const realKey = `${PREFIX}${universityId}:entries`;
   const demoKey = `${PREFIX}${universityId}:demo`;
   const demoFlag = `${PREFIX}${universityId}:demoOn`;
+  const scenarioKey = `${PREFIX}${universityId}:demoScenario`;
   const langKey = `${PREFIX}lang`;
 
   const read = (k) => {
@@ -29,8 +30,11 @@ export function createStore(storage, universityId) {
     /** Real and demo entries are separate keys, so demo mode never touches real answers. */
     setDemo(on, seed = []) {
       if (on) { safe.set(demoFlag, "1"); safe.set(demoKey, JSON.stringify(seed)); }
-      else { safe.del(demoFlag); safe.del(demoKey); }
+      else { safe.del(demoFlag); safe.del(demoKey); safe.del(scenarioKey); }
     },
+    /** Which simulated example week demo mode shows (see lib/signals.js). */
+    getScenario: () => safe.get(scenarioKey),
+    setScenario: (id) => safe.set(scenarioKey, id),
     entries() {
       const list = read(api.isDemo() ? demoKey : realKey);
       return list.sort((a, b) => a.week.localeCompare(b.week));
