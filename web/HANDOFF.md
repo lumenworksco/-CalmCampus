@@ -15,9 +15,9 @@ Branch `epfl-web-demo` is not merged into `main` yet. If SSH to GitHub fails, pu
 
 ## First message to paste into the new session
 
-"Read web/HANDOFF.md and web/README.md on branch epfl-web-demo. Continue with the 'Still to do' list, starting with the deployment step. Ask me before pushing or publishing anything."
+"Read web/HANDOFF.md and web/README.md on branch epfl-web-demo. Continue with the 'Still to do' list (steps 1, 2 and 4 are done; next is the real-device test, then the email to EPFL). Ask me before pushing or publishing anything."
 
-Written 2026-11-13 so work can continue from another machine or Claude account. Read this, then `web/README.md` and the repo `CLAUDE.md`.
+Written 2026-11-13, last updated 2026-11-13, so work can continue from another machine or Claude account. Read this, then `web/README.md` and the repo `CLAUDE.md`.
 
 ## Goal
 
@@ -30,13 +30,14 @@ Team: Florian Braun and Helene David. CalmCampus is not medical: it does not dia
 - `web/` is a PWA in vanilla JS with no runtime dependencies. One JSON config per university in `web/config/universities/` (`default`, `epfl`).
 - Selecting a university: folder (`dist/epfl/`) or `?u=epfl`. Language: browser language, FR/EN button, or `?lang=`.
 - Weekly check-in: four yes/no questions in config (localised), result screen with one next step from config, the required disclaimer always visible, and an emergency block on every result.
-- Privacy: answers only in `localStorage` (keys start with `cc:`), "Delete my data", privacy screen in plain words ("design principles", not "certified"), no third-party requests (fonts and Lucide icons bundled, CSP `connect-src 'self'`).
+- Privacy: answers only in `localStorage` (keys start with `cc:`), Start over (Delete my data outside preview builds), privacy screen in plain words ("design principles", not "certified"), no third-party requests (fonts and Lucide icons bundled, CSP `connect-src 'self'`).
 - Reviewer preview (`"preview": true` in the config, on for EPFL and default): a welcome screen on first open (what this is, language, how to install), example weeks and example phone data always on and labelled Example, four tabs (Home, My weeks, Support, About). About has "Things to try", "See every possible result" (each level, its yes-count range and the service it suggests) and Start over. Without the flag the older Demo mode toggle is used.
-- Simulated phone signals (demo mode only, `src/lib/signals.js`): a "This week on your phone" card with sleep, phone use after midnight and steps against the student's usual, three example weeks (calm, exam, heavy). Questions with a notable signal come first and show what the phone noticed; the result lists it too. Signals never answer a question or change the level; the result comes from the answers alone. Which signal belongs to which question is `signals` on each question in the config. A browser cannot read Apple Health or Screen Time, so the web version only simulates; the native iOS app reads sleep and steps for real (`ios/CalmCampus/Sensing/`).
+- Example phone signals (`src/lib/signals.js`, only with example data): a "This week on your phone" card with sleep, phone use after midnight and steps against the student's usual, three example weeks (calm, exams, difficult). Questions with a notable signal come first and show what the phone noticed; the result lists it too. Signals never answer a question or change the level; the result comes from the answers alone. Which signal belongs to which question is `signals` on each question in the config. A browser cannot read Apple Health or Screen Time, so the web version only simulates; the native iOS app reads sleep and steps for real (`ios/CalmCampus/Sensing/`).
 - "Send feedback": mailto to contact@calm.braunf.com, subject from config, nothing attached.
 - Brand: cream/sand/terracotta/sage/ink, Caprasimo and Figtree, Lucide icons at stroke 2.75. Text accents use darker tints (`--terracotta-deep`, `--sage-deep`) for contrast.
-- PWA: per-folder manifest and service worker, offline shell, icons. Caches are prefixed per university so folders do not delete each other's caches.
-- Checks: `npm run check` (FR/EN parity, placeholders, references, contact formats, voice lint), `npm test` (12 tests), `npm run build`. Also run end to end in emulated iPhone SE, iPhone 14 (WebKit) and Pixel 7 (Chromium) with Playwright. That script is not in the repo; it covered check-in, language switch, delete, demo, every preview level, offline, `?u=`, no external hosts, no horizontal overflow.
+- PWA: per-folder manifest and service worker, offline shell, icons. Caches are prefixed per university so folders do not delete each other's caches. Installed apps update themselves (fetch past the HTTP cache, reload once the new version is ready, never during a check-in); the build version is shown at the bottom of About.
+- Interaction: taps that change the current screen keep the tapped section in place; tabs remember their scroll position; Yes/No and the welcome Start button are pinned in the bottom dock.
+- Checks: `npm run check` (FR/EN parity, placeholders, references, signals, contact formats, voice lint), `npm test` (16 tests), `npm run build`. Also run end to end in emulated iPhone SE, iPhone 14 (WebKit) and Pixel 7 (Chromium) with Playwright (126 checks: welcome, language, example weeks, check-in order, result, My weeks, Support, About, every result, privacy, Start over, scroll position, no external hosts, no horizontal overflow; plus an update test with a 4-hour cache header). Those scripts are not in the repo.
 - EPFL facts verified on epfl.ch and chuv.ch on 2026-11-12 (source URL stored per entry in the config). Emails live in the page source behind email protection, so decode them from the raw HTML.
 
 ## Still to do
@@ -50,8 +51,8 @@ Team: Florian Braun and Helene David. CalmCampus is not medical: it does not dia
    - French uses "tu"; EPFL's pages use "vous" throughout (22 times on the social consultation page, never "tu"). Kept "tu" for now because `src/i18n/fr.json` is shared by every university; switching per university needs a register option in the code. Ask EPFL and AGEPoly.
    Ask these four in the email to EPFL.
 4. ~~Re-verify EPFL details.~~ **Done 2026-11-13**: service emails (decoded from the page source), links, emergency numbers (115, 021 693 3000, SOS in the EPFL Campus app, 144, 0848 133 133, 143) all match their source pages. Repeat if the email goes out after about a week, since EPFL is restructuring these pages.
-5. **Test on real devices** (iPhone Safari and Android Chrome). So far only emulated sizes.
-6. **Email to EPFL.** The "What to test" text is below. The email text says install first from Safari, then use the app only from its icon, because Safari and the installed app have separate storage on iPhone.
+5. **Test on real devices** (iPhone Safari and Android Chrome). Florian tried an earlier version on his phone (found the delete and scroll bugs, since fixed). The current reviewer preview needs a pass on a real iPhone and a real Android phone: delete the old icon, add it again, check the version at the bottom of About.
+6. **Email to EPFL.** The "What to test" text is below; the app's welcome screen and About > Things to try guide the rest. Add the four review questions from step 3.
 7. Optional, not requested: put the Playwright check script in the repo; add a language beyond FR/EN.
 
 ## What to test (paste into the email)
@@ -69,7 +70,8 @@ Team: Florian Braun and Helene David. CalmCampus is not medical: it does not dia
 - Clearing browser data deletes answers; nothing is backed up, by design.
 - No sync between devices.
 - GitHub Pages keeps ordinary request logs; the privacy screen says so.
-- Demo mode is the one allowed place for made-up data (exception to the "no synthetic data" rule in `CLAUDE.md`).
+- The labelled examples in a preview build are the one allowed place for made-up data (exception to the "no synthetic data" rule in `CLAUDE.md`).
+- Passive sensing is simulated: a browser cannot read Apple Health, Screen Time or Health Connect. The native iOS app (`ios/`) reads sleep and steps for real; sending it to EPFL needs the paid Apple Developer Program (TestFlight).
 
 ## Commands
 
