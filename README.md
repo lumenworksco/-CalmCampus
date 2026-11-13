@@ -33,6 +33,7 @@ The project is being rebuilt as native apps: **SwiftUI on iOS first, then Kotlin
 | HealthKit sleep and step signals (iOS) | Implemented, behind a provider protocol so it can be tested without Apple Health data |
 | On-device reframing model | v0.1 research preview, see [`ml/`](ml/); weights and data on [Hugging Face](https://huggingface.co/CalmCampus) |
 | Feasibility spike | Done, see [`spike/`](spike/) |
+| Web demo for university reviewers (PWA, one config per university), see [`web/`](web/) | Implemented, EPFL config |
 | Pilot with KU Leuven students (TestFlight) | Planned |
 | Android app | Planned |
 
@@ -47,6 +48,7 @@ The project is being rebuilt as native apps: **SwiftUI on iOS first, then Kotlin
 
 ```
 ios/            The iOS app (SwiftUI + SwiftData, XcodeGen project)
+web/            Reviewer demo as an installable web app (PWA), one config file per university
 spike/          iOS feasibility spike (XcodeGen project)
 ml/             On-device reframing model: data, training, evaluation, model card
 design/         HTML mockups of the app screens, app icon and palette

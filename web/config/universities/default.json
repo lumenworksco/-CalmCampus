@@ -1,0 +1,88 @@
+{
+  "id": "default",
+  "name": "Your university",
+  "logo": { "text": null, "image": null, "todo": "Optional. Set text or image to show the university next to CalmCampus." },
+  "defaultLanguage": "en",
+  "languages": ["en", "fr"],
+  "feedback": {
+    "email": "florian@calm.braunf.com",
+    "subject": "CalmCampus demo feedback"
+  },
+  "questions": [
+    {
+      "id": "sleep",
+      "version": 1,
+      "text": {
+        "en": "This week, has your sleep been worse than usual?",
+        "fr": "Cette semaine, ton sommeil a-t-il été moins bon que d'habitude ?"
+      }
+    },
+    {
+      "id": "planning",
+      "version": 1,
+      "text": {
+        "en": "Have you struggled to plan or organise your studies?",
+        "fr": "As-tu eu du mal à organiser ou à planifier tes études ?"
+      }
+    },
+    {
+      "id": "energy",
+      "version": 1,
+      "text": {
+        "en": "Have you found it hard to get started on things you usually manage?",
+        "fr": "As-tu eu du mal à te mettre au travail sur ce que tu gères d'habitude ?"
+      }
+    },
+    {
+      "id": "connection",
+      "version": 1,
+      "text": {
+        "en": "Have you been avoiding friends, classes or plans more than usual?",
+        "fr": "As-tu évité tes amis, tes cours ou tes projets plus que d'habitude ?"
+      }
+    }
+  ],
+  "levels": [
+    { "id": "steady", "minYes": 0, "service": null },
+    { "id": "notice", "minYes": 1, "service": "counselling" },
+    { "id": "support", "minYes": 2, "service": "counselling" },
+    { "id": "care", "minYes": 3, "service": "clinical" }
+  ],
+  "services": {
+    "counselling": {
+      "name": { "en": "Student counselling service", "fr": "Service d'accompagnement des étudiant·es" },
+      "purpose": {
+        "en": "Support with stress, planning and study organisation.",
+        "fr": "Un soutien pour le stress, la planification et l'organisation des études."
+      },
+      "contact": { "link": null, "email": null, "phone": null, "hours": null },
+      "source": null,
+      "verified": null,
+      "todo": ["name", "link", "email", "phone", "hours"]
+    },
+    "clinical": {
+      "name": { "en": "Clinical care service", "fr": "Service de soins cliniques" },
+      "purpose": {
+        "en": "Clinical care from a doctor or psychologist.",
+        "fr": "Des soins cliniques auprès d'un médecin ou d'un·e psychologue."
+      },
+      "contact": { "link": null, "email": null, "phone": null, "hours": null },
+      "source": null,
+      "verified": null,
+      "todo": ["name", "link", "email", "phone", "hours"]
+    }
+  },
+  "emergency": [
+    {
+      "id": "general",
+      "number": "112",
+      "tel": "112",
+      "label": { "en": "Emergency services", "fr": "Services d'urgence" },
+      "detail": {
+        "en": "Europe-wide emergency number. Replace with your campus and national numbers.",
+        "fr": "Numéro d'urgence européen. À remplacer par les numéros de ton campus et de ton pays."
+      },
+      "source": null
+    }
+  ]
+}

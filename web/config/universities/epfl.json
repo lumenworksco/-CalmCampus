@@ -1,0 +1,169 @@
+{
+  "id": "epfl",
+  "name": "EPFL",
+  "logo": {
+    "text": "EPFL",
+    "image": null,
+    "todo": "Text placeholder on purpose. Add an approved logo file only with EPFL's permission."
+  },
+  "defaultLanguage": "fr",
+  "languages": ["fr", "en"],
+  "feedback": {
+    "email": "florian@calm.braunf.com",
+    "subject": "CalmCampus EPFL demo feedback"
+  },
+  "questions": [
+    {
+      "id": "sleep",
+      "version": 1,
+      "text": {
+        "fr": "Cette semaine, ton sommeil a-t-il été moins bon que d'habitude ?",
+        "en": "This week, has your sleep been worse than usual?"
+      }
+    },
+    {
+      "id": "planning",
+      "version": 1,
+      "text": {
+        "fr": "As-tu eu du mal à organiser ou à planifier tes études ?",
+        "en": "Have you struggled to plan or organise your studies?"
+      }
+    },
+    {
+      "id": "energy",
+      "version": 1,
+      "text": {
+        "fr": "As-tu eu du mal à te mettre au travail sur ce que tu gères d'habitude ?",
+        "en": "Have you found it hard to get started on things you usually manage?"
+      }
+    },
+    {
+      "id": "connection",
+      "version": 1,
+      "text": {
+        "fr": "As-tu évité tes amis, tes cours ou tes projets plus que d'habitude ?",
+        "en": "Have you been avoiding friends, classes or plans more than usual?"
+      }
+    }
+  ],
+  "levels": [
+    { "id": "steady", "minYes": 0, "service": null },
+    { "id": "notice", "minYes": 1, "service": "social" },
+    { "id": "support", "minYes": 2, "service": "social" },
+    { "id": "care", "minYes": 3, "service": "clinical" }
+  ],
+  "services": {
+    "social": {
+      "name": {
+        "fr": "Consultation sociale",
+        "en": "Social consultation"
+      },
+      "purpose": {
+        "fr": "Un soutien gratuit, neutre et confidentiel pour le stress, la motivation, l'organisation et la planification des études, la préparation aux examens, l'isolement ou les démarches.",
+        "en": "Free, neutral and confidential support for stress, motivation, planning and organising your studies, exam preparation, isolation or admin matters."
+      },
+      "contact": {
+        "link": {
+          "fr": "https://www.epfl.ch/education/studies/consultation-sociale/",
+          "en": "https://www.epfl.ch/education/studies/en/social-consultation/"
+        },
+        "email": "consultation.sociale@epfl.ch",
+        "phone": null,
+        "hours": {
+          "fr": "Sur le campus de Lausanne ou en ligne, en français ou en anglais. Les e-mails sont lus chaque jour ouvrable, avec une réponse sous 48 heures.",
+          "en": "On the Lausanne campus or online, in French or English. Emails are read every working day, with a reply within 48 hours."
+        }
+      },
+      "source": "https://www.epfl.ch/education/studies/en/social-consultation/",
+      "verified": "2026-11-12",
+      "todo": ["phone", "opening hours (the page gives none)"]
+    },
+    "clinical": {
+      "name": {
+        "fr": "Consultation psychothérapeutique (CHUV)",
+        "en": "Psychotherapeutic consultation (CHUV)"
+      },
+      "purpose": {
+        "fr": "Un suivi médical bref avec des psychiatres et psychologues du CHUV, sur le campus, pour des difficultés psychiques liées ou non aux études.",
+        "en": "Brief medical follow-up with CHUV psychiatrists and psychologists, on campus, for mental health difficulties linked to your studies or not."
+      },
+      "contact": {
+        "link": {
+          "fr": "https://www.epfl.ch/education/studies/consultation-epfl/",
+          "en": "https://www.epfl.ch/education/studies/en/psy-consultation-epfl/"
+        },
+        "email": "consult.psy-epfl@chuv.ch",
+        "phone": null,
+        "hours": {
+          "fr": "Sur rendez-vous, bâtiment BP, en français ou en anglais. Réponse chaque jour ouvrable.",
+          "en": "By appointment, building BP, in French or English. Reply every working day."
+        }
+      },
+      "note": {
+        "fr": "La première consultation est prise en charge par l'EPFL.",
+        "en": "The first consultation is covered by EPFL."
+      },
+      "source": "https://www.epfl.ch/education/studies/en/psy-consultation-epfl/",
+      "verified": "2026-11-12",
+      "todo": ["phone"]
+    }
+  },
+  "emergency": [
+    {
+      "id": "campus",
+      "number": "021 693 30 00",
+      "tel": "+41216933000",
+      "label": {
+        "fr": "Urgence sur le campus de l'EPFL, 24 h/24",
+        "en": "Emergency on the EPFL campus, 24/7"
+      },
+      "detail": {
+        "fr": "Depuis un téléphone fixe de l'EPFL : 115. Ou le bouton SOS de l'app EPFL Campus.",
+        "en": "From an EPFL landline: 115. Or the SOS button in the EPFL Campus app."
+      },
+      "source": "https://www.epfl.ch/campus/security-safety/en/emergencies/health-emergencies/"
+    },
+    {
+      "id": "distress",
+      "number": "0848 133 133",
+      "tel": "0848133133",
+      "label": {
+        "fr": "Détresse psychologique, 24 h/24",
+        "en": "Psychological distress, 24/7"
+      },
+      "detail": {
+        "fr": "Centrale des médecins de garde : évaluation de la situation et orientation.",
+        "en": "On-call physicians' call centre: assessment and referral."
+      },
+      "source": "https://www.epfl.ch/education/studies/en/psy-consultation-epfl/"
+    },
+    {
+      "id": "offcampus",
+      "number": "144",
+      "tel": "144",
+      "label": {
+        "fr": "Urgence vitale hors campus",
+        "en": "Life-threatening emergency off campus"
+      },
+      "detail": {
+        "fr": "Ambulance, en Suisse.",
+        "en": "Ambulance, in Switzerland."
+      },
+      "source": "https://www.epfl.ch/education/studies/en/psy-consultation-epfl/"
+    },
+    {
+      "id": "listening",
+      "number": "143",
+      "tel": "143",
+      "label": {
+        "fr": "La Main Tendue, écoute 24 h/24",
+        "en": "La Main Tendue, listening 24/7"
+      },
+      "detail": {
+        "fr": "Écoute gratuite et confidentielle, par téléphone ou par tchat sur 143.ch.",
+        "en": "Free, confidential listening by phone or chat at 143.ch."
+      },
+      "source": "https://www.epfl.ch/education/studies/en/social-consultation/"
+    }
+  ]
+}

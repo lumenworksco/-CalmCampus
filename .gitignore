@@ -35,3 +35,6 @@ ml/runs/
 # Python
 __pycache__/
 *.pyc
+
+# Web demo build output
+web/dist/

@@ -1,0 +1,124 @@
+{
+  "lang": { "name": "English", "short": "EN", "switchTo": "Switch to French" },
+  "disclaimer": "We are not medical professionals. CalmCampus does not diagnose or treat; it helps students notice early signs and reach the right support.",
+  "nav": { "home": "Home", "history": "History", "more": "More", "label": "Main navigation" },
+  "demo": {
+    "label": "Demo data",
+    "banner": "These weeks are made up so you can explore the app.",
+    "exit": "Turn off",
+    "preview": "Preview every result",
+    "previewHint": "Opens an example result for each level.",
+    "toggleTitle": "Demo mode",
+    "toggleOn": "On. Showing made-up weeks. Your real answers are kept apart and are not touched.",
+    "toggleOff": "Off. Turn on to fill the app with a few made-up weeks.",
+    "turnOn": "Turn on demo mode",
+    "turnOff": "Turn off and clear demo data"
+  },
+  "home": {
+    "greeting": "Hello",
+    "title": "A quiet minute for you",
+    "lead": "Four yes or no questions about this past week. It takes under a minute, and it helps you notice early signs and find the right support.",
+    "start": "Start this week's check-in",
+    "doneTitle": "You checked in this week",
+    "doneBody": "Thanks for taking a minute. You can redo it if something has changed.",
+    "redo": "Redo the check-in",
+    "viewResult": "See my result",
+    "stays": "Your answers stay on this phone."
+  },
+  "checkin": {
+    "progress": "Question {n} of {total}",
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "heading": "This past week"
+  },
+  "result": {
+    "kicker": "Your result",
+    "noticedHeading": "What you noticed",
+    "noneNoticed": "None of the four signs this week.",
+    "nextHeading": "One next step",
+    "steadyNext": "If something changes, support is there whenever you want it.",
+    "seeSupport": "See support options",
+    "saved": "Saved on this phone only.",
+    "again": "Back to home",
+    "emergencyHeading": "In an emergency",
+    "emergencyIntro": "If you or someone else is in danger or needs help right now, call:",
+    "levels": {
+      "steady": {
+        "pill": "Steady",
+        "title": "Things look steady this week",
+        "body": "You did not mark any of the four signs. That is good to know. A quick check-in each week helps you notice if this changes."
+      },
+      "notice": {
+        "pill": "One sign",
+        "title": "You noticed one thing",
+        "body": "One of the signs showed up this week. That is common, and worth a small pause. Talking it through early often makes it lighter."
+      },
+      "support": {
+        "pill": "Some signs",
+        "title": "A few signs are showing up",
+        "body": "Two signs showed up this week. This is a good moment to talk to someone before things build up. One conversation can help you sort out what to do first."
+      },
+      "care": {
+        "pill": "Many signs",
+        "title": "This week sounds heavy",
+        "body": "Three or four signs showed up. You do not have to carry that alone. Someone who can look at the whole picture with you can help, and reaching out is a normal thing to do."
+      }
+    }
+  },
+  "service": {
+    "email": "Send an email",
+    "call": "Call",
+    "website": "Open the website",
+    "hoursHeading": "How to reach them",
+    "noContact": "Contact details are not set up yet. Ask your student services where to start.",
+    "emailNote": "This opens your email app. Nothing from CalmCampus is attached."
+  },
+  "history": {
+    "title": "Your weeks",
+    "empty": "No check-ins yet. Your weeks will appear here after your first one.",
+    "signs": "{n} of {total} signs",
+    "weekOf": "Week of {date}",
+    "chartLabel": "Signs noticed each week, from oldest to newest",
+    "trendHeading": "Trend",
+    "listHeading": "Week by week",
+    "open": "Open result"
+  },
+  "more": {
+    "title": "More",
+    "supportHeading": "Support at {name}",
+    "supportLead": "These are real services you can contact any time. You do not need a result to reach out.",
+    "emergencyHeading": "Emergency numbers",
+    "languageHeading": "Language",
+    "installHeading": "Add to your home screen",
+    "installIos": "iPhone: open this page in Safari, tap Share, then Add to Home Screen. Use the app from its icon afterwards.",
+    "installAndroid": "Android: in Chrome, open the menu and tap Install app or Add to Home screen.",
+    "privacyLink": "How your data is handled",
+    "feedbackHeading": "Send feedback",
+    "feedbackBody": "Opens an email to the CalmCampus team. No data is attached automatically.",
+    "feedbackButton": "Send feedback",
+    "deleteHeading": "Delete my data",
+    "deleteBody": "Removes every answer and setting stored on this phone. It cannot be undone.",
+    "deleteButton": "Delete my data",
+    "deleteConfirm": "Delete everything on this phone?",
+    "deleteYes": "Yes, delete",
+    "deleteCancel": "Keep my data",
+    "deleted": "Done. Everything stored on this phone has been deleted."
+  },
+  "privacy": {
+    "title": "Your privacy, in plain words",
+    "intro": "CalmCampus is built so that your answers belong to you and nobody else.",
+    "points": [
+      { "h": "Your answers stay on this phone", "p": "They are saved in your browser's local storage. They are never sent to a server, to {name}, or to the CalmCampus team." },
+      { "h": "No account, no tracking", "p": "There is no sign-up, no analytics and no trackers. Fonts and icons are bundled in the app, so it makes no calls to other companies." },
+      { "h": "Only what is needed", "p": "We keep yes or no answers and the week they belong to. No name, email, location or free text." },
+      { "h": "What the website host can see", "p": "Like any website, the host that delivers the app files may keep standard technical logs, such as a connection time and address. They never contain your answers, because your answers never leave your phone." },
+      { "h": "You are in control", "p": "Delete everything at any time from the More tab. Clearing your browser data does the same." },
+      { "h": "Feedback is your choice", "p": "Send feedback opens an email draft. Nothing is attached, and nothing is sent until you press send yourself." },
+      { "h": "This is a reviewer demo", "p": "It uses no real student data. In demo mode, the weeks you see are made up and labelled Demo data." }
+    ],
+    "principles": "We follow the design principles of the Swiss nLPD and the GDPR: data minimisation, purpose limitation, transparency and user control. This is a statement of how the app is designed. It is not a certification or an audit."
+  },
+  "footer": { "privacy": "Privacy" },
+  "errors": { "config": "This university could not be loaded. Showing the default setup instead." }
+}
