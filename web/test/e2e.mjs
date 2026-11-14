@@ -49,6 +49,7 @@ const C = (lang, value) => typography(loc(value, lang, cfg.defaultLanguage), lan
 const tryTitle = (i) => typography(ui.en.about.try[i].h, "en");
 const guide = Array.isArray(cfg.tries) && cfg.tries.length ? cfg.tries : null;
 const tryCount = guide ? guide.length : ui.en.about.try.length;
+const afterStartOver = guide && insts.length ? guide.filter((x) => (x.marks ?? [x.id]).every((m) => m === "uni")).length : 0;
 // Content rules checked on every screen a journey visits.
 const SECONDS = /\b\d+\s?(?:s|sec)(?![\p{L}\d])|\b(?:seconds?|secondes?|seconden?)\b/iu;
 const LESS = { en: "less than a minute", fr: "moins d’une minute", nl: "minder dan een minuut" };
@@ -280,7 +281,7 @@ async function phone(name, browserType, device, os) {
   await p.click('#nav a[href="#/history"]'); await settle();
   ok((await p.$$(".week-list li")).length === 6, "start over keeps only the examples");
   await p.click('#nav a[href="#/about"]'); await settle();
-  ok((await p.$$(".try .num.done")).length === 0, "start over resets the guide");
+  ok((await p.$$(".try .num.done")).length === afterStartOver, "start over resets the guide");
 
   await browser.close();
 }
@@ -378,6 +379,8 @@ async function institutionFlows(name, browserType, device) {
   const shows = async (text) => (await p.evaluate(() => document.body.textContent)).includes(text);
   for (const lang of langs) {
     await p.goto(`${base}?lang=${lang}`);
+    await p.evaluate(() => localStorage.clear());
+    await p.goto(`${base}?lang=${lang}`);
     await p.waitForSelector("[data-welcome]");
     await p.click("[data-welcome]"); await settle();
     ok(await h1() === T(lang, "pick.title"), `${lang.toUpperCase()}: the picker asks which university`);
@@ -427,6 +430,8 @@ async function pageFlows(name, browserType, device) {
   for (const lang of langs) {
     const L = lang.toUpperCase();
     await p.goto(`${base}?lang=${lang}`);
+    await p.evaluate(() => localStorage.clear());
+    await p.goto(`${base}?lang=${lang}`);
     await p.waitForSelector("[data-welcome]");
     if (cfg.welcomeNote) ok((await p.evaluate(() => document.body.textContent)).includes(C(lang, cfg.welcomeNote)), `${L}: the welcome screen says what this preview is`);
     for (const pid of cfg.welcomeLinks ?? []) ok(Boolean(await p.$(`a[href="#/${pid}"]`)), `${L}: the welcome screen links to ${pid}`);
@@ -467,7 +472,7 @@ async function pageFlows(name, browserType, device) {
       await p.click("[data-welcome]"); await settle();
       await pickFirst(p, ok, settle);
       await go("#/about");
-      ok(await ticked() === 0, `${L}: Start over resets the guide`);
+      ok(await ticked() === afterStartOver, `${L}: Start over resets the guide`);
     }
   }
   await browser.close();

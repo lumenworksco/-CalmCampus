@@ -62,13 +62,15 @@ function renderShell() {
   const c = app.config;
   const chip = c.logo?.image
     ? `<span class="uni-chip"><img src="${esc(c.logo.image)}" alt="${esc(L(c.name))}"></span>`
-    : c.logo?.text ? `<span class="uni-chip">${esc(Lt(c.logo.text))}</span>` : "";
+    : c.logo?.text ? `<span class="uni-chip${Lt(c.logo.text).length > 10 ? " long" : ""}">${esc(Lt(c.logo.text))}</span>` : "";
   // The language switch stays in the header: one button per other language
   // (with two languages, a single button with the languages icon, as before).
   const others = c.languages.filter((l) => l !== app.lang);
   const langBtn = (l) => `<button class="lang" data-hlang="${l}" lang="${l}" aria-label="${esc(app.ui.lang.names?.[l] ?? l)}">${others.length === 1 ? icon("languages", 18) : ""}${esc(l.toUpperCase())}</button>`;
   const switcher = others.length ? `<div class="langs" role="group" aria-label="${esc(t("more.languageHeading"))}">${others.map(langBtn).join("")}</div>` : "";
-  $("top").innerHTML = `<div class="brand"><a class="wordmark" href="#/">CalmCampus</a>${chip}</div>${switcher}`;
+  // A longer co-brand ("for … students") sits as a small line under the name, so the
+  // header fits the smallest phones next to the language buttons.
+  $("top").innerHTML = `<div class="brand${chip.includes(" long") ? " stacked" : ""}"><a class="wordmark" href="#/">CalmCampus</a>${chip}</div>${switcher}`;
   $("disclaimer").textContent = t("disclaimer");
   document.documentElement.lang = app.lang;
 

@@ -295,3 +295,10 @@ main { flex: 1; padding: 8px 20px calc(var(--dock-h) + 24px); outline: none; }
 .mock-card { border-radius: 16px; background: var(--sand); padding: 14px; display: grid; gap: 8px; font-size: 15px; line-height: 1.4; box-shadow: 0 0 0 2px var(--sage) inset; }
 .mock-card .mock-kicker { font-family: var(--font-head); font-size: 17px; color: var(--sage-deep); }
 .mock-card .btn { justify-self: start; }
+
+/* Long co-brand text: a small line under the wordmark instead of a pill */
+.brand.stacked { flex-direction: column; align-items: flex-start; gap: 0; }
+.uni-chip.long { background: none; padding: 0; border-radius: 0; font-size: 12.5px; letter-spacing: 0.02em; color: var(--ink-soft); line-height: 1.2; }
+/* The full language choice in About wraps on small phones */
+.seg { flex-wrap: wrap; }
+.table-card thead th { white-space: nowrap; }
