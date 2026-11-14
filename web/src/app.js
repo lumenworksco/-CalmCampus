@@ -1,5 +1,5 @@
 import { icon } from "./lib/icons.js";
-import { loadConfig, resolveUniversityId } from "./lib/config.js";
+import { loadConfig, resolveUniversityId, institutionsOf, institutionConfig } from "./lib/config.js";
 import { loc, pickLanguage, translate, typography } from "./lib/i18n.js";
 import { resultFor, answersForLevel, levelRanges } from "./lib/scoring.js";
 import { createStore } from "./lib/store.js";
@@ -10,7 +10,7 @@ import { SCENARIO_IDS, DEFAULT_SCENARIO, weekSignals, signalsFor, orderQuestions
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-const app = { config: null, store: null, lang: "en", ui: {}, answers: {}, confirmDelete: false, deleted: false, fellBack: false, screen: null, tabScroll: {}, advancing: false };
+const app = { base: null, config: null, store: null, pickReturn: null, pageBack: null, lang: "en", ui: {}, answers: {}, confirmDelete: false, deleted: false, fellBack: false, screen: null, tabScroll: {}, advancing: false };
 const TABS = new Set(["home", "history", "support", "about"]);
 
 /** Display text goes through typography(); links never do (L keeps them raw). */
@@ -18,7 +18,7 @@ const typo = (s) => typography(s, app.lang);
 const L = (value) => loc(value, app.lang, app.config.defaultLanguage);
 const Lt = (value) => typo(L(value));
 /** The university's name inside a sentence, with its article where needed (config `nameInText`). */
-const uniName = () => (app.config?.nameInText ? L(app.config.nameInText) : app.config?.name);
+const uniName = () => L(app.config?.nameInText) ?? L(app.config?.name);
 const t = (key, vars) => typo(translate(app.ui, key, { name: uniName(), ...vars }));
 
 /**
@@ -29,6 +29,18 @@ const t = (key, vars) => typo(translate(app.ui, key, { name: uniName(), ...vars 
  */
 const isPreview = () => app.config?.preview === true;
 const showsExamples = () => app.store.isDemo();
+
+/**
+ * A config with `institutions` (students from several universities) asks once which
+ * one the student is at; `app.config` is then that institution's merged config and
+ * `app.base` the config as loaded.
+ */
+const hasInstitutions = () => institutionsOf(app.base).length > 0;
+const needsPick = () => hasInstitutions() && !institutionsOf(app.base).some((i) => i.id === app.store.getUni());
+function applyUni() { app.config = institutionConfig(app.base, app.store.getUni()); }
+
+/** Extra pages from the config (`pages`), reached at #/<id> (or #<id>). */
+const pageOf = (id) => (Array.isArray(app.base?.pages) ? app.base.pages : []).find((pg) => pg.id === id);
 
 async function loadUi(lang) {
   const res = await fetch(`i18n/${lang}.json`);
@@ -49,14 +61,14 @@ function platform() {
 function renderShell() {
   const c = app.config;
   const chip = c.logo?.image
-    ? `<span class="uni-chip"><img src="${esc(c.logo.image)}" alt="${esc(c.name)}"></span>`
-    : c.logo?.text ? `<span class="uni-chip">${esc(c.logo.text)}</span>` : "";
-  const other = c.languages.length > 1 ? c.languages.find((l) => l !== app.lang) : null;
-  const switcher = other
-    ? `<button class="lang" id="lang-toggle" lang="${other}" aria-label="${esc(t("lang.switchTo"))}">${icon("languages", 18)}${esc(other.toUpperCase())}</button>`
-    : "";
+    ? `<span class="uni-chip"><img src="${esc(c.logo.image)}" alt="${esc(L(c.name))}"></span>`
+    : c.logo?.text ? `<span class="uni-chip">${esc(Lt(c.logo.text))}</span>` : "";
+  // The language switch stays in the header: one button per other language
+  // (with two languages, a single button with the languages icon, as before).
+  const others = c.languages.filter((l) => l !== app.lang);
+  const langBtn = (l) => `<button class="lang" data-hlang="${l}" lang="${l}" aria-label="${esc(app.ui.lang.names?.[l] ?? l)}">${others.length === 1 ? icon("languages", 18) : ""}${esc(l.toUpperCase())}</button>`;
+  const switcher = others.length ? `<div class="langs" role="group" aria-label="${esc(t("more.languageHeading"))}">${others.map(langBtn).join("")}</div>` : "";
   $("top").innerHTML = `<div class="brand"><a class="wordmark" href="#/">CalmCampus</a>${chip}</div>${switcher}`;
-  $("lang-toggle")?.addEventListener("click", () => setLang(other));
   $("disclaimer").textContent = t("disclaimer");
   document.documentElement.lang = app.lang;
 
@@ -149,30 +161,46 @@ function installTip() {
 
 /* ---------- The reviewer's guide ("Things to try") ---------- */
 
-// One entry per item of `about.try` in the strings, in the same order.
-const TRIES = ["checkin", "week", "results", "support", "feedback"];
-const tryHref = (id) => ({ checkin: "#/check/0", week: "#/", results: "#/results", support: "#/support", feedback: feedbackHref() }[id]);
+// The generic guide: one entry per item of `about.try` in the strings, in the same order.
+// A config can replace it with its own `tries` ({ id, href, marks, h, p }): a step is
+// ticked once every one of its `marks` was recorded (see markTried in the code).
+const GENERIC_TRIES = [
+  { id: "checkin", href: "#/check/0", marks: ["checkin"] },
+  { id: "week", href: "#/", marks: null }, // check-ins with two different example weeks
+  { id: "results", href: "#/results", marks: ["results"] },
+  { id: "support", href: "#/support", marks: ["support"] },
+  { id: "feedback", href: "feedback", marks: ["feedback"] },
+];
+const withName = (s) => s.replace(/\{name\}/g, uniName());
 
-/** Which items are done. "week" needs check-ins with two different example weeks. */
-function triedDone() {
-  const tried = app.store.tried();
-  const weeks = tried.filter((x) => x.startsWith("scenario:")).length;
-  return new Set(TRIES.filter((id) => (id === "week" ? weeks >= 2 : tried.includes(id))));
+function tries() {
+  const own = app.base.tries;
+  if (Array.isArray(own) && own.length) {
+    return own.map((x) => ({ id: x.id, href: x.href, marks: x.marks ?? [x.id], h: withName(Lt(x.h)), p: withName(Lt(x.p)) }));
+  }
+  return GENERIC_TRIES.map((x, i) => ({ ...x, h: typo(app.ui.about.try[i].h), p: typo(withName(app.ui.about.try[i].p)) }));
 }
 
-function tryLink(id, inner, cls = "") {
-  const attrs = id === "checkin" ? " data-reset" : id === "feedback" ? ' data-track="feedback"' : "";
-  return `<a${cls ? ` class="${cls}"` : ""} href="${esc(tryHref(id))}"${attrs}>${inner}</a>`;
+function triedDone(list = tries()) {
+  const tried = app.store.tried();
+  const done = (x) => (x.marks === null ? tried.filter((m) => m.startsWith("scenario:")).length >= 2 : x.marks.every((m) => tried.includes(m)));
+  return new Set(list.filter(done).map((x) => x.id));
+}
+
+function tryLink(x, inner, cls = "") {
+  const href = x.href === "feedback" ? feedbackHref() : x.href;
+  const attrs = x.href === "#/check/0" ? " data-reset" : x.href === "feedback" ? ' data-track="feedback"' : "";
+  return `<a${cls ? ` class="${cls}"` : ""} href="${esc(href)}"${attrs}>${inner}</a>`;
 }
 
 /** On a result: point to the next thing to try, so a reviewer never wonders what to do next. */
 function nextTryCard() {
   if (!isPreview()) return "";
-  const done = triedDone();
-  const i = TRIES.findIndex((id) => id !== "checkin" && !done.has(id));
-  if (i === -1) return "";
-  const it = app.ui.about.try[i];
-  return tryLink(TRIES[i], `<span class="grow"><span class="small">${esc(t("result.nextTry"))}</span><br><strong>${esc(typo(it.h))}</strong></span>${icon("arrow-right", 20)}`, "next-try");
+  const list = tries();
+  const done = triedDone(list);
+  const x = list.find((it) => it.id !== "checkin" && !done.has(it.id));
+  if (!x) return "";
+  return tryLink(x, `<span class="grow"><span class="small">${esc(t("result.nextTry"))}</span><br><strong>${esc(x.h)}</strong></span>${icon("arrow-right", 20)}`, "next-try");
 }
 
 /* ---------- Example phone data (see lib/signals.js) ---------- */
@@ -255,6 +283,8 @@ function viewWelcome() {
     <h1>${esc(t("welcome.title"))}</h1>
     <p class="lead">${esc(t("welcome.lead"))}</p>
     <ul class="points">${points}</ul>
+    ${app.base.welcomeNote ? `<div class="card"><p>${esc(Lt(app.base.welcomeNote))}</p></div>` : ""}
+    ${pageLinks(app.base.welcomeLinks)}
     ${installTip()}
     <p class="small">${esc(t("welcome.later"))}</p>
   </div>`;
@@ -354,7 +384,7 @@ function viewResult(answers, { saved, example, phone, scenarioId, back } = {}) {
     : `<p class="lead">${esc(t("result.noneNoticed"))}</p>`;
   const next = lv.service
     ? serviceCard(lv.service)
-    : `<div class="card stack"><p>${esc(t("result.steadyNext"))}</p><a class="btn sage" href="#/support">${esc(t("result.seeSupport"))}</a></div>`;
+    : `<div class="card stack"><p>${esc(lv.minYes > 0 && c.advice ? Lt(c.advice) : t("result.steadyNext"))}</p><a class="btn sage" href="#/support">${esc(t("result.seeSupport"))}</a></div>`;
   return `<div class="stack">
     ${back ? `<div>${backLink(back.href, back.label)}</div>` : ""}
     <div class="level-head"><div class="row wrap"><span class="small">${esc(t(example ? "result.exampleKicker" : "result.kicker"))}</span>${pillFor(lv)}</div>
@@ -387,6 +417,7 @@ function viewResults() {
     <div>${backLink("#/about", t("checkin.back"))}</div>
     <h1>${esc(t("results.title"))}</h1>
     <p class="lead">${esc(t("results.lead"))}</p>
+    ${hasInstitutions() ? `<p class="small">${esc(t("results.forInstitution"))} <a href="#/pick">${esc(t("pick.change"))}</a></p>` : ""}
     <ul class="level-list">${items}</ul>
     <p class="small row">${icon("siren", 18)}<span>${esc(t("results.emergencyNote"))}</span></p></div>`;
 }
@@ -432,8 +463,10 @@ function viewHistory() {
 function viewSupport() {
   const c = app.config;
   return `<div class="stack">
-    <h1>${esc(t("more.supportHeading"))}</h1><p class="lead">${esc(t("more.supportLead"))}</p>
-    ${Object.keys(c.services).map((id) => serviceCard(id)).join("")}
+    <h1>${esc(t("more.supportHeading"))}</h1>
+    ${Object.keys(c.services).length
+      ? `<p class="lead">${esc(t("more.supportLead"))}</p>${Object.keys(c.services).map((id) => serviceCard(id)).join("")}`
+      : `<div class="card"><p>${esc(c.advice ? Lt(c.advice) : t("service.noContact"))}</p></div>`}
     ${emergencyCard()}</div>`;
 }
 
@@ -454,16 +487,22 @@ function resetCard() {
 function viewAbout() {
   const c = app.config;
   const mail = feedbackHref();
-  const done = triedDone();
-  const tries = isPreview()
+  const list = tries();
+  const done = triedDone(list);
+  const tryList = isPreview()
     ? `<section class="stack"><div><h2>${esc(t("about.tryHeading"))}</h2>
-        <p class="small">${esc(t(done.size === TRIES.length ? "about.allDone" : "about.progress", { n: done.size, total: TRIES.length }))}</p></div>
-        <ol class="try">${app.ui.about.try.map((it, i) => {
-          const ok = done.has(TRIES[i]);
+        <p class="small">${esc(t(done.size === list.length ? "about.allDone" : "about.progress", { n: done.size, total: list.length }))}</p></div>
+        <ol class="try">${list.map((x, i) => {
+          const ok = done.has(x.id);
           const num = ok ? `<span class="num done">${icon("check", 18)}<span class="sr">${esc(t("about.doneLabel"))}</span></span>` : `<span class="num">${i + 1}</span>`;
-          return `<li>${tryLink(TRIES[i], `${num}<span class="grow"><strong>${esc(typo(it.h))}</strong><br><span class="small">${esc(typo(it.p.replace(/\{name\}/g, uniName())))}</span></span>${icon("arrow-right", 18)}`, ok ? "done" : "")}</li>`;
+          return `<li>${tryLink(x, `${num}<span class="grow"><strong>${esc(x.h)}</strong><br><span class="small">${esc(x.p)}</span></span>${icon("arrow-right", 18)}`, ok ? "done" : "")}</li>`;
         }).join("")}</ol></section>`
     : "";
+  const uni = hasInstitutions()
+    ? `<a class="link-row" href="#/pick"><span class="row">${icon("life-buoy", 20)}<span><span class="small">${esc(t("pick.current"))}</span><br><strong>${esc(typo(L(app.config.name)))}</strong></span></span><span class="small">${esc(t("pick.change"))}</span></a>`
+    : "";
+  const ap = app.base.aboutPages;
+  const pages = ap?.ids?.length ? `<section class="stack"><h2>${esc(Lt(ap.heading))}</h2>${pageLinks(ap.ids)}</section>` : "";
   const demo = isPreview() ? "" : showsExamples()
     ? `<div class="card stack" data-keep="demo"><h3>${esc(t("demo.toggleTitle"))}</h3><p class="small">${esc(t("demo.toggleOn"))}</p>
         <button class="btn ghost" data-demo="off">${esc(t("demo.turnOff"))}</button>
@@ -473,7 +512,9 @@ function viewAbout() {
   return `<div class="stack">
     <h1>${esc(t(isPreview() ? "about.title" : "nav.about"))}</h1>
     ${isPreview() ? `<p class="lead">${esc(t("about.intro"))}</p>` : ""}
-    ${tries}
+    ${tryList}
+    ${uni}
+    ${pages}
     <h2>${esc(t("more.languageHeading"))}</h2>${langButtons("lang")}
     <div class="card stack"><h3>${esc(t("more.feedbackHeading"))}</h3><p class="small">${esc(t("more.feedbackBody"))}</p>
       <a class="btn sage" href="${esc(mail)}" data-track="feedback">${icon("mail", 20)}${esc(t("more.feedbackButton"))}</a></div>
@@ -481,6 +522,7 @@ function viewAbout() {
     ${installTip()}
     ${demo}
     ${resetCard()}
+    <p class="small version">${esc(t("about.credit"))}</p>
     <p class="small version">${esc(t("more.version", { v: document.querySelector('meta[name="cc-build"]')?.content || "dev" }))}</p></div>`;
 }
 
@@ -489,6 +531,71 @@ function viewPrivacy() {
   return `<div class="stack privacy"><div>${backLink("#/about", t("checkin.back"))}</div>
     <h1>${esc(t("privacy.title"))}</h1><p class="lead">${esc(t("privacy.intro"))}</p>
     <div class="card"><dl>${pts}</dl></div><p class="small">${esc(t("privacy.principles"))}</p></div>`;
+}
+
+/** "Which university are you at?": once, and again from About to change it. */
+function viewPick() {
+  const cur = app.store.getUni();
+  const known = institutionsOf(app.base).some((i) => i.id === cur);
+  const items = institutionsOf(app.base).map((i) => {
+    const on = i.id === cur;
+    return `<li><button class="pick${on ? " on" : ""}" data-uni="${esc(i.id)}" aria-pressed="${on}"><span class="grow"><strong>${esc(Lt(i.name))}</strong>${i.hint ? `<br><span class="small">${esc(Lt(i.hint))}</span>` : ""}</span>${icon(on ? "check" : "arrow-right", 20)}</button></li>`;
+  }).join("");
+  return `<div class="stack">
+    ${known ? `<div>${backLink(app.pickReturn || "#/about", t("checkin.back"))}</div>` : ""}
+    <h1>${esc(t("pick.title"))}</h1>
+    <p class="lead">${esc(t("pick.lead"))}</p>
+    <ul class="pick-list">${items}</ul></div>`;
+}
+
+function pageLinks(ids) {
+  const list = (ids ?? []).map(pageOf).filter(Boolean);
+  if (!list.length) return "";
+  return `<div class="link-list">${list.map((pg) => `<a class="link-row" href="#/${esc(pg.id)}"><span>${esc(Lt(pg.linkLabel ?? pg.title))}</span>${icon("arrow-right", 18)}</a>`).join("")}</div>`;
+}
+
+/** Blocks of a config page: headings, paragraphs, notes, lists, steps, tables, boxes. */
+function block(b) {
+  if (b.h) return `<h2>${esc(Lt(b.h))}</h2>`;
+  if (b.p) return `<p>${esc(Lt(b.p))}</p>`;
+  if (b.note) return `<div class="hint"><p>${esc(Lt(b.note))}</p></div>`;
+  if (b.list) return `<ul class="bullets">${(L(b.list) ?? []).map((x) => `<li>${esc(typo(x))}</li>`).join("")}</ul>`;
+  if (b.items) return `<ol class="timeline">${b.items.map((it) => `<li><strong>${esc(Lt(it.h))}</strong><span>${esc(Lt(it.p))}</span></li>`).join("")}</ol>`;
+  if (b.box) return `<div class="card stack box">${b.box.map(block).join("")}</div>`;
+  if (b.links) return pageLinks(b.links);
+  if (b.table) {
+    const tb = b.table;
+    const head = L(tb.head) ?? [], rows = L(tb.rows) ?? [];
+    // Made-up numbers always carry the Example label.
+    const tag = tb.label === "example" ? `<span class="pill demo">${esc(t("demo.label"))}</span>` : "";
+    return `<div class="card stack table-card"><div class="row wrap"><h3 class="grow">${esc(Lt(tb.caption))}</h3>${tag}</div>
+      ${tb.note ? `<p class="small">${esc(Lt(tb.note))}</p>` : ""}
+      <div class="table-wrap"><table><thead><tr>${head.map((h) => `<th scope="col">${esc(typo(h))}</th>`).join("")}</tr></thead>
+      <tbody>${rows.map((r) => `<tr>${r.map((cell, i) => (i ? `<td>${esc(typo(cell))}</td>` : `<th scope="row">${esc(typo(cell))}</th>`)).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+  }
+  return "";
+}
+
+/** A plainly generic phone with one CalmCampus card: how a partner app could show it. */
+function frameMock(f) {
+  return `<figure class="mock">
+    <figcaption class="mock-label">${esc(Lt(f.label))}</figcaption>
+    <div class="mock-phone"><div class="mock-screen">
+      <div class="mock-app">${esc(Lt(f.app))}</div>
+      <div class="mock-bars" aria-hidden="true"><i></i><i></i><i class="short"></i></div>
+      <div class="mock-card"><p class="mock-kicker">CalmCampus</p><p>${esc(Lt(f.card.text))}</p>
+        <a class="btn sm" href="#/" data-track="frame">${esc(Lt(f.card.button))}${icon("arrow-right", 18)}</a></div>
+      <div class="mock-bars" aria-hidden="true"><i></i><i class="short"></i></div>
+    </div></div></figure>`;
+}
+
+function viewPage(pg) {
+  return `<div class="stack page"><div>${backLink(app.pageBack || "#/about", t("checkin.back"))}</div>
+    ${pg.eyebrow ? `<p class="small">${esc(Lt(pg.eyebrow))}</p>` : ""}
+    <h1>${esc(Lt(pg.title))}</h1>
+    ${pg.lead ? `<p class="lead">${esc(Lt(pg.lead))}</p>` : ""}
+    ${pg.frame ? frameMock(pg.frame) : ""}
+    ${(pg.blocks ?? []).map(block).join("")}</div>`;
 }
 
 /* ---------- Routing and events ---------- */
@@ -526,6 +633,7 @@ function route(opts) {
   const [name, arg] = hash.split("/");
   if (name === "more") { location.replace("#/about"); return; }
   if ((!name || name === "home") && isPreview() && !app.store.isWelcomed()) { location.replace("#/welcome"); return; }
+  if (needsPick() && ["", "home", "check", "result", "history", "support", "results", "preview"].includes(name || "")) { location.replace("#/pick"); return; }
   // Remember where each tab was scrolled, so coming back to it (from Privacy, a
   // result or a preview) lands where you left it instead of at the top.
   if (!inPlace && TABS.has(app.screen)) app.tabScroll[app.screen] = window.scrollY;
@@ -537,6 +645,14 @@ function route(opts) {
   const view = $("view");
   let html = "", nav = "home";
   if (name === "welcome") { nav = null; html = viewWelcome(); }
+  else if (name === "pick") {
+    if (!inPlace && from !== "pick") app.pickReturn = ["about", "results", "support"].includes(from) ? `#/${from}` : null;
+    nav = needsPick() ? null : "about"; html = viewPick();
+  } else if (pageOf(name)) {
+    if (!inPlace && from !== name) app.pageBack = from === "welcome" ? "#/welcome" : "#/about";
+    nav = "about"; html = viewPage(pageOf(name));
+    if (isPreview()) app.store.markTried(`page:${name}`);
+  }
   else if (name === "check") { nav = null; html = viewCheck(Number(arg)); if (html === null) return; }
   else if (name === "result") {
     const e = app.store.entryForWeek(arg || currentWeek());
@@ -575,8 +691,9 @@ function route(opts) {
 }
 
 function onClick(ev) {
-  if (ev.target.closest("[data-track]")?.dataset.track === "feedback") app.store.markTried("feedback");
-  const el = ev.target.closest("[data-answer],[data-lang],[data-demo],[data-delete],[data-reset],[data-scenario],[data-welcome],[data-replace]");
+  const track = ev.target.closest("[data-track]")?.dataset.track;
+  if (track) app.store.markTried(track);
+  const el = ev.target.closest("[data-answer],[data-lang],[data-hlang],[data-uni],[data-demo],[data-delete],[data-reset],[data-scenario],[data-welcome],[data-replace]");
   if (!el) return;
   if (el.dataset.reset !== undefined) { app.answers = {}; return; }
   if (el.dataset.replace !== undefined) {
@@ -584,6 +701,16 @@ function onClick(ev) {
     // whole check-in is one step back: the phone's back button returns to where it started.
     ev.preventDefault();
     location.replace(el.getAttribute("href"));
+    return;
+  }
+  if (el.dataset.hlang) { setLang(el.dataset.hlang); return; }
+  if (el.dataset.uni) {
+    if (!institutionsOf(app.base).some((i) => i.id === el.dataset.uni)) return;
+    app.store.setUni(el.dataset.uni);
+    if (isPreview()) app.store.markTried("uni");
+    applyUni();
+    renderShell();
+    location.replace(app.pickReturn || "#/");
     return;
   }
   if (el.dataset.welcome !== undefined) {
@@ -637,6 +764,8 @@ function onClick(ev) {
         app.store.setLang(app.lang);
         app.store.setDemo(true, demoEntries(app.config));
         app.tabScroll = {};
+        applyUni();
+        renderShell();
         location.replace("#/welcome");
         return;
       }
@@ -679,8 +808,9 @@ async function init() {
   const params = new URLSearchParams(location.search);
   const id = resolveUniversityId(location.search, document.querySelector('meta[name="cc-university"]')?.content);
   const { config, fellBack } = await loadConfig(id);
-  app.config = config; app.fellBack = fellBack;
+  app.base = config; app.fellBack = fellBack;
   app.store = createStore(window.localStorage, config.id);
+  applyUni();
   app.lang = pickLanguage(config, { search: location.search, stored: app.store.getLang(), browser: navigator.languages || [navigator.language] });
   app.ui = await loadUi(app.lang);
   if (isPreview()) {

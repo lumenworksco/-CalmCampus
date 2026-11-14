@@ -1,12 +1,12 @@
 {
   "lang": {
-    "switchTo": "Switch to French",
     "names": {
       "en": "English",
-      "fr": "Français"
+      "fr": "Français",
+      "nl": "Nederlands"
     }
   },
-  "disclaimer": "We are not medical professionals. CalmCampus does not diagnose or treat; it helps students notice early signs and reach the right support.",
+  "disclaimer": "We are students, not medical professionals. CalmCampus does not diagnose or treat; it helps students notice early signs and reach the right support.",
   "nav": {
     "home": "Home",
     "history": "My weeks",
@@ -27,7 +27,7 @@
   "home": {
     "greeting": "Hello",
     "title": "A quiet minute for you",
-    "lead": "Four yes or no questions about this past week. It takes under a minute, and it helps you notice early signs and find the right support.",
+    "lead": "Four yes or no questions about this past week. It takes less than a minute, and it helps you notice early signs and find the right support.",
     "start": "Start this week's check-in",
     "doneTitle": "You checked in this week",
     "doneBody": "Thanks for taking a minute. You can redo it if something has changed.",
@@ -203,7 +203,7 @@
     "title": "Welcome",
     "lead": "CalmCampus helps students notice early signs of stress and find the right support. This is a preview for {name}: try it the way a student would. It takes about five minutes.",
     "points": [
-      "Answer four yes or no questions about your week. It takes under a minute.",
+      "Answer four yes or no questions about your week. It takes less than a minute.",
       "The full app also looks at sleep, steps and late phone use. Here these are examples, not your real data.",
       "Nothing you enter leaves this phone."
     ],
@@ -221,7 +221,7 @@
     "try": [
       {
         "h": "Do the check-in",
-        "p": "Four yes or no questions. Under a minute."
+        "p": "Four yes or no questions. Less than a minute."
       },
       {
         "h": "Try another example week",
@@ -249,7 +249,8 @@
     "startOverDone": "Done. You are starting over.",
     "progress": "{n} of {total} tried",
     "allDone": "You have tried everything. Thank you.",
-    "doneLabel": "(done)"
+    "doneLabel": "(done)",
+    "credit": "Made by Florian Braùn and Hélène David."
   },
   "results": {
     "title": "Every possible result",
@@ -258,7 +259,8 @@
     "suggests": "Suggests: {target}",
     "supportList": "the list of support options",
     "back": "All results",
-    "emergencyNote": "Every result also shows the emergency numbers."
+    "emergencyNote": "Every result also shows the emergency numbers.",
+    "forInstitution": "Shown for {name}."
   },
   "install": {
     "title": "Add it to your home screen",
@@ -277,5 +279,11 @@
     "desktopTitle": "Made for phones",
     "desktopBody": "Scan this code with your phone's camera, or open {url} on your phone.",
     "qrAlt": "QR code that opens {url}"
+  },
+  "pick": {
+    "title": "Which university are you at?",
+    "lead": "CalmCampus shows the support of your own university. You can change this later in About.",
+    "current": "Your university",
+    "change": "Change"
   }
 }
