@@ -70,7 +70,14 @@ cd ../../_CalmWeb && python3 scripts/check-site.py
 git add docs/<id> && git commit -m "<id> preview: <what changed>" && git push origin main
 ```
 
-Pages publishes within a minute or two; then `E2E_URL=https://cc.braunf.com/<id>/ npm run e2e` checks the live copy. Installed apps update themselves: the service worker fetches the new files past the browser cache, and the page reloads once the new version is ready (never during a check-in). The build version is shown at the bottom of About, so a tester can tell which build a phone runs.
+The general preview (the `default` config, linked from the site's home page) is deployed the same way, from `main` only (there `dist/` holds nothing but the general preview), into `docs/demo/`:
+
+```bash
+cd web && npm run build
+rsync -a --delete dist/ ../../_CalmWeb/docs/demo/
+```
+
+Pages publishes within a minute or two; then `E2E_URL=https://cc.braunf.com/<id>/ npm run e2e` (or `/demo/` with `E2E_UNI=default`) checks the live copy. Every preview is `noindex`: search engines index the site's home page, which links to the demo. Installed apps update themselves: the service worker fetches the new files past the browser cache, and the page reloads once the new version is ready (never during a check-in). The build version is shown at the bottom of About, so a tester can tell which build a phone runs.
 
 ## Privacy design
 

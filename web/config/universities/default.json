@@ -6,6 +6,8 @@
   "preview": true,
   "defaultLanguage": "en",
   "languages": ["en", "fr"],
+  "publicUrl": "https://cc.braunf.com/demo/",
+  "qr": "config/qr/default.svg",
   "feedback": {
     "email": "contact@calm.braunf.com",
     "subject": { "en": "Feedback on the CalmCampus preview", "fr": "Retour sur l'aperçu CalmCampus" }
