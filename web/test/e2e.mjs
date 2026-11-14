@@ -379,6 +379,7 @@ async function institutionFlows(name, browserType, device) {
   const shows = async (text) => (await p.evaluate(() => document.body.textContent)).includes(text);
   for (const lang of langs) {
     await p.goto(`${base}?lang=${lang}`);
+    await p.waitForLoadState("networkidle"); // let the offline copy finish installing first
     await p.evaluate(() => localStorage.clear());
     await p.goto(`${base}?lang=${lang}`);
     await p.waitForSelector("[data-welcome]");
@@ -430,6 +431,7 @@ async function pageFlows(name, browserType, device) {
   for (const lang of langs) {
     const L = lang.toUpperCase();
     await p.goto(`${base}?lang=${lang}`);
+    await p.waitForLoadState("networkidle"); // let the offline copy finish installing first
     await p.evaluate(() => localStorage.clear());
     await p.goto(`${base}?lang=${lang}`);
     await p.waitForSelector("[data-welcome]");
