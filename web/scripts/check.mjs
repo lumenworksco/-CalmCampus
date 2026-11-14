@@ -19,7 +19,7 @@ const BANNED = {
   nl: [/risicogroep/i, /\brisico\b/i, /stoornis/i, /\bziekte/i, /\bpatiënt/i, /\bsyndroom/i, /\bdepressi/i],
 };
 // The check-in "takes less than a minute": never a time in seconds.
-const SECONDS = /\b\d+\s?(?:s|sec|seconds?|secondes?|seconden?)\b|\bseconds?\b|\bsecondes?\b|\bseconden?\b/i;
+const SECONDS = /\b\d+\s?(?:s|sec)(?![\p{L}\d])|\b(?:seconds?|secondes?|seconden?)\b/iu;
 
 function walk(value, where, fn) {
   if (typeof value === "string") fn(value, where);

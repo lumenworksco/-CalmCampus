@@ -50,7 +50,7 @@ const tryTitle = (i) => typography(ui.en.about.try[i].h, "en");
 const guide = Array.isArray(cfg.tries) && cfg.tries.length ? cfg.tries : null;
 const tryCount = guide ? guide.length : ui.en.about.try.length;
 // Content rules checked on every screen a journey visits.
-const SECONDS = /\b\d+\s?(?:s|sec|seconds?|secondes?|seconden?)\b|\bseconds?\b|\bsecondes?\b|\bseconden?\b/i;
+const SECONDS = /\b\d+\s?(?:s|sec)(?![\p{L}\d])|\b(?:seconds?|secondes?|seconden?)\b/iu;
 const LESS = { en: "less than a minute", fr: "moins d’une minute", nl: "minder dan een minuut" };
 const total = cfg.questions.length;
 const heavy = orderQuestions(cfg.questions, weekSignals("heavy"));
