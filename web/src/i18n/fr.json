@@ -1,12 +1,12 @@
 {
   "lang": {
-    "switchTo": "Passer à l'anglais",
     "names": {
       "en": "English",
-      "fr": "Français"
+      "fr": "Français",
+      "nl": "Nederlands"
     }
   },
-  "disclaimer": "Nous ne sommes pas des professionnel·les de santé. CalmCampus ne pose pas de diagnostic et ne soigne pas : l'application aide les étudiant·es à repérer les premiers signes et à trouver le bon soutien.",
+  "disclaimer": "Nous sommes des étudiant·es, pas des professionnel·les de santé. CalmCampus ne pose pas de diagnostic et ne soigne pas : l'application aide les étudiant·es à repérer les premiers signes et à trouver le bon soutien.",
   "nav": {
     "home": "Accueil",
     "history": "Semaines",
@@ -249,7 +249,8 @@
     "startOverDone": "C'est fait. Tu recommences.",
     "progress": "{n} sur {total} essayés",
     "allDone": "Tu as tout essayé. Merci.",
-    "doneLabel": "(fait)"
+    "doneLabel": "(fait)",
+    "credit": "Réalisé par Florian Braùn et Hélène David."
   },
   "results": {
     "title": "Tous les résultats possibles",
@@ -258,7 +259,8 @@
     "suggests": "Propose : {target}",
     "supportList": "la liste des soutiens",
     "back": "Tous les résultats",
-    "emergencyNote": "Chaque résultat affiche aussi les numéros d'urgence."
+    "emergencyNote": "Chaque résultat affiche aussi les numéros d'urgence.",
+    "forInstitution": "Affiché pour {name}."
   },
   "install": {
     "title": "Ajoute-la à ton écran d'accueil",
@@ -277,5 +279,11 @@
     "desktopTitle": "Conçue pour le téléphone",
     "desktopBody": "Scanne ce code avec l'appareil photo de ton téléphone, ou ouvre {url} sur ton téléphone.",
     "qrAlt": "Code QR qui ouvre {url}"
+  },
+  "pick": {
+    "title": "Dans quelle université es-tu ?",
+    "lead": "CalmCampus montre le soutien de ta propre université. Tu peux changer ce choix plus tard dans À propos.",
+    "current": "Ton université",
+    "change": "Changer"
   }
 }

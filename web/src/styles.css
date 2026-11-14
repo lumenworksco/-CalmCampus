@@ -255,3 +255,50 @@ main { flex: 1; padding: 8px 20px calc(var(--dock-h) + 24px); outline: none; }
 }
 .redo { display: grid; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 2px solid var(--line); }
 .redo .btn { justify-self: start; }
+
+/* Header language buttons (one per other language) */
+.langs { display: flex; gap: 6px; flex: none; }
+.langs .lang:only-child { padding: 0 14px; }
+.langs .lang:not(:only-child) { padding: 0 12px; }
+
+/* University picker */
+.pick-list { list-style: none; padding: 0; display: grid; gap: 10px; }
+.pick {
+  width: 100%; display: flex; gap: 12px; align-items: center; min-height: 60px; padding: 14px 16px; text-align: left;
+  border-radius: var(--radius-sm); border: 2px solid transparent; background: var(--sand); color: var(--ink);
+  font: inherit; line-height: 1.35; cursor: pointer;
+}
+.pick.on { border-color: var(--sage-deep); }
+.link-list { display: grid; gap: 10px; }
+
+/* Config pages */
+.bullets { padding-left: 22px; display: grid; gap: 8px; }
+.timeline { list-style: none; padding: 0; display: grid; gap: 12px; counter-reset: step; }
+.timeline li { display: grid; gap: 2px; padding: 14px 16px 14px 18px; border-left: 4px solid var(--sage); background: var(--sand); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.box h2 { font-size: 19px; }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.table-card th, .table-card td { text-align: left; vertical-align: top; padding: 8px 10px 8px 0; border-top: 1px solid var(--line); }
+.table-card thead th { border-top: 0; font-size: 13px; color: var(--ink-soft); }
+.table-card tbody th { font-weight: 600; }
+.table-card td { white-space: nowrap; }
+
+/* A plainly generic phone mockup (never a copy of another app's design) */
+.mock { margin: 0; display: grid; justify-items: center; gap: 10px; }
+.mock-label { font-size: 13px; font-weight: 700; color: var(--terracotta-deep); text-align: center; }
+.mock-phone { width: min(280px, 100%); padding: 10px; border-radius: 34px; background: var(--ink); }
+.mock-screen { border-radius: 26px; background: #FBF7F0; padding: 18px 14px 22px; display: grid; gap: 12px; min-height: 380px; align-content: start; }
+.mock-app { font-weight: 800; font-size: 18px; color: var(--ink-soft); letter-spacing: 0.02em; }
+.mock-bars { display: grid; gap: 8px; }
+.mock-bars i { display: block; height: 30px; border-radius: 10px; background: #E9E2D6; }
+.mock-bars i.short { width: 62%; }
+.mock-card { border-radius: 16px; background: var(--sand); padding: 14px; display: grid; gap: 8px; font-size: 15px; line-height: 1.4; box-shadow: 0 0 0 2px var(--sage) inset; }
+.mock-card .mock-kicker { font-family: var(--font-head); font-size: 17px; color: var(--sage-deep); }
+.mock-card .btn { justify-self: start; }
+
+/* Long co-brand text: a small line under the wordmark instead of a pill */
+.brand.stacked { flex-direction: column; align-items: flex-start; gap: 0; }
+.uni-chip.long { background: none; padding: 0; border-radius: 0; font-size: 12.5px; letter-spacing: 0.02em; color: var(--ink-soft); line-height: 1.2; }
+/* The full language choice in About wraps on small phones */
+.seg { flex-wrap: wrap; }
+.table-card thead th { white-space: nowrap; }

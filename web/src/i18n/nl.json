@@ -1,0 +1,289 @@
+{
+  "lang": {
+    "names": {
+      "en": "English",
+      "fr": "Français",
+      "nl": "Nederlands"
+    }
+  },
+  "disclaimer": "We zijn studenten, geen zorgverleners. CalmCampus stelt geen diagnose en behandelt niet; het helpt studenten om vroege signalen op te merken en de juiste ondersteuning te vinden.",
+  "nav": {
+    "home": "Start",
+    "history": "Mijn weken",
+    "support": "Hulp",
+    "about": "Over",
+    "label": "Hoofdnavigatie"
+  },
+  "demo": {
+    "label": "Voorbeeld",
+    "banner": "Verzonnen weken en telefoonsignalen.",
+    "exit": "Uitzetten",
+    "toggleTitle": "Demomodus",
+    "toggleOn": "Aan. Je ziet verzonnen weken. Je echte antwoorden worden apart bewaard en blijven onaangeroerd.",
+    "toggleOff": "Uit. Zet aan om de app te vullen met een paar verzonnen weken.",
+    "turnOn": "Demomodus aanzetten",
+    "turnOff": "Uitzetten en demogegevens wissen"
+  },
+  "home": {
+    "greeting": "Hallo",
+    "title": "Een rustige minuut voor jou",
+    "lead": "Vier ja-of-neevragen over de voorbije week. Het duurt minder dan een minuut, en het helpt je om vroege signalen op te merken en de juiste ondersteuning te vinden.",
+    "start": "Start de check-in van deze week",
+    "doneTitle": "Je hebt deze week ingecheckt",
+    "doneBody": "Bedankt dat je even de tijd nam. Je kunt het opnieuw doen als er iets veranderd is.",
+    "redo": "Doe de check-in opnieuw",
+    "viewResult": "Bekijk mijn resultaat",
+    "stays": "Je antwoorden blijven op deze telefoon."
+  },
+  "checkin": {
+    "progress": "Vraag {n} van {total}",
+    "yes": "Ja",
+    "no": "Nee",
+    "back": "Terug",
+    "heading": "De voorbije week",
+    "skip": "Sla deze vraag over"
+  },
+  "result": {
+    "kicker": "Je resultaat",
+    "noticedHeading": "Wat je opmerkte",
+    "noneNoticed": "Geen van de vier signalen deze week.",
+    "nextHeading": "Eén volgende stap",
+    "steadyNext": "Als er iets verandert, is er ondersteuning wanneer je die wilt.",
+    "seeSupport": "Bekijk waar je terechtkunt",
+    "saved": "Alleen op deze telefoon bewaard.",
+    "again": "Terug naar start",
+    "emergencyHeading": "In een noodgeval",
+    "emergencyIntro": "Ben jij of iemand anders in gevaar, of is er nu meteen hulp nodig? Bel:",
+    "levels": {
+      "steady": {
+        "pill": "Stabiel",
+        "title": "Het ziet er deze week stabiel uit",
+        "body": "Je duidde geen van de vier signalen aan. Goed om te weten. Een korte check-in per week helpt je om op te merken als dat verandert."
+      },
+      "notice": {
+        "pill": "Eén signaal",
+        "title": "Je merkte één ding op",
+        "body": "Eén van de signalen kwam deze week naar boven. Dat komt vaak voor en is een korte pauze waard. Er vroeg over praten maakt het vaak lichter."
+      },
+      "support": {
+        "pill": "Enkele signalen",
+        "title": "Er komen een paar signalen naar boven",
+        "body": "Deze week kwamen twee signalen naar boven. Dit is een goed moment om met iemand te praten voor het zich opstapelt. Eén gesprek kan je helpen om te bepalen wat je eerst doet."
+      },
+      "care": {
+        "pill": "Veel signalen",
+        "title": "Deze week klinkt zwaar",
+        "body": "Drie of vier signalen kwamen naar boven. Je hoeft dat niet alleen te dragen. Iemand die samen met jou naar het hele plaatje kijkt, kan helpen, en hulp vragen is heel gewoon."
+      }
+    },
+    "exampleKicker": "Voorbeeldresultaat",
+    "skipped": "Overgeslagen vragen: {n} van {total}.",
+    "nextTry": "Probeer hierna"
+  },
+  "service": {
+    "email": "Stuur een e-mail",
+    "call": "Bel",
+    "website": "Open de website",
+    "noContact": "De versie van elke universiteit toont hier de echte contactgegevens van deze dienst.",
+    "emailNote": "Dit opent je e-mailapp. Er wordt niets van CalmCampus bijgevoegd."
+  },
+  "history": {
+    "title": "Jouw weken",
+    "empty": "Nog geen check-ins. Je weken verschijnen hier na je eerste check-in.",
+    "signs": "{n} van {total} signalen",
+    "weekOf": "Week van {date}",
+    "chartLabel": "Signalen per week, van oudste naar nieuwste",
+    "trendHeading": "Signalen per week",
+    "listHeading": "Week per week",
+    "open": "Open resultaat",
+    "examplesNote": "De eerdere weken zijn voorbeelden, zodat je ziet hoe deze pagina er na een paar weken uitziet.",
+    "ownHeading": "Jouw check-ins",
+    "ownEmpty": "Je eigen check-ins verschijnen hier.",
+    "examplesHeading": "Voorbeeldweken"
+  },
+  "more": {
+    "supportHeading": "Hulp bij {name}",
+    "supportLead": "Dit zijn de eigen diensten van {name}. Je kunt ze altijd contacteren, ook zonder resultaat.",
+    "languageHeading": "Taal",
+    "privacyLink": "Hoe met je gegevens wordt omgegaan",
+    "feedbackHeading": "Feedback sturen",
+    "feedbackBody": "Opent een e-mail aan het CalmCampus-team, met een paar vragen om je op weg te helpen. Er wordt niets uit de app bijgevoegd.",
+    "feedbackButton": "Feedback sturen",
+    "deleteHeading": "Mijn gegevens wissen",
+    "deleteBody": "Verwijdert alle antwoorden en instellingen op deze telefoon. Dit kan niet ongedaan worden gemaakt.",
+    "deleteButton": "Mijn gegevens wissen",
+    "deleteConfirm": "Alles op deze telefoon wissen?",
+    "deleteYes": "Ja, wissen",
+    "deleteCancel": "Mijn gegevens houden",
+    "version": "Versie {v}",
+    "deleteDone": "Klaar. Alles wat op deze telefoon bewaard was, is gewist.",
+    "feedbackTemplate": "Wat goed werkte:\n\n\nWat onduidelijk was:\n\n\nDe resultaten en de diensten die ze voorstellen:\n\n\nIets anders:\n"
+  },
+  "signals": {
+    "heading": "Deze week op je telefoon",
+    "simulated": "In de volledige app komt dit uit de eigen gezondheids- en schermtijdgegevens van de telefoon, vergeleken met je gewone week. Hier is het een voorbeeld.",
+    "scenarioLabel": "Probeer een andere voorbeeldweek",
+    "scenarios": {
+      "steady": "Rustig",
+      "exams": "Examens",
+      "heavy": "Zwaar"
+    },
+    "names": {
+      "sleep": "Slaap",
+      "lateScreen": "Laat op je telefoon",
+      "steps": "Stappen"
+    },
+    "per": {
+      "sleep": "per nacht",
+      "lateScreen": "na middernacht",
+      "steps": "per dag"
+    },
+    "usual": "meestal {value}",
+    "status": {
+      "lower": "Lager",
+      "higher": "Hoger",
+      "same": "Zoals gewoonlijk"
+    },
+    "hours": "{h} u {m} min",
+    "minutes": "{m} min",
+    "noticedHeading": "Je telefoon merkte op",
+    "hint": {
+      "sleep": "Ongeveer {value} slaap per nacht, meestal {usual}.",
+      "lateScreen": "Ongeveer {value} op je telefoon na middernacht, meestal {usual}.",
+      "steps": "Ongeveer {value} stappen per dag, meestal {usual}."
+    },
+    "noSignal": "Geen telefoonsignaal voor deze vraag. Alleen jij kunt het zeggen.",
+    "youDecide": "Jij weet het best. Antwoord zoals de week aanvoelde.",
+    "resultHeading": "Wat je telefoon opmerkte",
+    "resultNone": "Niets ongewoons in slaap, laat telefoongebruik of stappen deze week.",
+    "resultNote": "Telefoonsignalen bepalen alleen welke vragen eerst komen. Je resultaat komt enkel uit je antwoorden.",
+    "scenarioHint": "De vragen van de check-in passen zich eraan aan.",
+    "unremarkable": "Je telefoon merkte hier niets ongewoons op.",
+    "redoPrompt": "Je koos een andere voorbeeldweek. Doe de check-in opnieuw om te zien hoe de vragen veranderen."
+  },
+  "privacy": {
+    "title": "Je privacy, in gewone woorden",
+    "intro": "CalmCampus is zo gebouwd dat je antwoorden van jou zijn en van niemand anders.",
+    "points": [
+      {
+        "h": "Je antwoorden blijven op deze telefoon",
+        "p": "Ze worden bewaard in de lokale opslag van je browser. Ze worden nooit naar een server gestuurd, niet naar {name} en niet naar het CalmCampus-team."
+      },
+      {
+        "h": "Geen account, geen tracking",
+        "p": "Er is geen registratie, geen analytics en geen trackers. Lettertypes en iconen zitten in de app zelf, dus ze laadt niets van andere bedrijven."
+      },
+      {
+        "h": "Alleen wat nodig is",
+        "p": "We bewaren ja-of-neeantwoorden en de week waartoe ze horen. Geen naam, e-mail, locatie of vrije tekst."
+      },
+      {
+        "h": "Wat de websitehost kan zien",
+        "p": "Zoals bij elke website kan de host die de app-bestanden levert gewone technische logs bijhouden, zoals een verbindingstijdstip en -adres. Daar staan nooit je antwoorden in, want je antwoorden verlaten je telefoon nooit."
+      },
+      {
+        "h": "Jij beslist",
+        "p": "Wis alles wanneer je wilt met Opnieuw beginnen onder Over. Je browsergegevens wissen doet hetzelfde."
+      },
+      {
+        "h": "Feedback is jouw keuze",
+        "p": "Feedback sturen opent een e-mailontwerp. Er wordt niets bijgevoegd, en er wordt niets verstuurd tot je zelf op verzenden drukt."
+      },
+      {
+        "h": "Dit is een preview om te beoordelen",
+        "p": "Ze gebruikt geen echte studentengegevens. De eerdere weken en de telefoongegevens die je ziet zijn verzonnen en gemarkeerd als Voorbeeld. Deze webversie kan Apple Gezondheid of Schermtijd niet lezen; de volledige app is daarvoor ontworpen, alleen op de telefoon."
+      }
+    ],
+    "principles": "We volgen de ontwerpprincipes van de Zwitserse nLPD en de AVG: dataminimalisatie, doelbinding, transparantie en controle voor de gebruiker. Dit beschrijft hoe de app ontworpen is. Het is geen certificering of audit."
+  },
+  "errors": {
+    "config": "Deze universiteit kon niet geladen worden. Je ziet de standaardversie."
+  },
+  "welcome": {
+    "title": "Welkom",
+    "lead": "CalmCampus helpt studenten om vroege signalen van stress op te merken en de juiste ondersteuning te vinden. Dit is een preview voor {name}: probeer het zoals een student het zou doen. Het duurt ongeveer vijf minuten.",
+    "points": [
+      "Beantwoord vier ja-of-neevragen over je week. Het duurt minder dan een minuut.",
+      "De volledige app kijkt ook naar slaap, stappen en laat telefoongebruik. Hier zijn dat voorbeelden, niet je echte gegevens.",
+      "Niets wat je invult, verlaat deze telefoon."
+    ],
+    "start": "Start de preview",
+    "later": "Je vindt dit allemaal terug onder Over."
+  },
+  "preview": {
+    "strip": "Preview met voorbeelden",
+    "tryLink": "Wat probeer je"
+  },
+  "about": {
+    "title": "Over deze preview",
+    "intro": "CalmCampus helpt studenten om vroege signalen van stress op te merken en de juiste ondersteuning te vinden bij {name}. Deze preview toont hoe het zou werken. De voorbije weken en de telefoongegevens zijn voorbeelden. Je eigen antwoorden blijven op deze telefoon.",
+    "tryHeading": "Dingen om te proberen",
+    "try": [
+      {
+        "h": "Doe de check-in",
+        "p": "Vier ja-of-neevragen. Minder dan een minuut."
+      },
+      {
+        "h": "Probeer een andere voorbeeldweek",
+        "p": "Kies er een op Start en doe de check-in opnieuw. De vragen passen zich aan."
+      },
+      {
+        "h": "Bekijk elk mogelijk resultaat",
+        "p": "Open de lijst: elk resultaat en de dienst van {name} die het voorstelt."
+      },
+      {
+        "h": "Kijk naar het tabblad Hulp",
+        "p": "De diensten en noodnummers die een student zou zien."
+      },
+      {
+        "h": "Vertel ons wat je ervan vindt",
+        "p": "Opent een e-mail aan het CalmCampus-team."
+      }
+    ],
+    "startOverHeading": "Opnieuw beginnen",
+    "startOverBody": "Wist je antwoorden op deze telefoon en zet de voorbeeldweken terug.",
+    "startOverButton": "Opnieuw beginnen",
+    "startOverConfirm": "Je antwoorden wissen en opnieuw beginnen?",
+    "startOverYes": "Ja, opnieuw beginnen",
+    "startOverCancel": "Annuleren",
+    "startOverDone": "Klaar. Je begint opnieuw.",
+    "progress": "{n} van {total} geprobeerd",
+    "allDone": "Je hebt alles geprobeerd. Dank je wel.",
+    "doneLabel": "(gedaan)",
+    "credit": "Gemaakt door Florian Braùn en Hélène David."
+  },
+  "results": {
+    "title": "Elk mogelijk resultaat",
+    "lead": "Het resultaat hangt alleen af van hoeveel van de vier vragen met ja beantwoord worden. Elk resultaat stelt één volgende stap voor. Tik op een resultaat om het te zien zoals een student het ziet.",
+    "yes": "Ja-antwoorden: {range} van {total}",
+    "suggests": "Stelt voor: {target}",
+    "supportList": "de lijst met hulpmogelijkheden",
+    "back": "Alle resultaten",
+    "emergencyNote": "Elk resultaat toont ook de noodnummers.",
+    "forInstitution": "Getoond voor {name}."
+  },
+  "install": {
+    "title": "Zet het op je beginscherm",
+    "ios": [
+      "Open deze pagina in Safari.",
+      "Tik op Deel: het vierkant met een pijl. Op nieuwere iPhones kan het onder de knop ••• staan.",
+      "Kies Zet op beginscherm.",
+      "Open CalmCampus via het nieuwe icoon."
+    ],
+    "android": [
+      "Open deze pagina in Chrome.",
+      "Tik op het menu: de drie puntjes rechtsboven.",
+      "Kies Toevoegen aan startscherm of App installeren.",
+      "Open CalmCampus via het nieuwe icoon."
+    ],
+    "desktopTitle": "Gemaakt voor telefoons",
+    "desktopBody": "Scan deze code met de camera van je telefoon, of open {url} op je telefoon.",
+    "qrAlt": "QR-code die {url} opent"
+  },
+  "pick": {
+    "title": "Aan welke universiteit studeer je?",
+    "lead": "CalmCampus toont de ondersteuning van je eigen universiteit. Je kunt dit later wijzigen onder Over.",
+    "current": "Jouw universiteit",
+    "change": "Wijzigen"
+  }
+}

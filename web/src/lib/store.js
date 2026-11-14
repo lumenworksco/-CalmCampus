@@ -21,6 +21,7 @@ export function createStore(storage, universityId) {
   const langKey = `${PREFIX}lang`;
   const welcomeKey = `${PREFIX}${universityId}:welcomed`;
   const triedKey = `${PREFIX}${universityId}:tried`;
+  const uniKey = `${PREFIX}${universityId}:uni`;
 
   const read = (k) => {
     try { const v = JSON.parse(safe.get(k) ?? "[]"); return Array.isArray(v) ? v : []; }
@@ -56,6 +57,9 @@ export function createStore(storage, universityId) {
       const now = api.tried();
       if (!now.includes(id)) safe.set(triedKey, JSON.stringify([...now, id]));
     },
+    /** For configs with `institutions`: which one the student picked. */
+    getUni: () => safe.get(uniKey),
+    setUni: (id) => safe.set(uniKey, id),
     getLang: () => safe.get(langKey),
     setLang: (l) => safe.set(langKey, l),
     /** Delete every key this app wrote, for every university on this origin. */

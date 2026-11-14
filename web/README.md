@@ -6,7 +6,7 @@ Each university is one JSON file in `config/universities/`. Adding a university 
 
 ```bash
 cd web
-npm run check     # validates every config and string file (FR/EN parity, voice, references)
+npm run check     # validates every config and string file (EN/FR/NL parity, voice, references)
 npm test          # unit tests: scoring, weeks, storage, example data, phone signals, language, config
 npm run build     # check + build into dist/ (default at the root, one folder per university)
 npm run dev       # build and serve dist/ at http://localhost:8080
@@ -25,7 +25,7 @@ Node 20+. No `npm install` is needed to build or run. Playwright is only needed 
 
 ## What a reviewer sees
 
-- **Welcome** on first open: what CalmCampus is, that this is a preview, and, when opened in the browser instead of the installed app, how to add it to the home screen: numbered steps on iPhone and Android, and on a computer a QR code to the phone link (`publicUrl` and `qr` in the config). The language switch sits in the header on every screen; About also has a full Français / English choice.
+- **Welcome** on first open: what CalmCampus is, that this is a preview, and, when opened in the browser instead of the installed app, how to add it to the home screen: numbered steps on iPhone and Android, and on a computer a QR code to the phone link (`publicUrl` and `qr` in the config). The language switch sits in the header on every screen (one button per other language); About also has the full list of languages.
 - **Home**: the weekly check-in and "This week on your phone": example sleep, phone use after midnight and steps, each compared with the student's usual week. Three example weeks (calm, exams, difficult) show how the check-in adapts; after picking another one, Home offers to redo the check-in.
 - **Check-in**: questions with a notable phone signal come first and say what the phone noticed; questions whose signal looks usual, or that no phone signal can measure, say so. Yes, No and Skip stay pinned at the bottom. A double tap answers one question only, and the whole check-in is one step in the browser history, so the phone's back button never returns into a finished check-in.
 - **Result**: the level, what the student noticed (and how many questions were skipped), what the phone noticed in the example week the check-in was done with, one next step (a service from the config), the emergency numbers, and in a preview the next thing to try.
@@ -38,7 +38,7 @@ Phone signals never answer a question and never change the result: the level com
 ## Choosing a university
 
 - Folder: `dist/<id>/` opens that university, `dist/` opens the default setup.
-- URL: `?u=<id>` on any folder overrides it. `?lang=en` or `?lang=fr` picks the language.
+- URL: `?u=<id>` on any folder overrides it. `?lang=en`, `?lang=fr` or `?lang=nl` picks the language.
 - `?demo=1` / `?demo=0` turn the example data on or off, only for a university without `"preview": true`. A preview build always shows the examples.
 - Build one only: `node scripts/build.mjs --only <id>`
 
@@ -46,16 +46,21 @@ Phone signals never answer a question and never change the result: the level com
 
 1. Create the branch: `git switch main && git switch -c <id>-web-demo`.
 2. Copy `config/universities/default.json` to `config/universities/<id>.json`. The file name, without `.json`, is the id and the folder name (`/<id>/`).
-3. Set `name`, `languages` and `defaultLanguage`. Every language listed needs a file in `src/i18n/` (English and French exist). Set `nameInText` for the name as it reads inside a sentence, with its article where the language needs one (in French, "l'…" or "la …"). Keep `"preview": true` for a reviewer preview. Optional: `logo.text`, or `logo.image` once you have permission to use the logo.
+3. Set `name`, `languages` and `defaultLanguage`. Every language listed needs a file in `src/i18n/` (English, French and Dutch exist). Set `nameInText` for the name as it reads inside a sentence, with its article where the language needs one (in French, "l'…" or "la …"). Keep `"preview": true` for a reviewer preview. Optional: `logo.text`, or `logo.image` once you have permission to use the logo.
 4. Translate the four `questions` into every language. Never change a question `id` later. Bump its `version` when the wording changes. Each question can list `signals` (`sleep`, `lateScreen`, `steps`): the phone signals that belong to it.
 5. Fill in `services`: for each one a `name`, a `purpose` and `contact` (`link` per language, `email`, `phone`, `hours`). Use `null` for anything you do not know and list it in `todo`. If the university's pages do not publish it at all (for example a service reached only by email), list it in `notPublished` with where you looked instead: no warning, and the app simply leaves it out. Copy details only from the university's own pages, and put that page in `source` and today's date in `verified`.
 6. Fill in `emergency`: the campus emergency number first, then national lines. `number` is what people read, `tel` is what the phone dials.
 7. Point each entry in `levels` at a service with `service` (`null` points to the support list). `minYes` is how many of the four answers must be yes for that level. The default is `0 steady`, `1 notice`, `2 support`, `3 care`.
 8. Set `feedback.email` and `feedback.subject` (one text, or one per language). For the computer view, set `publicUrl` (the address the preview will have) and `qr` (an SVG QR code of that address in `config/qr/<id>.svg`, made once with any QR tool).
-9. Add `test/<id>.test.mjs` for what matters at that university (routing, sources, emergency numbers) and a `HANDOFF.md` for the state of the pilot.
-10. Run `npm run check`. It fails on a missing translation, an unknown service or signal, a bad email or link, an exclamation mark, an emoji, or a clinical word such as "disorder". TODOs show up as warnings. Then `npm test`, `npm run build` and `npm run e2e`.
-11. Run `npm run dev`, open `http://localhost:8080/<id>/` and go through About > Things to try yourself.
-12. Deploy (below).
+9. Optional, for a preview that is not one university:
+   - `institutions`: for students of several universities (for example a student app used across a region). Each entry has an `id`, a `name` (and optional `nameInText`, `hint`), its own `services`, `levels` and campus `emergency` numbers (shown before the config's own `emergency`, which then holds the national lines). An entry without services needs `advice`: what to do instead, shown on Support and as the next step. The student picks once ("Which university are you at?", stored as `cc:<id>:uni`) and can change it in About. Start over asks again.
+   - `pages`: extra screens at `#/<page id>` (also `#<page id>`), made of blocks: `h`, `p`, `note`, `list`, `items` (steps with `h` and `p`), `box` (blocks in a card), `links` (to other pages) and `table`. A table's `label` is `"example"` (made-up numbers, shown with the Example label) or `"target"` (with a `note` saying what the numbers are); the check refuses any other. A page can show a `frame`: a plainly generic phone with one CalmCampus `card` (`text`, `button`) and a `label` saying it is a mockup.
+   - `welcomeNote` (a card on the welcome screen), `welcomeLinks` and `aboutPages` (`heading` and page `ids`): where those pages are linked from.
+   - `tries`: the reviewer's guide in About, instead of the five generic steps. Each step has `id`, `href`, `h`, `p` and `marks`: it is ticked once every mark was recorded. Marks: `checkin`, `results`, `support`, `feedback`, `uni` (a university picked), `frame` (the mockup's card opened), `page:<id>` (a page opened).
+10. Add `test/<id>.test.mjs` for what matters at that university (routing, sources, emergency numbers) and a `HANDOFF.md` for the state of the pilot.
+11. Run `npm run check`. It fails on a missing translation, an unknown service, signal or page, a bad email or link, an exclamation mark, an emoji, a time in seconds (the check-in "takes less than a minute"), or a clinical word such as "disorder". TODOs show up as warnings. Then `npm test`, `npm run build` and `npm run e2e`.
+12. Run `npm run dev`, open `http://localhost:8080/<id>/` and go through About > Things to try yourself.
+13. Deploy (below).
 
 Checklist before sending to a university: every `todo` is resolved or accepted, a staff member there has confirmed the service details, and the contact email in `feedback` is one you read.
 
